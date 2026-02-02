@@ -31,6 +31,7 @@ export * from './lib/use-media-query';
 export * from './lib/composite';
 export * from './lib/button';
 export * from './lib/separator';
+export * from './lib/progress';
 
 // Components (to be added as they are ported)
 // export * from './lib/button';

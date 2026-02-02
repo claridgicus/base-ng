@@ -49,7 +49,7 @@ Every file must include a reference to the original React source:
 | 13  | Port composite component    | [x]    | `src/composite/`    |
 | 14  | Port button component       | [x]    | `src/button/`       |
 | 15  | Port separator component    | [x]    | `src/separator/`    |
-| 16  | Port progress component     | [ ]    | `src/progress/`     |
+| 16  | Port progress component     | [x]    | `src/progress/`     |
 | 17  | Port meter component        | [ ]    | `src/meter/`        |
 | 18  | Port switch component       | [ ]    | `src/switch/`       |
 | 19  | Port toggle component       | [ ]    | `src/toggle/`       |
@@ -188,9 +188,9 @@ projects/base-ng/src/lib/[component]/
 ## Progress Summary
 
 - **Total Tasks:** 52
-- **Completed:** 15
+- **Completed:** 16
 - **In Progress:** 0
-- **Remaining:** 37
+- **Remaining:** 36
 
 ---
 
