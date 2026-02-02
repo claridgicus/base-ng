@@ -30,7 +30,7 @@ Every file must include a reference to the original React source:
 | # | Task | Status | Source Reference |
 |---|------|--------|------------------|
 | 3 | Create shared types module | [x] | `src/types/` |
-| 4 | Create utils module | [ ] | `src/utils/` |
+| 4 | Create utils module | [x] | `src/utils/` |
 | 5 | Create merge-props utility | [ ] | `src/merge-props/` |
 | 6 | Create use-render directive/service | [ ] | `src/use-render/` |
 | 7 | Create floating-ui integration service | [ ] | `src/floating-ui-react/` |
@@ -188,9 +188,9 @@ projects/base-ng/src/lib/[component]/
 ## Progress Summary
 
 - **Total Tasks:** 52
-- **Completed:** 3
+- **Completed:** 4
 - **In Progress:** 0
-- **Remaining:** 49
+- **Remaining:** 48
 
 ---
 
