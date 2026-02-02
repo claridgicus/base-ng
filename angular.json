@@ -78,6 +78,32 @@
           "builder": "@angular/build:unit-test"
         }
       }
+    },
+    "@base-ng/ui": {
+      "projectType": "library",
+      "root": "projects/base-ng/ui",
+      "sourceRoot": "projects/base-ng/ui/src",
+      "prefix": "bui",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/base-ng/ui/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/base-ng/ui/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/base-ng/ui/tsconfig.spec.json"
+          }
+        }
+      }
     }
   }
 }

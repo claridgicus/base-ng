@@ -3,6 +3,11 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "paths": {
+      "@base-ng/ui": [
+        "./dist/base-ng/ui"
+      ]
+    },
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
@@ -28,6 +33,12 @@
     },
     {
       "path": "./tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/base-ng/ui/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/base-ng/ui/tsconfig.spec.json"
     }
   ]
 }
