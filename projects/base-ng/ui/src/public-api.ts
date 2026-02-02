@@ -55,3 +55,4 @@ export * from './lib/alert-dialog';
 export * from './lib/menu';
 export * from './lib/context-menu';
 export * from './lib/menubar';
+export * from './lib/navigation-menu';
