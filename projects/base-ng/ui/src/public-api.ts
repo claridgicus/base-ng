@@ -59,3 +59,4 @@ export * from './lib/navigation-menu';
 export * from './lib/toolbar';
 export * from './lib/select';
 export * from './lib/combobox';
+export * from './lib/autocomplete';
