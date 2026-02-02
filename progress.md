@@ -101,7 +101,7 @@ Every file must include a reference to the original React source:
 
 | #   | Task                           | Status | Source Reference       |
 | --- | ------------------------------ | ------ | ---------------------- |
-| 40  | Port menu component            | [ ]    | `src/menu/`            |
+| 40  | Port menu component            | [x]    | `src/menu/`            |
 | 41  | Port context-menu component    | [ ]    | `src/context-menu/`    |
 | 42  | Port menubar component         | [ ]    | `src/menubar/`         |
 | 43  | Port navigation-menu component | [ ]    | `src/navigation-menu/` |
@@ -188,9 +188,9 @@ projects/base-ng/src/lib/[component]/
 ## Progress Summary
 
 - **Total Tasks:** 52
-- **Completed:** 39
+- **Completed:** 40
 - **In Progress:** 0
-- **Remaining:** 13
+- **Remaining:** 12
 
 ---
 

@@ -52,3 +52,4 @@ export * from './lib/popover';
 export * from './lib/preview-card';
 export * from './lib/dialog';
 export * from './lib/alert-dialog';
+export * from './lib/menu';
