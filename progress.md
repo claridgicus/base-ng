@@ -32,7 +32,7 @@ Every file must include a reference to the original React source:
 | 3   | Create shared types module                       | [x]    | `src/types/`                    |
 | 4   | Create utils module                              | [x]    | `src/utils/`                    |
 | 5   | Create merge-props utility                       | [x]    | `src/merge-props/`              |
-| 6   | Create use-render directive/service              | [ ]    | `src/use-render/`               |
+| 6   | Create use-render directive/service              | [x]    | `src/use-render/`               |
 | 7   | Create floating-ui integration service           | [ ]    | `src/floating-ui-react/`        |
 | 8   | Port csp-provider as Angular service             | [ ]    | `src/csp-provider/`             |
 | 9   | Port direction-provider as Angular service       | [ ]    | `src/direction-provider/`       |
@@ -188,9 +188,9 @@ projects/base-ng/src/lib/[component]/
 ## Progress Summary
 
 - **Total Tasks:** 52
-- **Completed:** 5
+- **Completed:** 6
 - **In Progress:** 0
-- **Remaining:** 47
+- **Remaining:** 46
 
 ---
 

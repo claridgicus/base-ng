@@ -15,6 +15,7 @@ export * from './lib/types';
 // Utilities
 export * from './lib/utils';
 export * from './lib/merge-props';
+export * from './lib/use-render';
 
 // Providers (to be added)
 // export * from './lib/direction-provider';
