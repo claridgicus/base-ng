@@ -67,8 +67,8 @@ Every file must include a reference to the original React source:
 | 24  | Port fieldset component       | [x]    | `src/fieldset/`       |
 | 25  | Port checkbox component       | [x]    | `src/checkbox/`       |
 | 26  | Port checkbox-group component | [x]    | `src/checkbox-group/` |
-| 27  | Port radio component          | [ ]    | `src/radio/`          |
-| 28  | Port radio-group component    | [ ]    | `src/radio-group/`    |
+| 27  | Port radio component          | [x]    | `src/radio/`          |
+| 28  | Port radio-group component    | [x]    | `src/radio-group/`    |
 | 29  | Port slider component         | [ ]    | `src/slider/`         |
 | 30  | Port number-field component   | [ ]    | `src/number-field/`   |
 | 31  | Port form component           | [ ]    | `src/form/`           |
@@ -188,9 +188,9 @@ projects/base-ng/src/lib/[component]/
 ## Progress Summary
 
 - **Total Tasks:** 52
-- **Completed:** 26
+- **Completed:** 28
 - **In Progress:** 0
-- **Remaining:** 26
+- **Remaining:** 24
 
 ---
 
