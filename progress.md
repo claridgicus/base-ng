@@ -80,7 +80,7 @@ Every file must include a reference to the original React source:
 | #   | Task                       | Status | Source Reference   |
 | --- | -------------------------- | ------ | ------------------ |
 | 32  | Port collapsible component | [x]    | `src/collapsible/` |
-| 33  | Port accordion component   | [ ]    | `src/accordion/`   |
+| 33  | Port accordion component   | [x]    | `src/accordion/`   |
 | 34  | Port tabs component        | [ ]    | `src/tabs/`        |
 
 ---
@@ -188,9 +188,9 @@ projects/base-ng/src/lib/[component]/
 ## Progress Summary
 
 - **Total Tasks:** 52
-- **Completed:** 32
+- **Completed:** 33
 - **In Progress:** 0
-- **Remaining:** 20
+- **Remaining:** 19
 
 ---
 
