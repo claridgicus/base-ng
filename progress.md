@@ -114,7 +114,7 @@ Every file must include a reference to the original React source:
 | #   | Task                        | Status | Source Reference    |
 | --- | --------------------------- | ------ | ------------------- |
 | 45  | Port select component       | [x]    | `src/select/`       |
-| 46  | Port combobox component     | [ ]    | `src/combobox/`     |
+| 46  | Port combobox component     | [x]    | `src/combobox/`     |
 | 47  | Port autocomplete component | [ ]    | `src/autocomplete/` |
 | 48  | Port scroll-area component  | [ ]    | `src/scroll-area/`  |
 
@@ -188,9 +188,9 @@ projects/base-ng/src/lib/[component]/
 ## Progress Summary
 
 - **Total Tasks:** 52
-- **Completed:** 45
+- **Completed:** 46
 - **In Progress:** 0
-- **Remaining:** 7
+- **Remaining:** 6
 
 ---
 

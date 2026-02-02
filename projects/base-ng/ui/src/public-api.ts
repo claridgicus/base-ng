@@ -58,3 +58,4 @@ export * from './lib/menubar';
 export * from './lib/navigation-menu';
 export * from './lib/toolbar';
 export * from './lib/select';
+export * from './lib/combobox';
