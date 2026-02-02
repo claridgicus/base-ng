@@ -39,6 +39,7 @@
     "@floating-ui/dom": "^1.7.5",
     "express": "^5.1.0",
     "rxjs": "~7.8.0",
+    "shiki": "^3.22.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {

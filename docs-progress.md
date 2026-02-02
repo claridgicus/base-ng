@@ -13,7 +13,7 @@
 | 2   | Configure routing with lazy loading                       | [x]    | Match Base UI URL structure   |
 | 3   | Set up SSR for SEO                                        | [x]    | Already in angular.json       |
 | 4   | Configure Tailwind CSS                                    | [x]    | Using plain SCSS for now      |
-| 5   | Set up syntax highlighting (Shiki or Prism)               | [ ]    | For code examples             |
+| 5   | Set up syntax highlighting (Shiki or Prism)               | [x]    | Shiki installed               |
 
 ---
 
@@ -34,12 +34,12 @@
 
 | #   | Task                                               | Status | Source Reference              |
 | --- | -------------------------------------------------- | ------ | ----------------------------- |
-| 12  | Create code block component with copy button       | [ ]    | `components/CodeBlock`        |
-| 13  | Create live demo component with code toggle        | [ ]    | `components/Demo`             |
-| 14  | Create API reference table component               | [ ]    | `components/ApiReference`     |
-| 15  | Create props table component                       | [ ]    | `components/PropsTable`       |
+| 12  | Create code block component with copy button       | [x]    | `components/CodeBlock`        |
+| 13  | Create live demo component with code toggle        | [x]    | `components/Demo`             |
+| 14  | Create API reference table component               | [x]    | `components/ApiReference`     |
+| 15  | Create props table component                       | [x]    | `components/PropsTable`       |
 | 16  | Create example variant selector (CSS/Tailwind)     | [ ]    | Variant switcher              |
-| 17  | Create package manager selector (npm/yarn/pnpm)    | [ ]    | Install command variants      |
+| 17  | Create package manager selector (npm/yarn/pnpm)    | [x]    | Install command variants      |
 | 18  | Create "Open in StackBlitz" integration            | [ ]    | External link button          |
 
 ---
@@ -73,7 +73,7 @@
 
 | #   | Task                                               | Status | Source Reference              |
 | --- | -------------------------------------------------- | ------ | ----------------------------- |
-| 30  | Document Button component                          | [ ]    | `components/button`           |
+| 30  | Document Button component                          | [x]    | `components/button`           |
 | 31  | Document Separator component                       | [ ]    | `components/separator`        |
 | 32  | Document Progress component                        | [ ]    | `components/progress`         |
 | 33  | Document Meter component                           | [ ]    | `components/meter`            |
@@ -225,9 +225,9 @@ Each component page should include:
 ## Progress Summary
 
 - **Total Tasks:** 75
-- **Completed:** 12
+- **Completed:** 18
 - **In Progress:** 0
-- **Remaining:** 63
+- **Remaining:** 57
 
 ---
 
