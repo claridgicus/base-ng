@@ -9,6 +9,9 @@
 // Version
 export { VERSION } from './lib/version';
 
+// Types
+export * from './lib/types';
+
 // Utilities (to be added)
 // export * from './lib/utils';
 // export * from './lib/merge-props';
