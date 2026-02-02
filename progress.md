@@ -124,7 +124,7 @@ Every file must include a reference to the original React source:
 
 | #   | Task                 | Status | Source Reference |
 | --- | -------------------- | ------ | ---------------- |
-| 49  | Port toast component | [ ]    | `src/toast/`     |
+| 49  | Port toast component | [x]    | `src/toast/`     |
 
 ---
 
@@ -188,9 +188,9 @@ projects/base-ng/src/lib/[component]/
 ## Progress Summary
 
 - **Total Tasks:** 52
-- **Completed:** 48
+- **Completed:** 49
 - **In Progress:** 0
-- **Remaining:** 4
+- **Remaining:** 3
 
 ---
 

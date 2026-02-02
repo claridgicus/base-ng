@@ -61,3 +61,4 @@ export * from './lib/select';
 export * from './lib/combobox';
 export * from './lib/autocomplete';
 export * from './lib/scroll-area';
+export * from './lib/toast';
