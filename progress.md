@@ -70,7 +70,7 @@ Every file must include a reference to the original React source:
 | 27  | Port radio component          | [x]    | `src/radio/`          |
 | 28  | Port radio-group component    | [x]    | `src/radio-group/`    |
 | 29  | Port slider component         | [x]    | `src/slider/`         |
-| 30  | Port number-field component   | [ ]    | `src/number-field/`   |
+| 30  | Port number-field component   | [x]    | `src/number-field/`   |
 | 31  | Port form component           | [ ]    | `src/form/`           |
 
 ---
@@ -188,9 +188,9 @@ projects/base-ng/src/lib/[component]/
 ## Progress Summary
 
 - **Total Tasks:** 52
-- **Completed:** 29
+- **Completed:** 30
 - **In Progress:** 0
-- **Remaining:** 23
+- **Remaining:** 22
 
 ---
 
