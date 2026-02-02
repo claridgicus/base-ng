@@ -32,6 +32,7 @@ export * from './lib/composite';
 export * from './lib/button';
 export * from './lib/separator';
 export * from './lib/progress';
+export * from './lib/meter';
 
 // Components (to be added as they are ported)
 // export * from './lib/button';
