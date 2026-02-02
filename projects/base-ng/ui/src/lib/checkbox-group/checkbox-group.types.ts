@@ -3,7 +3,7 @@
  * @source https://github.com/mui/base-ui/blob/master/packages/react/src/checkbox-group/CheckboxGroupContext.tsx
  */
 
-import { InjectionToken, WritableSignal } from '@angular/core';
+import { InjectionToken, Signal, WritableSignal } from '@angular/core';
 
 /**
  * Checkbox group state.
@@ -20,14 +20,14 @@ export interface CheckboxGroupState {
  */
 export interface CheckboxGroupContext {
   /**
-   * Current selected values.
+   * Current selected values signal.
    */
   value: WritableSignal<string[]>;
 
   /**
    * Whether the group is disabled.
    */
-  disabled: () => boolean;
+  disabled: Signal<boolean>;
 
   /**
    * Add a value to the selection.
@@ -50,9 +50,19 @@ export interface CheckboxGroupContext {
   isSelected: (value: string) => boolean;
 
   /**
-   * Whether all checkboxes should be indeterminate (for parent checkbox).
+   * All possible values (for parent checkbox).
    */
-  allValues: WritableSignal<string[]>;
+  allValues: Signal<string[]>;
+}
+
+/**
+ * Checkbox group change event details.
+ */
+export interface CheckboxGroupChangeEventDetails {
+  /**
+   * The new selected values.
+   */
+  value: string[];
 }
 
 /**
