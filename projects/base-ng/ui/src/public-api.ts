@@ -34,6 +34,7 @@ export * from './lib/separator';
 export * from './lib/progress';
 export * from './lib/meter';
 export * from './lib/switch';
+export * from './lib/toggle';
 
 // Components (to be added as they are ported)
 // export * from './lib/button';
