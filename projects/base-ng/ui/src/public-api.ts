@@ -42,8 +42,10 @@ export * from './lib/field';
 export * from './lib/fieldset';
 export * from './lib/checkbox';
 export * from './lib/checkbox-group';
-
-// Components (to be added as they are ported)
-// export * from './lib/button';
-// export * from './lib/switch';
-// etc.
+export * from './lib/radio-group';
+export * from './lib/slider';
+export * from './lib/number-field';
+export * from './lib/accordion';
+export * from './lib/tabs';
+export * from './lib/tooltip';
+export * from './lib/popover';
