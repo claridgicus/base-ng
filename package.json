@@ -5,8 +5,11 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:lib": "ng build @base-ng/ui",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
+    "test": "ng test @base-ng/ui --no-watch",
+    "test:watch": "ng test @base-ng/ui",
+    "test:coverage": "ng test @base-ng/ui --no-watch --coverage",
     "serve:ssr:base-ng": "node dist/base-ng/server/server.mjs"
   },
   "prettier": {
