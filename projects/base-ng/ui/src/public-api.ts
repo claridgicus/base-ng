@@ -50,3 +50,4 @@ export * from './lib/tabs';
 export * from './lib/tooltip';
 export * from './lib/popover';
 export * from './lib/preview-card';
+export * from './lib/dialog';
