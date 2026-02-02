@@ -36,6 +36,7 @@ export * from './lib/meter';
 export * from './lib/switch';
 export * from './lib/toggle';
 export * from './lib/toggle-group';
+export * from './lib/avatar';
 
 // Components (to be added as they are ported)
 // export * from './lib/button';

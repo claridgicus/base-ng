@@ -54,7 +54,7 @@ Every file must include a reference to the original React source:
 | 18  | Port switch component       | [x]    | `src/switch/`       |
 | 19  | Port toggle component       | [x]    | `src/toggle/`       |
 | 20  | Port toggle-group component | [x]    | `src/toggle-group/` |
-| 21  | Port avatar component       | [ ]    | `src/avatar/`       |
+| 21  | Port avatar component       | [x]    | `src/avatar/`       |
 | 22  | Port input component        | [ ]    | `src/input/`        |
 
 ---
@@ -188,9 +188,9 @@ projects/base-ng/src/lib/[component]/
 ## Progress Summary
 
 - **Total Tasks:** 52
-- **Completed:** 20
+- **Completed:** 21
 - **In Progress:** 0
-- **Remaining:** 32
+- **Remaining:** 31
 
 ---
 
