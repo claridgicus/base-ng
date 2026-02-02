@@ -40,6 +40,7 @@ export * from './lib/avatar';
 export * from './lib/input';
 export * from './lib/field';
 export * from './lib/fieldset';
+export * from './lib/checkbox';
 
 // Components (to be added as they are ported)
 // export * from './lib/button';
