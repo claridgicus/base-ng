@@ -21,6 +21,7 @@ export * from './lib/floating-ui';
 // Providers
 export * from './lib/csp-provider';
 export * from './lib/direction-provider';
+export * from './lib/labelable-provider';
 
 // Components (to be added as they are ported)
 // export * from './lib/button';
