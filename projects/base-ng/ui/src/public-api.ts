@@ -27,6 +27,9 @@ export * from './lib/labelable-provider';
 export * from './lib/use-button';
 export * from './lib/use-media-query';
 
+// Components
+export * from './lib/composite';
+
 // Components (to be added as they are ported)
 // export * from './lib/button';
 // export * from './lib/switch';

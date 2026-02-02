@@ -46,7 +46,7 @@ Every file must include a reference to the original React source:
 
 | #   | Task                        | Status | Source Reference    |
 | --- | --------------------------- | ------ | ------------------- |
-| 13  | Port composite component    | [ ]    | `src/composite/`    |
+| 13  | Port composite component    | [x]    | `src/composite/`    |
 | 14  | Port button component       | [ ]    | `src/button/`       |
 | 15  | Port separator component    | [ ]    | `src/separator/`    |
 | 16  | Port progress component     | [ ]    | `src/progress/`     |
@@ -188,9 +188,9 @@ projects/base-ng/src/lib/[component]/
 ## Progress Summary
 
 - **Total Tasks:** 52
-- **Completed:** 12
+- **Completed:** 13
 - **In Progress:** 0
-- **Remaining:** 40
+- **Remaining:** 39
 
 ---
 
