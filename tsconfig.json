@@ -39,6 +39,9 @@
     },
     {
       "path": "./projects/base-ng/ui/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/base-ng/docs/tsconfig.app.json"
     }
   ]
 }

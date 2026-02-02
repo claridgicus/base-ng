@@ -1,0 +1,240 @@
+# Base UI Angular Documentation Site - Progress Tracker
+
+> Building an Angular documentation site mirroring [Base UI Docs](https://base-ui.com/)
+> Source structure: https://github.com/mui/base-ui/tree/master/docs/src
+
+---
+
+## Phase 1: Infrastructure
+
+| #   | Task                                                      | Status | Notes                         |
+| --- | --------------------------------------------------------- | ------ | ----------------------------- |
+| 1   | Generate Angular application `@base-ng/docs`              | [x]    | `ng generate application`     |
+| 2   | Configure routing with lazy loading                       | [x]    | Match Base UI URL structure   |
+| 3   | Set up SSR for SEO                                        | [x]    | Already in angular.json       |
+| 4   | Configure Tailwind CSS                                    | [x]    | Using plain SCSS for now      |
+| 5   | Set up syntax highlighting (Shiki or Prism)               | [ ]    | For code examples             |
+
+---
+
+## Phase 2: Layout & Navigation
+
+| #   | Task                                               | Status | Source Reference              |
+| --- | -------------------------------------------------- | ------ | ----------------------------- |
+| 6   | Create root layout with header, sidebar, main      | [x]    | `app/layout.tsx`              |
+| 7   | Build header component (logo, search, nav links)   | [x]    | `components/Header`           |
+| 8   | Build sidebar navigation component                 | [x]    | `components/Sidebar`          |
+| 9   | Build table of contents component                  | [ ]    | `components/TableOfContents`  |
+| 10  | Build mobile navigation (hamburger menu)           | [ ]    | Responsive design             |
+| 11  | Implement search functionality (Cmd+K)             | [ ]    | `components/Search`           |
+
+---
+
+## Phase 3: Documentation Components
+
+| #   | Task                                               | Status | Source Reference              |
+| --- | -------------------------------------------------- | ------ | ----------------------------- |
+| 12  | Create code block component with copy button       | [ ]    | `components/CodeBlock`        |
+| 13  | Create live demo component with code toggle        | [ ]    | `components/Demo`             |
+| 14  | Create API reference table component               | [ ]    | `components/ApiReference`     |
+| 15  | Create props table component                       | [ ]    | `components/PropsTable`       |
+| 16  | Create example variant selector (CSS/Tailwind)     | [ ]    | Variant switcher              |
+| 17  | Create package manager selector (npm/yarn/pnpm)    | [ ]    | Install command variants      |
+| 18  | Create "Open in StackBlitz" integration            | [ ]    | External link button          |
+
+---
+
+## Phase 4: Overview Pages
+
+| #   | Task                                               | Status | Source Reference              |
+| --- | -------------------------------------------------- | ------ | ----------------------------- |
+| 19  | Create Quick Start page                            | [x]    | `overview/quick-start`        |
+| 20  | Create Accessibility page                          | [x]    | `overview/accessibility`      |
+| 21  | Create Releases/Changelog page                     | [x]    | `overview/releases`           |
+| 22  | Create About page                                  | [x]    | `overview/about`              |
+
+---
+
+## Phase 5: Handbook Pages
+
+| #   | Task                                               | Status | Source Reference              |
+| --- | -------------------------------------------------- | ------ | ----------------------------- |
+| 23  | Create Styling guide page                          | [ ]    | `handbook/styling`            |
+| 24  | Create Animation guide page                        | [ ]    | `handbook/animation`          |
+| 25  | Create Composition guide page                      | [ ]    | `handbook/composition`        |
+| 26  | Create Customization guide page                    | [ ]    | `handbook/customization`      |
+| 27  | Create Forms guide page                            | [ ]    | `handbook/forms`              |
+| 28  | Create TypeScript guide page                       | [ ]    | `handbook/typescript`         |
+| 29  | Create llms.txt page (AI-friendly docs)            | [ ]    | `handbook/llms-txt`           |
+
+---
+
+## Phase 6: Component Documentation - Simple
+
+| #   | Task                                               | Status | Source Reference              |
+| --- | -------------------------------------------------- | ------ | ----------------------------- |
+| 30  | Document Button component                          | [ ]    | `components/button`           |
+| 31  | Document Separator component                       | [ ]    | `components/separator`        |
+| 32  | Document Progress component                        | [ ]    | `components/progress`         |
+| 33  | Document Meter component                           | [ ]    | `components/meter`            |
+| 34  | Document Switch component                          | [ ]    | `components/switch`           |
+| 35  | Document Toggle component                          | [ ]    | `components/toggle`           |
+| 36  | Document Toggle Group component                    | [ ]    | `components/toggle-group`     |
+| 37  | Document Avatar component                          | [ ]    | `components/avatar`           |
+| 38  | Document Input component                           | [ ]    | `components/input`            |
+
+---
+
+## Phase 7: Component Documentation - Forms
+
+| #   | Task                                               | Status | Source Reference              |
+| --- | -------------------------------------------------- | ------ | ----------------------------- |
+| 39  | Document Field component                           | [ ]    | `components/field`            |
+| 40  | Document Fieldset component                        | [ ]    | `components/fieldset`         |
+| 41  | Document Checkbox component                        | [ ]    | `components/checkbox`         |
+| 42  | Document Checkbox Group component                  | [ ]    | `components/checkbox-group`   |
+| 43  | Document Radio component                           | [ ]    | `components/radio`            |
+| 44  | Document Radio Group component                     | [ ]    | `components/radio-group`      |
+| 45  | Document Slider component                          | [ ]    | `components/slider`           |
+| 46  | Document Number Field component                    | [ ]    | `components/number-field`     |
+| 47  | Document Form component                            | [ ]    | `components/form`             |
+
+---
+
+## Phase 8: Component Documentation - Disclosure
+
+| #   | Task                                               | Status | Source Reference              |
+| --- | -------------------------------------------------- | ------ | ----------------------------- |
+| 48  | Document Collapsible component                     | [ ]    | `components/collapsible`      |
+| 49  | Document Accordion component                       | [ ]    | `components/accordion`        |
+| 50  | Document Tabs component                            | [ ]    | `components/tabs`             |
+
+---
+
+## Phase 9: Component Documentation - Overlays
+
+| #   | Task                                               | Status | Source Reference              |
+| --- | -------------------------------------------------- | ------ | ----------------------------- |
+| 51  | Document Tooltip component                         | [ ]    | `components/tooltip`          |
+| 52  | Document Popover component                         | [ ]    | `components/popover`          |
+| 53  | Document Preview Card component                    | [ ]    | `components/preview-card`     |
+| 54  | Document Dialog component                          | [ ]    | `components/dialog`           |
+| 55  | Document Alert Dialog component                    | [ ]    | `components/alert-dialog`     |
+
+---
+
+## Phase 10: Component Documentation - Menus
+
+| #   | Task                                               | Status | Source Reference              |
+| --- | -------------------------------------------------- | ------ | ----------------------------- |
+| 56  | Document Menu component                            | [ ]    | `components/menu`             |
+| 57  | Document Context Menu component                    | [ ]    | `components/context-menu`     |
+| 58  | Document Menubar component                         | [ ]    | `components/menubar`          |
+| 59  | Document Navigation Menu component                 | [ ]    | `components/navigation-menu`  |
+| 60  | Document Toolbar component                         | [ ]    | `components/toolbar`          |
+
+---
+
+## Phase 11: Component Documentation - Selection
+
+| #   | Task                                               | Status | Source Reference              |
+| --- | -------------------------------------------------- | ------ | ----------------------------- |
+| 61  | Document Select component                          | [ ]    | `components/select`           |
+| 62  | Document Combobox component                        | [ ]    | `components/combobox`         |
+| 63  | Document Autocomplete component                    | [ ]    | `components/autocomplete`     |
+| 64  | Document Scroll Area component                     | [ ]    | `components/scroll-area`      |
+
+---
+
+## Phase 12: Component Documentation - Notification
+
+| #   | Task                                               | Status | Source Reference              |
+| --- | -------------------------------------------------- | ------ | ----------------------------- |
+| 65  | Document Toast component                           | [ ]    | `components/toast`            |
+
+---
+
+## Phase 13: Utils Documentation
+
+| #   | Task                                               | Status | Source Reference              |
+| --- | -------------------------------------------------- | ------ | ----------------------------- |
+| 66  | Document CSP Provider                              | [ ]    | `utils/csp-provider`          |
+| 67  | Document Direction Provider                        | [ ]    | `utils/direction-provider`    |
+| 68  | Document mergeProps utility                        | [ ]    | `utils/merge-props`           |
+| 69  | Document useRender directive                       | [ ]    | `utils/use-render`            |
+
+---
+
+## Phase 14: Finalization
+
+| #   | Task                                               | Status | Source Reference              |
+| --- | -------------------------------------------------- | ------ | ----------------------------- |
+| 70  | Add version badge and changelog integration        | [ ]    | -                             |
+| 71  | Add GitHub edit links to each page                 | [ ]    | -                             |
+| 72  | Generate llms.txt for AI assistants                | [ ]    | -                             |
+| 73  | Add SEO metadata to all pages                      | [ ]    | -                             |
+| 74  | Run accessibility audit                            | [ ]    | -                             |
+| 75  | Deploy to production                               | [ ]    | -                             |
+
+---
+
+## Documentation Page Structure
+
+Each component page should include:
+
+```
+1. Title + Description
+2. Live Demo (interactive, with code toggle)
+3. Installation snippet
+4. Anatomy (minimal code structure)
+5. Examples (feature-specific demos)
+6. API Reference
+   - Props table for each sub-component
+   - State attributes (data-* attributes)
+   - CSS variables
+7. Accessibility notes
+```
+
+---
+
+## URL Structure
+
+```
+/angular/overview/quick-start
+/angular/overview/accessibility
+/angular/overview/releases
+/angular/overview/about
+/angular/handbook/styling
+/angular/handbook/animation
+/angular/handbook/composition
+/angular/handbook/customization
+/angular/handbook/forms
+/angular/handbook/typescript
+/angular/components/accordion
+/angular/components/alert-dialog
+/angular/components/autocomplete
+... (all components)
+/angular/utils/csp-provider
+/angular/utils/direction-provider
+/angular/utils/merge-props
+/angular/utils/use-render
+```
+
+---
+
+## Progress Summary
+
+- **Total Tasks:** 75
+- **Completed:** 12
+- **In Progress:** 0
+- **Remaining:** 63
+
+---
+
+## Notes
+
+- Use `@base-ng/ui` components in all demos
+- Match Base UI styling conventions
+- Support both CSS Modules and Tailwind examples
+- Ensure all code examples are copy-pasteable
+- Mobile-first responsive design
