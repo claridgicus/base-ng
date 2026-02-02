@@ -57,3 +57,4 @@ export * from './lib/context-menu';
 export * from './lib/menubar';
 export * from './lib/navigation-menu';
 export * from './lib/toolbar';
+export * from './lib/select';
