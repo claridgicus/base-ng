@@ -3,6 +3,10 @@
  * @source https://github.com/mui/base-ui/blob/master/packages/react/src/types/index.ts
  */
 
+// Common types
+export type Orientation = 'horizontal' | 'vertical';
+export type TextDirection = 'ltr' | 'rtl';
+
 // Event details types and utilities
 export type {
   BaseUIChangeEventDetails,
