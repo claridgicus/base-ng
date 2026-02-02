@@ -19,19 +19,5 @@ export interface ToggleState {
  */
 export type ToggleChangeEventDetails = BaseUIChangeEventDetails<string>;
 
-/**
- * Context for toggle group integration (optional).
- */
-export interface ToggleGroupContext {
-  /** Current pressed values in the group */
-  value: Signal<string[]>;
-  /** Whether the group is disabled */
-  disabled: Signal<boolean>;
-  /** Set a toggle value in the group */
-  setGroupValue: (value: string, pressed: boolean, details: ToggleChangeEventDetails) => void;
-}
-
-/**
- * Injection token for ToggleGroupContext (optional).
- */
-export const TOGGLE_GROUP_CONTEXT = new InjectionToken<ToggleGroupContext>('TOGGLE_GROUP_CONTEXT');
+// Note: ToggleGroupContext is defined in toggle-group module to avoid circular dependencies
+// Toggle directive injects it optionally using TOGGLE_GROUP_CONTEXT token

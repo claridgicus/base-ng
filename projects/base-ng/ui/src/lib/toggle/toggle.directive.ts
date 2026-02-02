@@ -19,10 +19,10 @@ import {
 } from '@angular/core';
 import { createChangeEventDetails, REASONS } from '../types';
 import {
-  TOGGLE_GROUP_CONTEXT,
   ToggleChangeEventDetails,
   ToggleState,
 } from './toggle.types';
+import { TOGGLE_GROUP_CONTEXT } from '../toggle-group/toggle-group.types';
 
 /**
  * Toggle button component that can be pressed or unpressed.

@@ -5,9 +5,7 @@
 
 // Types
 export {
-  TOGGLE_GROUP_CONTEXT,
   type ToggleChangeEventDetails,
-  type ToggleGroupContext,
   type ToggleState,
 } from './toggle.types';
 
