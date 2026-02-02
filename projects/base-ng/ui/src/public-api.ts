@@ -25,6 +25,7 @@ export * from './lib/labelable-provider';
 
 // Hooks/Directives
 export * from './lib/use-button';
+export * from './lib/use-media-query';
 
 // Components (to be added as they are ported)
 // export * from './lib/button';

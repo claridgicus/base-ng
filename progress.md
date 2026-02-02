@@ -38,7 +38,7 @@ Every file must include a reference to the original React source:
 | 9   | Port direction-provider as Angular service       | [x]    | `src/direction-provider/`       |
 | 10  | Port labelable-provider as Angular service       | [x]    | `src/labelable-provider/`       |
 | 11  | Port use-button hook as Angular directive        | [x]    | `src/use-button/`               |
-| 12  | Port unstable-use-media-query as Angular service | [ ]    | `src/unstable-use-media-query/` |
+| 12  | Port unstable-use-media-query as Angular service | [x]    | `src/unstable-use-media-query/` |
 
 ---
 
@@ -188,9 +188,9 @@ projects/base-ng/src/lib/[component]/
 ## Progress Summary
 
 - **Total Tasks:** 52
-- **Completed:** 11
+- **Completed:** 12
 - **In Progress:** 0
-- **Remaining:** 41
+- **Remaining:** 40
 
 ---
 
