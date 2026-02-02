@@ -93,7 +93,7 @@ Every file must include a reference to the original React source:
 | 36  | Port popover component      | [x]    | `src/popover/`      |
 | 37  | Port preview-card component | [x]    | `src/preview-card/` |
 | 38  | Port dialog component       | [x]    | `src/dialog/`       |
-| 39  | Port alert-dialog component | [ ]    | `src/alert-dialog/` |
+| 39  | Port alert-dialog component | [x]    | `src/alert-dialog/` |
 
 ---
 
@@ -188,9 +188,9 @@ projects/base-ng/src/lib/[component]/
 ## Progress Summary
 
 - **Total Tasks:** 52
-- **Completed:** 38
+- **Completed:** 39
 - **In Progress:** 0
-- **Remaining:** 14
+- **Remaining:** 13
 
 ---
 
