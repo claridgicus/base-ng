@@ -34,7 +34,7 @@ Every file must include a reference to the original React source:
 | 5   | Create merge-props utility                       | [x]    | `src/merge-props/`              |
 | 6   | Create use-render directive/service              | [x]    | `src/use-render/`               |
 | 7   | Create floating-ui integration service           | [x]    | `src/floating-ui-react/`        |
-| 8   | Port csp-provider as Angular service             | [ ]    | `src/csp-provider/`             |
+| 8   | Port csp-provider as Angular service             | [x]    | `src/csp-provider/`             |
 | 9   | Port direction-provider as Angular service       | [ ]    | `src/direction-provider/`       |
 | 10  | Port labelable-provider as Angular service       | [ ]    | `src/labelable-provider/`       |
 | 11  | Port use-button hook as Angular directive        | [ ]    | `src/use-button/`               |
@@ -188,9 +188,9 @@ projects/base-ng/src/lib/[component]/
 ## Progress Summary
 
 - **Total Tasks:** 52
-- **Completed:** 7
+- **Completed:** 8
 - **In Progress:** 0
-- **Remaining:** 45
+- **Remaining:** 44
 
 ---
 
