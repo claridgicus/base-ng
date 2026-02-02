@@ -63,7 +63,7 @@ Every file must include a reference to the original React source:
 
 | #   | Task                          | Status | Source Reference      |
 | --- | ----------------------------- | ------ | --------------------- |
-| 23  | Port field component          | [ ]    | `src/field/`          |
+| 23  | Port field component          | [x]    | `src/field/`          |
 | 24  | Port fieldset component       | [ ]    | `src/fieldset/`       |
 | 25  | Port checkbox component       | [ ]    | `src/checkbox/`       |
 | 26  | Port checkbox-group component | [ ]    | `src/checkbox-group/` |
@@ -188,9 +188,9 @@ projects/base-ng/src/lib/[component]/
 ## Progress Summary
 
 - **Total Tasks:** 52
-- **Completed:** 22
+- **Completed:** 23
 - **In Progress:** 0
-- **Remaining:** 30
+- **Remaining:** 29
 
 ---
 

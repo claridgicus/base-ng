@@ -38,6 +38,7 @@ export * from './lib/toggle';
 export * from './lib/toggle-group';
 export * from './lib/avatar';
 export * from './lib/input';
+export * from './lib/field';
 
 // Components (to be added as they are ported)
 // export * from './lib/button';
