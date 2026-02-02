@@ -16,6 +16,7 @@ export * from './lib/types';
 export * from './lib/utils';
 export * from './lib/merge-props';
 export * from './lib/use-render';
+export * from './lib/floating-ui';
 
 // Providers (to be added)
 // export * from './lib/direction-provider';
