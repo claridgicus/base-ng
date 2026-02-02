@@ -51,7 +51,7 @@ Every file must include a reference to the original React source:
 | 15  | Port separator component    | [x]    | `src/separator/`    |
 | 16  | Port progress component     | [x]    | `src/progress/`     |
 | 17  | Port meter component        | [x]    | `src/meter/`        |
-| 18  | Port switch component       | [ ]    | `src/switch/`       |
+| 18  | Port switch component       | [x]    | `src/switch/`       |
 | 19  | Port toggle component       | [ ]    | `src/toggle/`       |
 | 20  | Port toggle-group component | [ ]    | `src/toggle-group/` |
 | 21  | Port avatar component       | [ ]    | `src/avatar/`       |
@@ -188,9 +188,9 @@ projects/base-ng/src/lib/[component]/
 ## Progress Summary
 
 - **Total Tasks:** 52
-- **Completed:** 17
+- **Completed:** 18
 - **In Progress:** 0
-- **Remaining:** 35
+- **Remaining:** 34
 
 ---
 
