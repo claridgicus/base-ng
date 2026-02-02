@@ -77,7 +77,7 @@
 | 31  | Document Separator component                       | [ ]    | `components/separator`        |
 | 32  | Document Progress component                        | [ ]    | `components/progress`         |
 | 33  | Document Meter component                           | [ ]    | `components/meter`            |
-| 34  | Document Switch component                          | [ ]    | `components/switch`           |
+| 34  | Document Switch component                          | [x]    | `components/switch`           |
 | 35  | Document Toggle component                          | [ ]    | `components/toggle`           |
 | 36  | Document Toggle Group component                    | [ ]    | `components/toggle-group`     |
 | 37  | Document Avatar component                          | [ ]    | `components/avatar`           |
@@ -91,7 +91,7 @@
 | --- | -------------------------------------------------- | ------ | ----------------------------- |
 | 39  | Document Field component                           | [ ]    | `components/field`            |
 | 40  | Document Fieldset component                        | [ ]    | `components/fieldset`         |
-| 41  | Document Checkbox component                        | [ ]    | `components/checkbox`         |
+| 41  | Document Checkbox component                        | [x]    | `components/checkbox`         |
 | 42  | Document Checkbox Group component                  | [ ]    | `components/checkbox-group`   |
 | 43  | Document Radio component                           | [ ]    | `components/radio`            |
 | 44  | Document Radio Group component                     | [ ]    | `components/radio-group`      |
@@ -225,9 +225,9 @@ Each component page should include:
 ## Progress Summary
 
 - **Total Tasks:** 75
-- **Completed:** 18
+- **Completed:** 20
 - **In Progress:** 0
-- **Remaining:** 57
+- **Remaining:** 55
 
 ---
 
