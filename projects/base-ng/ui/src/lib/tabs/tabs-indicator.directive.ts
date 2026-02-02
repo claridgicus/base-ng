@@ -48,7 +48,7 @@ export class TabsIndicatorDirective {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
 
   /** Whether the indicator position has been calculated */
-  private readonly isReady = signal(false);
+  protected readonly isReady = signal(false);
 
   /** Indicator position and size */
   private readonly position = signal({
