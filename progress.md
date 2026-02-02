@@ -91,7 +91,7 @@ Every file must include a reference to the original React source:
 | --- | --------------------------- | ------ | ------------------- |
 | 35  | Port tooltip component      | [x]    | `src/tooltip/`      |
 | 36  | Port popover component      | [x]    | `src/popover/`      |
-| 37  | Port preview-card component | [ ]    | `src/preview-card/` |
+| 37  | Port preview-card component | [x]    | `src/preview-card/` |
 | 38  | Port dialog component       | [ ]    | `src/dialog/`       |
 | 39  | Port alert-dialog component | [ ]    | `src/alert-dialog/` |
 
@@ -188,9 +188,9 @@ projects/base-ng/src/lib/[component]/
 ## Progress Summary
 
 - **Total Tasks:** 52
-- **Completed:** 36
+- **Completed:** 37
 - **In Progress:** 0
-- **Remaining:** 16
+- **Remaining:** 15
 
 ---
 
