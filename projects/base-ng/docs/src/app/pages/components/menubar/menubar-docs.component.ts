@@ -1,15 +1,36 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  MenubarDirective,
+  MenuRootDirective,
+  MenuTriggerDirective,
+  MenuPositionerDirective,
+  MenuPopupDirective,
+  MenuItemDirective,
+  MenuSeparatorDirective,
+} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-menubar',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    MenubarDirective,
+    MenuRootDirective,
+    MenuTriggerDirective,
+    MenuPositionerDirective,
+    MenuPopupDirective,
+    MenuItemDirective,
+    MenuSeparatorDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,14 +42,98 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <h2 class="docs-section-title">Live Demo</h2>
+        <docs-demo [code]="basicDemoCode">
+          <nav baseUiMenubar class="demo-menubar">
+            <!-- File menu -->
+            <div baseUiMenuRoot>
+              <button baseUiMenuTrigger class="menubar-trigger">File</button>
+              <div baseUiMenuPositioner>
+                <div baseUiMenuPopup class="menubar-popup">
+                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('new')">
+                    <svg viewBox="0 0 16 16" width="14" height="14">
+                      <path d="M4 1h6l4 4v10H4V1zm1 1v12h8V6h-3V2H5z" fill="currentColor"/>
+                    </svg>
+                    New File
+                    <span class="menubar-shortcut">Ctrl+N</span>
+                  </div>
+                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('open')">
+                    <svg viewBox="0 0 16 16" width="14" height="14">
+                      <path d="M1 3v10h14V5H7L5 3H1z" stroke="currentColor" fill="none"/>
+                    </svg>
+                    Open
+                    <span class="menubar-shortcut">Ctrl+O</span>
+                  </div>
+                  <div baseUiMenuSeparator class="menubar-separator"></div>
+                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('save')">
+                    <svg viewBox="0 0 16 16" width="14" height="14">
+                      <path d="M2 2v12h12V4l-2-2H2zm2 0h6v3H4V2zm8 5v5H4V7h8z" fill="currentColor"/>
+                    </svg>
+                    Save
+                    <span class="menubar-shortcut">Ctrl+S</span>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-        <p class="docs-paragraph">
-          Import the Menubar and Menu directives from the package:
-        </p>
+            <!-- Edit menu -->
+            <div baseUiMenuRoot>
+              <button baseUiMenuTrigger class="menubar-trigger">Edit</button>
+              <div baseUiMenuPositioner>
+                <div baseUiMenuPopup class="menubar-popup">
+                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('undo')">
+                    <svg viewBox="0 0 16 16" width="14" height="14">
+                      <path d="M3 8l4-4v3h4a3 3 0 0 1 0 6H8" stroke="currentColor" fill="none"/>
+                    </svg>
+                    Undo
+                    <span class="menubar-shortcut">Ctrl+Z</span>
+                  </div>
+                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('redo')">
+                    <svg viewBox="0 0 16 16" width="14" height="14">
+                      <path d="M13 8l-4-4v3H5a3 3 0 0 0 0 6h3" stroke="currentColor" fill="none"/>
+                    </svg>
+                    Redo
+                    <span class="menubar-shortcut">Ctrl+Y</span>
+                  </div>
+                  <div baseUiMenuSeparator class="menubar-separator"></div>
+                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('cut')">Cut</div>
+                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('copy')">Copy</div>
+                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('paste')">Paste</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- View menu -->
+            <div baseUiMenuRoot>
+              <button baseUiMenuTrigger class="menubar-trigger">View</button>
+              <div baseUiMenuPositioner>
+                <div baseUiMenuPopup class="menubar-popup">
+                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('zoomIn')">Zoom In</div>
+                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('zoomOut')">Zoom Out</div>
+                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('resetZoom')">Reset Zoom</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Help menu -->
+            <div baseUiMenuRoot>
+              <button baseUiMenuTrigger class="menubar-trigger">Help</button>
+              <div baseUiMenuPositioner>
+                <div baseUiMenuPopup class="menubar-popup">
+                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('docs')">Documentation</div>
+                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('about')">About</div>
+                </div>
+              </div>
+            </div>
+          </nav>
+        </docs-demo>
+      </section>
+
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -175,15 +280,108 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-menubar {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      background: var(--docs-bg-hover);
+      padding: 0.25rem;
+      border-radius: 8px;
+      border: 1px solid var(--docs-border);
+    }
+
+    .menubar-trigger {
+      padding: 0.5rem 0.75rem;
+      border: none;
+      background: transparent;
+      border-radius: 4px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--docs-text);
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .menubar-trigger:hover,
+    .menubar-trigger[data-state="open"] {
+      background: var(--docs-bg);
+    }
+
+    .menubar-trigger:focus-visible {
+      outline: 2px solid var(--docs-accent);
+      outline-offset: 2px;
+    }
+
+    .menubar-popup {
+      background: var(--docs-bg);
+      border: 1px solid var(--docs-border);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      padding: 0.25rem;
+      min-width: 200px;
+      outline: none;
+      animation: menubarIn 0.15s ease;
+    }
+
+    @keyframes menubarIn {
+      from {
+        opacity: 0;
+        transform: translateY(-4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .menubar-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      cursor: pointer;
+      outline: none;
+      font-size: 0.875rem;
+      color: var(--docs-text);
+      transition: background 0.1s ease;
+    }
+
+    .menubar-item:hover,
+    .menubar-item[data-highlighted] {
+      background: var(--docs-bg-hover);
+    }
+
+    .menubar-item svg {
+      opacity: 0.6;
+    }
+
+    .menubar-shortcut {
+      margin-left: auto;
+      font-size: 0.75rem;
+      color: var(--docs-text-tertiary);
+    }
+
+    .menubar-separator {
+      height: 1px;
+      background: var(--docs-border);
+      margin: 0.25rem 0;
+    }
+  `,
 })
 export class MenubarDocsComponent {
+  protected handleAction(action: string): void {
+    console.log(`Action: ${action}`);
+  }
+
   protected readonly importCode = `import {
   MenubarDirective,
   MenuRootDirective,
@@ -192,9 +390,7 @@ export class MenubarDocsComponent {
   MenuPopupDirective,
   MenuItemDirective,
   MenuSeparatorDirective,
-  MenuGroupDirective,
-  MenuGroupLabelDirective,
-} from '@base-ng/ui/menubar';
+} from '@base-ng/ui';
 
 @Component({
   imports: [
@@ -205,8 +401,6 @@ export class MenubarDocsComponent {
     MenuPopupDirective,
     MenuItemDirective,
     MenuSeparatorDirective,
-    MenuGroupDirective,
-    MenuGroupLabelDirective,
   ],
   // ...
 })`;
