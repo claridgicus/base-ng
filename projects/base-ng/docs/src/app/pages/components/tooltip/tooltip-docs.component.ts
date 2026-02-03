@@ -2,14 +2,31 @@ import { Component } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  TooltipRootDirective,
+  TooltipTriggerDirective,
+  TooltipPositionerDirective,
+  TooltipPopupDirective,
+  TooltipArrowDirective,
+} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-tooltip',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    TooltipRootDirective,
+    TooltipTriggerDirective,
+    TooltipPositionerDirective,
+    TooltipPopupDirective,
+    TooltipArrowDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,12 +38,40 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <docs-demo [code]="basicDemoCode" language="html">
+          <div class="demo-container">
+            <div baseUiTooltipRoot>
+              <button baseUiTooltipTrigger class="demo-button">
+                Hover me
+              </button>
+              <div baseUiTooltipPositioner side="top" [sideOffset]="8">
+                <div baseUiTooltipPopup class="demo-tooltip">
+                  This is a tooltip with helpful information
+                  <div baseUiTooltipArrow class="demo-tooltip-arrow"></div>
+                </div>
+              </div>
+            </div>
 
-        <p class="docs-paragraph">Import the Tooltip directives:</p>
+            <div baseUiTooltipRoot>
+              <button baseUiTooltipTrigger class="demo-button">
+                Bottom tooltip
+              </button>
+              <div baseUiTooltipPositioner side="bottom" [sideOffset]="8">
+                <div baseUiTooltipPopup class="demo-tooltip">
+                  Positioned below the trigger
+                  <div baseUiTooltipArrow class="demo-tooltip-arrow"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </docs-demo>
+      </section>
+
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -164,13 +209,99 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-container {
+      display: flex;
+      gap: 1rem;
+      padding: 2rem;
+      justify-content: center;
+    }
+
+    .demo-button {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      background: var(--docs-bg);
+      border: 1px solid var(--docs-border);
+      border-radius: 0.375rem;
+      color: var(--docs-text);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+
+      &:hover {
+        background: var(--docs-bg-hover, rgba(0, 0, 0, 0.05));
+        border-color: var(--docs-accent, #0066ff);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--docs-accent, #0066ff);
+        outline-offset: 2px;
+      }
+    }
+
+    .demo-tooltip {
+      position: relative;
+      background: #1f2937;
+      color: white;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.375rem;
+      font-size: 0.8125rem;
+      line-height: 1.4;
+      max-width: 200px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      animation: tooltipIn 0.15s ease;
+    }
+
+    @keyframes tooltipIn {
+      from {
+        opacity: 0;
+        transform: scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .demo-tooltip-arrow {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: inherit;
+      transform: rotate(45deg);
+
+      [data-side='top'] & {
+        bottom: -4px;
+        left: 50%;
+        margin-left: -4px;
+      }
+
+      [data-side='bottom'] & {
+        top: -4px;
+        left: 50%;
+        margin-left: -4px;
+      }
+
+      [data-side='left'] & {
+        right: -4px;
+        top: 50%;
+        margin-top: -4px;
+      }
+
+      [data-side='right'] & {
+        left: -4px;
+        top: 50%;
+        margin-top: -4px;
+      }
+    }
+  `,
 })
 export class TooltipDocsComponent {
   protected readonly importCode = `import {
@@ -178,8 +309,8 @@ export class TooltipDocsComponent {
   TooltipTriggerDirective,
   TooltipPositionerDirective,
   TooltipPopupDirective,
-  TooltipArrowDirective
-} from '@base-ng/ui/tooltip';
+  TooltipArrowDirective,
+} from '@base-ng/ui';
 
 @Component({
   imports: [
@@ -187,7 +318,7 @@ export class TooltipDocsComponent {
     TooltipTriggerDirective,
     TooltipPositionerDirective,
     TooltipPopupDirective,
-    TooltipArrowDirective
+    TooltipArrowDirective,
   ],
   // ...
 })`;
