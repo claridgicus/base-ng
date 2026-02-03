@@ -1,0 +1,285 @@
+# Base NG
+
+> Unstyled, accessible Angular components for building design systems and web applications.
+
+Base NG is an Angular port of Base UI (React), providing unstyled, accessible primitives that you can style however you want. Built on Angular 19+ with signals, standalone components, and modern patterns.
+
+## Installation
+
+```bash
+npm install @base-ng/ui
+```
+
+## Key Concepts
+
+1. **Unstyled** - Components ship without CSS; style with your own CSS, Tailwind, or any styling solution
+2. **Accessible** - WAI-ARIA compliant with keyboard navigation and screen reader support
+3. **Composable** - Directive-based API for flexible composition using compound components
+4. **Type-safe** - Full TypeScript support with signal-based inputs and outputs
+5. **Modern Angular** - Built for Angular 19+ with standalone components and signals
+
+## Component Categories
+
+### Layout & Navigation
+- Accordion - Expandable content panels with single/multiple mode
+- Collapsible - Single expand/collapse section with animation support
+- Tabs - Tabbed content navigation with keyboard support
+- Scroll Area - Custom scrollbars with overflow detection
+- Toolbar - Grouped action buttons
+
+### Overlays & Popups
+- Dialog - Modal dialog with focus trap and backdrop
+- Alert Dialog - Confirmation dialog for destructive actions
+- Popover - Positioned popup content
+- Tooltip - Hover/focus hint text
+- Preview Card - Rich preview on hover/focus
+- Menu - Dropdown action menu with nesting support
+- Context Menu - Right-click context menus
+- Navigation Menu - Complex navigation dropdowns
+
+### Form Controls
+- Button - Click action trigger
+- Checkbox - Binary selection with indeterminate state
+- Checkbox Group - Grouped checkbox selection
+- Radio - Single selection from group
+- Radio Group - Radio button groups
+- Switch - Toggle on/off
+- Toggle - Pressable toggle button
+- Toggle Group - Single/multiple toggle selection
+- Input - Text input field
+- Number Field - Numeric input with increment/decrement
+- Slider - Range selection with marks
+- Select - Dropdown selection with search
+- Combobox - Filterable dropdown with custom options
+- Autocomplete - Text input with suggestions
+- Field - Form field wrapper with label and errors
+- Fieldset - Grouped form fields with legend
+- Form - Form container with validation
+
+### Feedback
+- Progress - Progress indicator (linear)
+- Meter - Measured value indicator
+- Toast - Notification messages with auto-dismiss
+
+### Utilities
+- Avatar - User profile images with fallback
+- Separator - Visual divider
+
+## Usage Patterns
+
+### Directive-based composition
+
+Base NG uses directives applied to standard HTML elements:
+
+```html
+<div baseUiPopoverRoot>
+  <button baseUiPopoverTrigger>Open Popover</button>
+  <div baseUiPopoverPopup>
+    <div baseUiPopoverArrow></div>
+    Popover content here
+  </div>
+</div>
+```
+
+### Two-way binding with signals
+
+```html
+<button baseUiSwitchRoot [(checked)]="isEnabled">
+  <span baseUiSwitchThumb></span>
+</button>
+```
+
+```typescript
+@Component({...})
+export class MyComponent {
+  isEnabled = signal(false);
+}
+```
+
+### Reactive forms integration
+
+```html
+<input baseUiInput [formControl]="emailControl" />
+```
+
+```typescript
+emailControl = new FormControl('', [Validators.required, Validators.email]);
+```
+
+### Styling with data attributes
+
+Components expose state via data attributes for CSS:
+
+```css
+/* Base styles */
+[baseUiButton] {
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+
+/* Disabled state */
+[baseUiButton][data-disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Switch checked state */
+[baseUiSwitchRoot][data-checked] {
+  background: #3b82f6;
+}
+
+/* Dialog open state */
+[baseUiDialogBackdrop][data-open] {
+  opacity: 1;
+}
+```
+
+### Tailwind CSS usage
+
+```html
+<button baseUiButton
+        class="px-4 py-2 rounded-md bg-blue-500 text-white
+               data-[disabled]:opacity-50
+               data-[pressed]:scale-95">
+  Click me
+</button>
+```
+
+## Common Data Attributes
+
+- `data-disabled` - Present when component is disabled
+- `data-open` - Present when overlay/disclosure is open
+- `data-checked` - Present when checkbox/switch is checked
+- `data-pressed` - Present when toggle is pressed
+- `data-highlighted` - Present on highlighted/focused option
+- `data-selected` - Present on selected item
+- `data-orientation` - Horizontal or vertical orientation
+- `data-side` - Popover/tooltip side (top, bottom, left, right)
+- `data-state` - State for transitions (starting, ending)
+
+## Accessibility Features
+
+All components include:
+- Proper ARIA roles and attributes
+- Keyboard navigation (Tab, Arrow keys, Enter, Escape)
+- Focus management and trapping
+- Screen reader announcements
+- Reduced motion support
+
+## Directive Naming Convention
+
+All Base NG directives follow the pattern `baseUi[ComponentName][SubPart]`:
+
+- `baseUiDialogRoot` - Root container
+- `baseUiDialogTrigger` - Element that opens the dialog
+- `baseUiDialogBackdrop` - Background overlay
+- `baseUiDialogPopup` - The dialog content container
+- `baseUiDialogTitle` - Dialog title (for aria-labelledby)
+- `baseUiDialogDescription` - Dialog description (for aria-describedby)
+- `baseUiDialogClose` - Close button
+
+## Services
+
+### ToastManagerService
+
+Global toast notification management:
+
+```typescript
+import { ToastManagerService } from '@base-ng/ui';
+
+@Component({...})
+export class MyComponent {
+  private toastManager = inject(ToastManagerService);
+
+  showSuccess() {
+    this.toastManager.add({
+      title: 'Success!',
+      description: 'Your changes have been saved.',
+      type: 'success',
+    });
+  }
+
+  async saveWithToast() {
+    await this.toastManager.promise(
+      this.saveData(),
+      {
+        loading: 'Saving...',
+        success: 'Saved successfully!',
+        error: 'Failed to save.',
+      }
+    );
+  }
+}
+```
+
+### DirectionService
+
+RTL/LTR text direction management:
+
+```typescript
+import { DirectionService, provideDirection } from '@base-ng/ui';
+
+// Configure at app level
+export const appConfig = {
+  providers: [provideDirection('rtl')],
+};
+
+// Use in components
+@Component({...})
+export class MyComponent {
+  private directionService = inject(DirectionService);
+  isRtl = this.directionService.isRtl;
+}
+```
+
+### CSPService
+
+Content Security Policy nonce management:
+
+```typescript
+import { provideCSP } from '@base-ng/ui';
+
+export const appConfig = {
+  providers: [provideCSP({ nonce: 'your-nonce' })],
+};
+```
+
+## Utilities
+
+### mergeProps
+
+Merge multiple props objects with intelligent handling:
+
+```typescript
+import { mergeProps } from '@base-ng/ui';
+
+const merged = mergeProps(
+  { onClick: handler1, className: 'base' },
+  { onClick: handler2, className: 'custom' },
+);
+// Event handlers are chained, classNames are concatenated
+```
+
+## Links
+
+- Documentation: https://base-ng.dev
+- GitHub: https://github.com/anthropics/base-ng
+- npm: https://npmjs.com/package/@base-ng/ui
+- Base UI (React): https://base-ui.com
+
+## Quick Reference
+
+| Component | Root Directive | Key Features |
+|-----------|---------------|--------------|
+| Accordion | baseUiAccordionRoot | Multiple/single expand, disabled items |
+| Button | baseUiButton | Disabled state, focus handling |
+| Checkbox | baseUiCheckboxRoot | Indeterminate, custom indicator |
+| Dialog | baseUiDialogRoot | Focus trap, backdrop, nested dialogs |
+| Menu | baseUiMenuRoot | Nested menus, keyboard navigation |
+| Popover | baseUiPopoverRoot | Positioning, arrow, click outside |
+| Select | baseUiSelectRoot | Search, grouped options, multiple |
+| Slider | baseUiSliderRoot | Range, marks, vertical |
+| Switch | baseUiSwitchRoot | Animated thumb |
+| Tabs | baseUiTabsRoot | Orientation, disabled tabs |
+| Toast | baseUiToastProvider | Types, auto-dismiss, swipe |
+| Tooltip | baseUiTooltipRoot | Delay, hover/focus |

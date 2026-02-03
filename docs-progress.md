@@ -40,7 +40,7 @@
 | 15  | Create props table component                       | [x]    | `components/PropsTable`       |
 | 16  | Create example variant selector (CSS/Tailwind)     | [x]    | Variant switcher              |
 | 17  | Create package manager selector (npm/yarn/pnpm)    | [x]    | Install command variants      |
-| 18  | Create "Open in StackBlitz" integration            | [ ]    | External link button          |
+| 18  | Create "Open in StackBlitz" integration            | [x]    | External link button          |
 
 ---
 
@@ -171,7 +171,7 @@
 | --- | -------------------------------------------------- | ------ | ----------------------------- |
 | 70  | Add version badge and changelog integration        | [ ]    | -                             |
 | 71  | Add GitHub edit links to each page                 | [ ]    | -                             |
-| 72  | Generate llms.txt for AI assistants                | [ ]    | -                             |
+| 72  | Generate llms.txt for AI assistants                | [x]    | -                             |
 | 73  | Add SEO metadata to all pages                      | [ ]    | -                             |
 | 74  | Run accessibility audit                            | [ ]    | -                             |
 | 75  | Deploy to production                               | [ ]    | -                             |
@@ -225,9 +225,9 @@ Each component page should include:
 ## Progress Summary
 
 - **Total Tasks:** 75
-- **Completed:** 57
+- **Completed:** 59
 - **In Progress:** 0
-- **Remaining:** 18
+- **Remaining:** 16
 
 ---
 
