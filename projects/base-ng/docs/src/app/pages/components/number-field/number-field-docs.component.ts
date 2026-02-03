@@ -1,15 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  NumberFieldRootDirective,
+  NumberFieldInputDirective,
+  NumberFieldIncrementDirective,
+  NumberFieldDecrementDirective,
+} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-number-field',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    NumberFieldRootDirective,
+    NumberFieldInputDirective,
+    NumberFieldIncrementDirective,
+    NumberFieldDecrementDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,14 +36,29 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <docs-demo [code]="basicDemoCode" language="html">
+          <div class="demo-container">
+            <div
+              baseUiNumberFieldRoot
+              [(value)]="quantity"
+              [min]="0"
+              [max]="99"
+              class="demo-number-field"
+            >
+              <button baseUiNumberFieldDecrement class="demo-btn">−</button>
+              <input baseUiNumberFieldInput class="demo-input" />
+              <button baseUiNumberFieldIncrement class="demo-btn">+</button>
+            </div>
+            <span class="demo-status">Quantity: {{ quantity() }}</span>
+          </div>
+        </docs-demo>
+      </section>
 
-        <p class="docs-paragraph">
-          Import the Number Field directives from the package:
-        </p>
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -45,42 +75,50 @@ import {
       <section class="docs-section">
         <h2 class="docs-section-title">Examples</h2>
 
-        <h3 class="docs-section-subtitle">Basic usage</h3>
+        <h3 class="docs-section-subtitle">With step</h3>
         <p class="docs-paragraph">
-          Create a number field with increment/decrement buttons.
+          Configure step increment:
         </p>
-        <docs-code-block [code]="basicDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">With min, max, and step</h3>
-        <p class="docs-paragraph">
-          Configure value constraints and step increment.
-        </p>
-        <docs-code-block [code]="configuredDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">With large step</h3>
-        <p class="docs-paragraph">
-          Set a larger step for Page Up/Down and Shift+Arrow keys.
-        </p>
-        <docs-code-block [code]="largeStepDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">With Angular forms</h3>
-        <p class="docs-paragraph">
-          Number Field implements <code>ControlValueAccessor</code> for forms
-          integration.
-        </p>
-        <docs-code-block [code]="formsDemoCode" language="typescript" />
-
-        <h3 class="docs-section-subtitle">With Field component</h3>
-        <p class="docs-paragraph">
-          Combine with Field for labels and validation.
-        </p>
-        <docs-code-block [code]="fieldDemoCode" language="html" />
+        <docs-demo [code]="configuredDemoCode" language="html">
+          <div class="demo-container">
+            <div
+              baseUiNumberFieldRoot
+              [(value)]="amount"
+              [min]="0"
+              [max]="100"
+              [step]="5"
+              class="demo-number-field"
+            >
+              <button baseUiNumberFieldDecrement class="demo-btn">−</button>
+              <input baseUiNumberFieldInput class="demo-input" />
+              <button baseUiNumberFieldIncrement class="demo-btn">+</button>
+            </div>
+            <span class="demo-status">Amount: {{ amount() }} (step: 5)</span>
+          </div>
+        </docs-demo>
 
         <h3 class="docs-section-subtitle">Disabled state</h3>
         <p class="docs-paragraph">
-          Disable the entire number field.
+          Disable the number field:
         </p>
-        <docs-code-block [code]="disabledDemoCode" language="html" />
+        <docs-demo [code]="disabledDemoCode" language="html">
+          <div class="demo-container">
+            <div
+              baseUiNumberFieldRoot
+              [(value)]="disabledValue"
+              [disabled]="isDisabled()"
+              class="demo-number-field"
+            >
+              <button baseUiNumberFieldDecrement class="demo-btn">−</button>
+              <input baseUiNumberFieldInput class="demo-input" />
+              <button baseUiNumberFieldIncrement class="demo-btn">+</button>
+            </div>
+            <label class="demo-toggle">
+              <input type="checkbox" [checked]="isDisabled()" (change)="toggleDisabled()" />
+              Disabled
+            </label>
+          </div>
+        </docs-demo>
       </section>
 
       <!-- Styling -->
@@ -169,21 +207,113 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .demo-number-field {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--docs-border);
+      border-radius: 0.375rem;
+      overflow: hidden;
+
+      &[data-disabled] {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+
+      &[data-focused] {
+        border-color: var(--docs-accent, #0066ff);
+        box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+      }
+    }
+
+    .demo-btn {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--docs-bg-secondary, #f5f5f5);
+      border: none;
+      cursor: pointer;
+      font-size: 1.25rem;
+      color: var(--docs-text);
+      transition: background 0.15s;
+
+      &:hover:not([data-disabled]) {
+        background: var(--docs-border);
+      }
+
+      &[data-disabled] {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+
+    .demo-input {
+      width: 60px;
+      height: 36px;
+      padding: 0 8px;
+      border: none;
+      text-align: center;
+      font-size: 0.875rem;
+      font-variant-numeric: tabular-nums;
+      background: var(--docs-bg);
+      color: var(--docs-text);
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    .demo-status {
+      font-size: 0.75rem;
+      color: var(--docs-text-secondary);
+    }
+
+    .demo-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--docs-text-secondary);
+      cursor: pointer;
+    }
+  `,
 })
 export class NumberFieldDocsComponent {
+  // Basic demo
+  protected readonly quantity = signal<number | null>(1);
+
+  // Configured demo
+  protected readonly amount = signal<number | null>(50);
+
+  // Disabled demo
+  protected readonly disabledValue = signal<number | null>(10);
+  protected readonly isDisabled = signal(false);
+
+  protected toggleDisabled(): void {
+    this.isDisabled.update(v => !v);
+  }
+
   protected readonly importCode = `import {
   NumberFieldRootDirective,
   NumberFieldInputDirective,
   NumberFieldIncrementDirective,
   NumberFieldDecrementDirective,
-} from '@base-ng/ui/number-field';
+} from '@base-ng/ui';
 
 @Component({
   imports: [
