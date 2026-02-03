@@ -42,20 +42,22 @@ interface TocItem {
   styles: `
     :host {
       display: block;
+      position: relative;
     }
 
     .toc-nav {
-      position: sticky;
-      top: calc(var(--docs-header-height) + 2rem);
+      border-top: 1px solid var(--docs-border);
+      padding-top: 0.75rem;
+      padding-bottom: 2.5rem;
     }
 
     .toc-title {
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--docs-muted);
-      margin: 0 0 0.75rem 0;
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: -0.00625em;
+      color: var(--docs-text);
+      margin: 0;
+      padding: 0.25rem 0;
     }
 
     .toc-list {
@@ -64,33 +66,37 @@ interface TocItem {
       padding: 0;
       display: flex;
       flex-direction: column;
-      gap: 0.25rem;
-      border-left: 1px solid var(--docs-border);
+      align-items: flex-start;
+      color: var(--docs-text-secondary);
+    }
+
+    .toc-list .toc-list {
+      padding-left: 0.75rem;
     }
 
     .toc-link {
-      display: block;
-      padding: 0.375rem 0.75rem;
-      font-size: 0.8125rem;
-      color: var(--docs-text-secondary);
+      display: flex;
+      padding: 0.25rem 0.5rem;
+      margin-left: -0.25rem;
+      font-size: 0.875rem;
+      color: inherit;
       text-decoration: none;
-      border-left: 2px solid transparent;
-      margin-left: -1px;
-      transition: all 0.15s;
+      border-radius: 0.375rem;
+      transition: color 0.15s;
 
       &:hover {
-        color: var(--docs-text);
-        text-decoration: none;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+        text-decoration-thickness: 1px;
+        text-decoration-color: var(--docs-muted);
       }
 
       &.active {
-        color: var(--docs-accent);
-        border-left-color: var(--docs-accent);
+        color: var(--docs-text);
       }
 
       &.toc-link-h3 {
         padding-left: 1.25rem;
-        font-size: 0.75rem;
       }
     }
   `,
