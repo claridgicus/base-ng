@@ -96,7 +96,7 @@
 | 43  | Document Radio component                           | [x]    | `components/radio`            |
 | 44  | Document Radio Group component                     | [x]    | `components/radio-group`      |
 | 45  | Document Slider component                          | [x]    | `components/slider`           |
-| 46  | Document Number Field component                    | [ ]    | `components/number-field`     |
+| 46  | Document Number Field component                    | [x]    | `components/number-field`     |
 | 47  | Document Form component                            | [ ]    | `components/form`             |
 
 ---
@@ -225,9 +225,9 @@ Each component page should include:
 ## Progress Summary
 
 - **Total Tasks:** 75
-- **Completed:** 38
+- **Completed:** 39
 - **In Progress:** 0
-- **Remaining:** 37
+- **Remaining:** 36
 
 ---
 

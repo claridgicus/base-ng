@@ -1,16 +1,512 @@
 import { Component } from '@angular/core';
+import {
+  CodeBlockComponent,
+  PackageSelectorComponent,
+  PropsTableComponent,
+  type PropDefinition,
+} from '../../../shared';
 
 @Component({
   selector: 'docs-number-field',
+  imports: [CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
-        <h1 class="docs-title">NumberField</h1>
+        <h1 class="docs-title">Number Field</h1>
         <p class="docs-description">
-          Documentation coming soon.
+          A numeric input component with increment/decrement buttons. Supports
+          min/max constraints, step values, keyboard navigation, and auto-repeat
+          on button hold.
         </p>
       </header>
+
+      <!-- Installation -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Installation</h2>
+        <docs-package-selector package="@base-ng/ui" />
+
+        <p class="docs-paragraph">
+          Import the Number Field directives from the package:
+        </p>
+        <docs-code-block [code]="importCode" language="typescript" />
+      </section>
+
+      <!-- Anatomy -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Anatomy</h2>
+        <p class="docs-paragraph">
+          The Number Field uses a composition pattern with multiple directives:
+        </p>
+        <docs-code-block [code]="anatomyCode" language="html" />
+      </section>
+
+      <!-- Examples -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Examples</h2>
+
+        <h3 class="docs-section-subtitle">Basic usage</h3>
+        <p class="docs-paragraph">
+          Create a number field with increment/decrement buttons.
+        </p>
+        <docs-code-block [code]="basicDemoCode" language="html" />
+
+        <h3 class="docs-section-subtitle">With min, max, and step</h3>
+        <p class="docs-paragraph">
+          Configure value constraints and step increment.
+        </p>
+        <docs-code-block [code]="configuredDemoCode" language="html" />
+
+        <h3 class="docs-section-subtitle">With large step</h3>
+        <p class="docs-paragraph">
+          Set a larger step for Page Up/Down and Shift+Arrow keys.
+        </p>
+        <docs-code-block [code]="largeStepDemoCode" language="html" />
+
+        <h3 class="docs-section-subtitle">With Angular forms</h3>
+        <p class="docs-paragraph">
+          Number Field implements <code>ControlValueAccessor</code> for forms
+          integration.
+        </p>
+        <docs-code-block [code]="formsDemoCode" language="typescript" />
+
+        <h3 class="docs-section-subtitle">With Field component</h3>
+        <p class="docs-paragraph">
+          Combine with Field for labels and validation.
+        </p>
+        <docs-code-block [code]="fieldDemoCode" language="html" />
+
+        <h3 class="docs-section-subtitle">Disabled state</h3>
+        <p class="docs-paragraph">
+          Disable the entire number field.
+        </p>
+        <docs-code-block [code]="disabledDemoCode" language="html" />
+      </section>
+
+      <!-- Styling -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Styling</h2>
+        <p class="docs-paragraph">
+          The Number Field is unstyled by default. Style each part using CSS:
+        </p>
+        <docs-code-block [code]="stylingCode" language="css" />
+
+        <h3 class="docs-section-subtitle">Tailwind CSS</h3>
+        <p class="docs-paragraph">
+          Style the Number Field with Tailwind utilities:
+        </p>
+        <docs-code-block [code]="tailwindCode" language="html" />
+      </section>
+
+      <!-- API Reference -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">API Reference</h2>
+        <docs-props-table title="Root Inputs" [props]="rootInputProps" />
+        <docs-props-table title="Root Outputs" [props]="rootOutputProps" />
+      </section>
+
+      <!-- Data Attributes -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Data attributes</h2>
+        <docs-props-table [props]="dataAttributes" />
+      </section>
+
+      <!-- CSS Classes -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">CSS classes</h2>
+        <docs-props-table [props]="cssClasses" />
+      </section>
+
+      <!-- Keyboard Navigation -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Keyboard navigation</h2>
+        <docs-props-table [props]="keyboardNav" />
+      </section>
+
+      <!-- Accessibility -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Accessibility</h2>
+        <p class="docs-paragraph">
+          The Number Field follows WAI-ARIA guidelines:
+        </p>
+        <ul class="docs-list">
+          <li>
+            Input sets <code>aria-valuemin</code>, <code>aria-valuemax</code>,
+            and <code>aria-valuenow</code> for screen readers
+          </li>
+          <li>
+            Increment/decrement buttons have <code>aria-label</code> for
+            clarity
+          </li>
+          <li>
+            Buttons auto-disable at min/max bounds with
+            <code>aria-disabled</code>
+          </li>
+          <li>Full keyboard navigation support</li>
+          <li>
+            <strong>Required:</strong> Use Field component or explicit labels
+            for accessible naming
+          </li>
+        </ul>
+      </section>
     </article>
   `,
+  styles: `
+    .docs-list {
+      margin: 1rem 0;
+      padding-left: 1.5rem;
+      color: var(--docs-text-secondary);
+
+      li {
+        margin-bottom: 0.5rem;
+        line-height: 1.6;
+      }
+    }
+  `,
 })
-export class NumberFieldDocsComponent {}
+export class NumberFieldDocsComponent {
+  protected readonly importCode = `import {
+  NumberFieldRootDirective,
+  NumberFieldInputDirective,
+  NumberFieldIncrementDirective,
+  NumberFieldDecrementDirective,
+} from '@base-ng/ui/number-field';
+
+@Component({
+  imports: [
+    NumberFieldRootDirective,
+    NumberFieldInputDirective,
+    NumberFieldIncrementDirective,
+    NumberFieldDecrementDirective,
+  ],
+  // ...
+})`;
+
+  protected readonly anatomyCode = `<div baseUiNumberFieldRoot [(value)]="quantity">
+  <!-- Decrement button -->
+  <button baseUiNumberFieldDecrement>-</button>
+
+  <!-- Numeric input -->
+  <input baseUiNumberFieldInput />
+
+  <!-- Increment button -->
+  <button baseUiNumberFieldIncrement>+</button>
+</div>`;
+
+  protected readonly basicDemoCode = `<div baseUiNumberFieldRoot [(value)]="quantity" class="number-field">
+  <button baseUiNumberFieldDecrement class="number-btn">-</button>
+  <input baseUiNumberFieldInput class="number-input" />
+  <button baseUiNumberFieldIncrement class="number-btn">+</button>
+</div>
+
+<p>Quantity: {{ quantity() }}</p>`;
+
+  protected readonly configuredDemoCode = `<div
+  baseUiNumberFieldRoot
+  [(value)]="amount"
+  [min]="0"
+  [max]="100"
+  [step]="5"
+>
+  <button baseUiNumberFieldDecrement>-</button>
+  <input baseUiNumberFieldInput />
+  <button baseUiNumberFieldIncrement>+</button>
+</div>`;
+
+  protected readonly largeStepDemoCode = `<!-- Page Up/Down and Shift+Arrow increment by largeStep (25) -->
+<div
+  baseUiNumberFieldRoot
+  [(value)]="percentage"
+  [min]="0"
+  [max]="100"
+  [step]="1"
+  [largeStep]="25"
+>
+  <button baseUiNumberFieldDecrement>-</button>
+  <input baseUiNumberFieldInput />
+  <button baseUiNumberFieldIncrement>+</button>
+</div>`;
+
+  protected readonly formsDemoCode = `@Component({
+  template: \`
+    <form [formGroup]="form">
+      <label>
+        Quantity
+        <div baseUiNumberFieldRoot formControlName="quantity" [min]="1" [max]="99">
+          <button baseUiNumberFieldDecrement>-</button>
+          <input baseUiNumberFieldInput />
+          <button baseUiNumberFieldIncrement>+</button>
+        </div>
+      </label>
+    </form>
+  \`,
+})
+export class MyComponent {
+  readonly form = new FormGroup({
+    quantity: new FormControl(1),
+  });
+}`;
+
+  protected readonly fieldDemoCode = `<div baseUiFieldRoot name="quantity">
+  <label baseUiFieldLabel>Quantity</label>
+  <div baseUiNumberFieldRoot [(value)]="quantity" [min]="0" [max]="99">
+    <button baseUiNumberFieldDecrement>-</button>
+    <input baseUiNumberFieldInput />
+    <button baseUiNumberFieldIncrement>+</button>
+  </div>
+  <span baseUiFieldDescription>Select a quantity between 0 and 99</span>
+</div>`;
+
+  protected readonly disabledDemoCode = `<div baseUiNumberFieldRoot [(value)]="count" [disabled]="true">
+  <button baseUiNumberFieldDecrement>-</button>
+  <input baseUiNumberFieldInput />
+  <button baseUiNumberFieldIncrement>+</button>
+</div>`;
+
+  protected readonly stylingCode = `/* Container */
+.number-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* Buttons */
+.number-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+  border: none;
+  cursor: pointer;
+  font-size: 1.25rem;
+  transition: background 0.15s;
+}
+
+.number-btn:hover:not([disabled]) {
+  background: #e5e5e5;
+}
+
+.number-btn[data-disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Input */
+.number-input {
+  width: 60px;
+  height: 36px;
+  padding: 0 8px;
+  border: none;
+  text-align: center;
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.number-input:focus {
+  outline: none;
+}
+
+/* Disabled state */
+[baseUiNumberFieldRoot][data-disabled] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Focused state */
+[baseUiNumberFieldRoot][data-focused] {
+  border-color: #0066ff;
+  box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+}`;
+
+  protected readonly tailwindCode = `<div
+  baseUiNumberFieldRoot
+  [(value)]="quantity"
+  [min]="0"
+  [max]="99"
+  class="inline-flex items-center border border-gray-200 rounded-md overflow-hidden
+         data-[disabled]:opacity-50 data-[disabled]:pointer-events-none
+         data-[focused]:border-blue-500 data-[focused]:ring-2 data-[focused]:ring-blue-500/20"
+>
+  <button
+    baseUiNumberFieldDecrement
+    class="w-9 h-9 flex items-center justify-center bg-gray-50 text-lg
+           hover:bg-gray-100 data-[disabled]:opacity-50 data-[disabled]:cursor-not-allowed"
+  >
+    -
+  </button>
+  <input
+    baseUiNumberFieldInput
+    class="w-16 h-9 px-2 text-center tabular-nums border-none focus:outline-none"
+  />
+  <button
+    baseUiNumberFieldIncrement
+    class="w-9 h-9 flex items-center justify-center bg-gray-50 text-lg
+           hover:bg-gray-100 data-[disabled]:opacity-50 data-[disabled]:cursor-not-allowed"
+  >
+    +
+  </button>
+</div>`;
+
+  protected readonly rootInputProps: PropDefinition[] = [
+    {
+      name: 'value',
+      type: 'number | null',
+      default: 'null',
+      description: 'Current numeric value. Supports two-way binding.',
+    },
+    {
+      name: 'min',
+      type: 'number | undefined',
+      default: 'undefined',
+      description: 'Minimum allowed value.',
+    },
+    {
+      name: 'max',
+      type: 'number | undefined',
+      default: 'undefined',
+      description: 'Maximum allowed value.',
+    },
+    {
+      name: 'step',
+      type: 'number',
+      default: '1',
+      description: 'Value increment step.',
+    },
+    {
+      name: 'largeStep',
+      type: 'number',
+      default: '10',
+      description: 'Step for Page Up/Down and Shift+Arrow keys.',
+    },
+    {
+      name: 'disabled',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether the number field is disabled.',
+    },
+    {
+      name: 'readOnly',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether the number field is read-only.',
+    },
+    {
+      name: 'required',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether the field is required.',
+    },
+  ];
+
+  protected readonly rootOutputProps: PropDefinition[] = [
+    {
+      name: 'valueChanged',
+      type: 'EventEmitter<NumberFieldChangeEventDetails>',
+      description:
+        'Emitted when value changes. Includes value and reason (input, increment, decrement, commit).',
+    },
+  ];
+
+  protected readonly dataAttributes: PropDefinition[] = [
+    {
+      name: 'data-disabled',
+      type: 'string',
+      description: 'Present when the component is disabled.',
+    },
+    {
+      name: 'data-readonly',
+      type: 'string',
+      description: 'Present when the component is read-only.',
+    },
+    {
+      name: 'data-focused',
+      type: 'string',
+      description: 'Present when the input is focused.',
+    },
+  ];
+
+  protected readonly cssClasses: PropDefinition[] = [
+    {
+      name: 'base-ui-number-field',
+      type: 'class',
+      description: 'Applied to the root element.',
+    },
+    {
+      name: 'base-ui-number-field-disabled',
+      type: 'class',
+      description: 'Applied when disabled.',
+    },
+    {
+      name: 'base-ui-number-field-readonly',
+      type: 'class',
+      description: 'Applied when read-only.',
+    },
+    {
+      name: 'base-ui-number-field-focused',
+      type: 'class',
+      description: 'Applied when focused.',
+    },
+    {
+      name: 'base-ui-number-field-input',
+      type: 'class',
+      description: 'Applied to the input element.',
+    },
+    {
+      name: 'base-ui-number-field-increment',
+      type: 'class',
+      description: 'Applied to the increment button.',
+    },
+    {
+      name: 'base-ui-number-field-decrement',
+      type: 'class',
+      description: 'Applied to the decrement button.',
+    },
+  ];
+
+  protected readonly keyboardNav: PropDefinition[] = [
+    {
+      name: 'Arrow Up',
+      type: 'key',
+      description: 'Increment value by step.',
+    },
+    {
+      name: 'Arrow Down',
+      type: 'key',
+      description: 'Decrement value by step.',
+    },
+    {
+      name: 'Shift + Arrow Up/Down',
+      type: 'key',
+      description: 'Increment/decrement by large step.',
+    },
+    {
+      name: 'Page Up',
+      type: 'key',
+      description: 'Increment value by large step.',
+    },
+    {
+      name: 'Page Down',
+      type: 'key',
+      description: 'Decrement value by large step.',
+    },
+    {
+      name: 'Home',
+      type: 'key',
+      description: 'Set value to minimum (if defined).',
+    },
+    {
+      name: 'End',
+      type: 'key',
+      description: 'Set value to maximum (if defined).',
+    },
+    {
+      name: 'Enter',
+      type: 'key',
+      description: 'Commit the current input value.',
+    },
+  ];
+}
