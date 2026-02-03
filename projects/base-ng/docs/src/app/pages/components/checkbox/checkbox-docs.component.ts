@@ -1,15 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import { CheckboxRootDirective, CheckboxIndicatorDirective } from '@base-ng/ui';
 
 @Component({
   selector: 'docs-checkbox',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    CheckboxRootDirective,
+    CheckboxIndicatorDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -20,12 +28,40 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <docs-demo [code]="basicDemoCode" language="html">
+          <button
+            baseUiCheckboxRoot
+            [(checked)]="acceptTerms"
+            class="demo-checkbox"
+          >
+            <span baseUiCheckboxIndicator class="demo-indicator">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="none"
+                class="demo-check-icon"
+              >
+                <path
+                  d="M10 3L4.5 8.5L2 6"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+            I accept the terms and conditions
+          </button>
+          <span class="demo-status">{{ acceptTerms() ? 'Accepted' : 'Not accepted' }}</span>
+        </docs-demo>
+      </section>
 
-        <p class="docs-paragraph">Import the Checkbox directives:</p>
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -43,31 +79,86 @@ import {
       <section class="docs-section">
         <h2 class="docs-section-title">Examples</h2>
 
-        <h3 class="docs-section-subtitle">Basic usage</h3>
-        <p class="docs-paragraph">
-          Use two-way binding with <code>[(checked)]</code> to control the
-          checkbox state:
-        </p>
-        <docs-code-block [code]="basicDemoCode" language="html" />
-
         <h3 class="docs-section-subtitle">Indeterminate state</h3>
         <p class="docs-paragraph">
           The indeterminate state is useful for "select all" checkboxes:
         </p>
-        <docs-code-block [code]="indeterminateDemoCode" language="html" />
+        <docs-demo [code]="indeterminateDemoCode" language="html">
+          <div class="demo-indeterminate">
+            <button
+              baseUiCheckboxRoot
+              [(checked)]="allSelected"
+              [indeterminate]="someSelected()"
+              (checkedChange)="onSelectAllChange($event)"
+              class="demo-checkbox"
+            >
+              <span baseUiCheckboxIndicator class="demo-indicator">
+                @if (someSelected() && !allSelected) {
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="demo-check-icon">
+                    <path d="M3 6H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  </svg>
+                } @else {
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="demo-check-icon">
+                    <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                }
+              </span>
+              Select all
+            </button>
+            <div class="demo-options">
+              @for (option of options; track option.value) {
+                <button
+                  baseUiCheckboxRoot
+                  [(checked)]="option.checked"
+                  (checkedChange)="onOptionChange()"
+                  class="demo-checkbox demo-checkbox-nested"
+                >
+                  <span baseUiCheckboxIndicator class="demo-indicator">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="demo-check-icon">
+                      <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  {{ option.label }}
+                </button>
+              }
+            </div>
+          </div>
+        </docs-demo>
 
-        <h3 class="docs-section-subtitle">Form integration</h3>
+        <h3 class="docs-section-subtitle">Disabled state</h3>
         <p class="docs-paragraph">
-          Works with Angular forms using <code>ngModel</code> or
-          <code>formControl</code>:
+          Disable the checkbox using the <code>disabled</code> input:
         </p>
-        <docs-code-block [code]="formDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">With CheckboxGroup</h3>
-        <p class="docs-paragraph">
-          Use with CheckboxGroup to manage multiple selections:
-        </p>
-        <docs-code-block [code]="groupDemoCode" language="html" />
+        <docs-demo [code]="disabledDemoCode" language="html">
+          <div class="demo-row">
+            <button
+              baseUiCheckboxRoot
+              [checked]="true"
+              [disabled]="true"
+              class="demo-checkbox"
+            >
+              <span baseUiCheckboxIndicator class="demo-indicator">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="demo-check-icon">
+                  <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+              Disabled (checked)
+            </button>
+            <button
+              baseUiCheckboxRoot
+              [checked]="false"
+              [disabled]="true"
+              class="demo-checkbox"
+            >
+              <span baseUiCheckboxIndicator class="demo-indicator">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="demo-check-icon">
+                  <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+              Disabled (unchecked)
+            </button>
+          </div>
+        </docs-demo>
       </section>
 
       <!-- Styling -->
@@ -134,19 +225,127 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-checkbox {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.875rem;
+      color: var(--docs-text);
+
+      &:focus-visible .demo-indicator {
+        outline: 2px solid var(--docs-accent, #0066ff);
+        outline-offset: 2px;
+      }
+
+      &[data-disabled] {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+
+    .demo-indicator {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--docs-border);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--docs-bg);
+      transition: all 0.15s;
+
+      [data-checked] & {
+        background: var(--docs-accent, #0066ff);
+        border-color: var(--docs-accent, #0066ff);
+      }
+
+      [data-indeterminate] & {
+        background: var(--docs-accent, #0066ff);
+        border-color: var(--docs-accent, #0066ff);
+      }
+    }
+
+    .demo-check-icon {
+      color: transparent;
+      transition: color 0.15s;
+
+      [data-checked] &,
+      [data-indeterminate] & {
+        color: white;
+      }
+    }
+
+    .demo-status {
+      font-size: 0.75rem;
+      color: var(--docs-text-secondary);
+      margin-left: 1rem;
+    }
+
+    .demo-indeterminate {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .demo-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding-left: 1.5rem;
+    }
+
+    .demo-checkbox-nested {
+      font-size: 0.875rem;
+    }
+
+    .demo-row {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+  `,
 })
 export class CheckboxDocsComponent {
+  protected readonly acceptTerms = signal(false);
+  protected allSelected = false;
+
+  protected readonly options = [
+    { value: 'apple', label: 'Apple', checked: true },
+    { value: 'banana', label: 'Banana', checked: false },
+    { value: 'orange', label: 'Orange', checked: true },
+  ];
+
+  protected someSelected(): boolean {
+    const checkedCount = this.options.filter(o => o.checked).length;
+    return checkedCount > 0 && checkedCount < this.options.length;
+  }
+
+  protected onSelectAllChange(checked: boolean): void {
+    this.allSelected = checked;
+    this.options.forEach(o => (o.checked = checked));
+  }
+
+  protected onOptionChange(): void {
+    const checkedCount = this.options.filter(o => o.checked).length;
+    this.allSelected = checkedCount === this.options.length;
+  }
+
   protected readonly importCode = `import {
   CheckboxRootDirective,
   CheckboxIndicatorDirective
-} from '@base-ng/ui/checkbox';
+} from '@base-ng/ui';
 
 @Component({
   imports: [CheckboxRootDirective, CheckboxIndicatorDirective],
@@ -210,6 +409,16 @@ export class CheckboxDocsComponent {
 </div>
 
 <!-- selectedFruits: string[] -->`;
+
+  protected readonly disabledDemoCode = `<button baseUiCheckboxRoot [checked]="true" [disabled]="true">
+  <span baseUiCheckboxIndicator>✓</span>
+  Disabled (checked)
+</button>
+
+<button baseUiCheckboxRoot [checked]="false" [disabled]="true">
+  <span baseUiCheckboxIndicator>✓</span>
+  Disabled (unchecked)
+</button>`;
 
   protected readonly stylingCode = `/* Base checkbox styles */
 [baseUiCheckboxRoot] {

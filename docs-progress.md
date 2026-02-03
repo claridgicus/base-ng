@@ -196,7 +196,7 @@
 | 84  | Fix Input docs - add live interactive demo         | [x]    | Use `<docs-demo>` with actual component |
 | 85  | Fix Field docs - add live interactive demo         | [x]    | Use `<docs-demo>` with actual component |
 | 86  | Fix Fieldset docs - add live interactive demo      | [x]    | Use `<docs-demo>` with actual component |
-| 87  | Fix Checkbox docs - add live interactive demo      | [ ]    | Use `<docs-demo>` with actual component |
+| 87  | Fix Checkbox docs - add live interactive demo      | [x]    | Use `<docs-demo>` with actual component |
 | 88  | Fix Checkbox Group docs - add live interactive demo| [ ]    | Use `<docs-demo>` with actual component |
 | 89  | Fix Radio docs - add live interactive demo         | [ ]    | Use `<docs-demo>` with actual component |
 | 90  | Fix Radio Group docs - add live interactive demo   | [ ]    | Use `<docs-demo>` with actual component |
@@ -272,9 +272,9 @@ Each component page should include:
 ## Progress Summary
 
 - **Total Tasks:** 112
-- **Completed:** 86
+- **Completed:** 87
 - **In Progress:** 0
-- **Remaining:** 26 (Phase 15 - CRITICAL)
+- **Remaining:** 25 (Phase 15 - CRITICAL)
 
 ---
 
