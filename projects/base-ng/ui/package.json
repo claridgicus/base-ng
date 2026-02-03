@@ -1,6 +1,6 @@
 {
   "name": "@copied/base-ng",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Angular component library with accessible, unstyled primitives",
   "license": "MIT",
   "repository": {
