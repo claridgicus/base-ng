@@ -37,10 +37,6 @@
 
   --root-layout-padding-x: 0rem;
   padding-inline: var(--root-layout-padding-x);
-
-  @media (min-width: 64rem) {
-    --root-layout-padding-x: 3rem;
-  }
 }
 
 // Main container
@@ -54,8 +50,6 @@
   background-color: var(--color-content);
 
   @media (min-width: 64rem) {
-    padding-block-start: var(--header-height);
-
     // Vertical border lines
     &::before,
     &::after {
