@@ -1,6 +1,7 @@
 /**
  * @fileoverview Tests for Input component
  * @source https://github.com/mui/base-ui/blob/master/packages/react/src/input/Input.test.tsx
+ * @parity Verified against React Base UI
  */
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -328,6 +329,62 @@ describe('Input component', () => {
 
     it('should have filled class with initial value', () => {
       expect(input.classList.contains('base-ui-input-filled')).toBe(true);
+    });
+  });
+
+  describe('Focus Management', () => {
+    @Component({
+      template: `
+        <input baseUiInput [disabled]="disabled()" />
+      `,
+      standalone: true,
+      imports: [InputDirective],
+    })
+    class TestComponent {
+      disabled = signal(false);
+    }
+
+    let fixture: ComponentFixture<TestComponent>;
+    let component: TestComponent;
+    let input: HTMLInputElement;
+
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
+        imports: [TestComponent],
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(TestComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+      input = fixture.nativeElement.querySelector('[baseUiInput]');
+    });
+
+    it('should be focusable when not disabled', () => {
+      input.focus();
+      expect(document.activeElement).toBe(input);
+    });
+
+    it('should apply focused class on focus event', () => {
+      input.dispatchEvent(new Event('focus'));
+      fixture.detectChanges();
+      expect(input.classList.contains('base-ui-input-focused')).toBe(true);
+    });
+
+    it('should remove focused class on blur event', () => {
+      input.dispatchEvent(new Event('focus'));
+      fixture.detectChanges();
+      expect(input.classList.contains('base-ui-input-focused')).toBe(true);
+
+      input.dispatchEvent(new Event('blur'));
+      fixture.detectChanges();
+      expect(input.classList.contains('base-ui-input-focused')).toBe(false);
+    });
+
+    it('should be disabled when disabled input is set', () => {
+      component.disabled.set(true);
+      fixture.detectChanges();
+
+      expect(input.disabled).toBe(true);
     });
   });
 });

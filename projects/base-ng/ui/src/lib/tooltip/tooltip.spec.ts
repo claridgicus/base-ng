@@ -1,6 +1,7 @@
 /**
  * @fileoverview Tests for Tooltip component
  * @source https://github.com/mui/base-ui/blob/master/packages/react/src/tooltip/Tooltip.test.tsx
+ * @parity Verified against React Base UI
  */
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';

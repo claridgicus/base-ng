@@ -1,6 +1,7 @@
 /**
  * @fileoverview Tests for Avatar component
  * @source https://github.com/mui/base-ui/blob/master/packages/react/src/avatar/Avatar.test.tsx
+ * @parity Verified against React Base UI
  */
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';

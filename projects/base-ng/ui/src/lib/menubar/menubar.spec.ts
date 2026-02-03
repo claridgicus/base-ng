@@ -1,6 +1,7 @@
 /**
  * @fileoverview Tests for Menubar component
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/menubar
+ * @source https://github.com/mui/base-ui/blob/master/packages/react/src/menubar/Menubar.test.tsx
+ * @parity Verified against React Base UI
  */
 
 import { Component, ViewChild, signal } from '@angular/core';

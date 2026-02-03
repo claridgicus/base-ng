@@ -2,7 +2,7 @@
 active: false
 iteration: 1
 max_iterations: 100
-completion_promise: 'BASE-UI-DOCS-COMPLETE'
+completion_promise: 'COMPONENT-PARITY-VERIFIED'
 started_at: null
 ---
 
@@ -290,3 +290,101 @@ If you cannot complete a task due to a blocker, document it in docs-progress.md 
 Check git log to see what was done in previous iterations. Build upon that work.
 
 Now read docs-progress.md and continue building the documentation site.
+
+---
+
+## Phase 2: Component Parity Verification
+
+> **NEW OBJECTIVE:** Ensure all `@base-ng/ui` components look and behave exactly like their React Base UI counterparts.
+
+### Parity Verification Workflow
+
+1. **Read `component-parity-progress.md`** to find the next unchecked component
+2. **Fetch React reference** from `https://base-ui.com/react/components/[component]`
+3. **Visual Comparison:**
+   - [ ] Default state matches
+   - [ ] Hover state matches
+   - [ ] Focus state matches
+   - [ ] Active/pressed state matches
+   - [ ] Disabled state matches
+   - [ ] Open/closed states match (if applicable)
+   - [ ] Animation timing matches
+4. **Run specs:** `ng test @base-ng/ui --include=**/[component].spec.ts`
+5. **Enhance specs** with missing test categories (see below)
+6. **Fix discrepancies** in component implementation or styling
+7. **Update `component-parity-progress.md`** - mark columns `[x]`
+8. **Commit changes** with descriptive message
+
+### Required Spec Test Categories
+
+Each component spec MUST include these test blocks:
+
+```typescript
+describe('Keyboard Navigation', () => {
+  it('should activate on Space key', () => {});
+  it('should activate on Enter key', () => {});
+  it('should navigate with Arrow keys', () => {}); // if applicable
+  it('should handle Escape key', () => {}); // if applicable
+  it('should handle Home/End keys', () => {}); // for lists
+});
+
+describe('Focus Management', () => {
+  it('should be focusable when not disabled', () => {});
+  it('should not be focusable when disabled', () => {});
+  it('should receive focus via focus() method', () => {});
+  it('should blur via blur() method', () => {});
+  it('should trap focus in overlays', () => {}); // for dialogs/popovers
+  it('should restore focus on close', () => {}); // for dialogs/popovers
+});
+
+describe('State Attributes', () => {
+  it('should set [data-disabled] when disabled', () => {});
+  it('should set [data-checked] when checked', () => {}); // if applicable
+  it('should set [data-open] when open', () => {}); // if applicable
+  it('should set [data-highlighted] when highlighted', () => {}); // for menu items
+  it('should set [data-selected] when selected', () => {}); // for options
+});
+
+describe('Accessibility', () => {
+  it('should have correct ARIA role', () => {});
+  it('should set aria-disabled when disabled', () => {});
+  it('should support aria-label', () => {});
+  it('should support aria-labelledby', () => {});
+  it('should support aria-describedby', () => {});
+});
+```
+
+### Spec File Header Format
+
+Each spec must include the React source reference:
+
+```typescript
+/**
+ * @component ComponentName
+ * @source https://github.com/mui/base-ui/blob/master/packages/react/src/component/Component.test.tsx
+ * @parity Verified against React Base UI v[version]
+ */
+```
+
+### Visual Comparison Process
+
+1. Open React demo: `https://base-ui.com/react/components/[component]`
+2. Open Angular demo: `http://localhost:4200/angular/components/[component]`
+3. Compare side-by-side:
+   - Take screenshots if helpful
+   - Check all interactive states
+   - Verify animations match
+   - Test keyboard navigation
+4. Document any discrepancies in component-parity-progress.md
+
+### Completion Signal
+
+When ALL components in `component-parity-progress.md` have all columns marked `[x]`, output:
+
+<promise>COMPONENT-PARITY-VERIFIED</promise>
+
+This requires:
+- All 35 components visually verified
+- All 35 components behaviorally verified
+- All specs enhanced with required test blocks
+- All tests passing

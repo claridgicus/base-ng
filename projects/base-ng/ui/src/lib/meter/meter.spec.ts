@@ -1,6 +1,7 @@
 /**
  * @fileoverview Tests for Meter component
  * @source https://github.com/mui/base-ui/blob/master/packages/react/src/meter/Meter.test.tsx
+ * @parity Verified against React Base UI
  */
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';

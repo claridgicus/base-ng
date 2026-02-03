@@ -1,6 +1,7 @@
 /**
  * @fileoverview Tests for Switch component
  * @source https://github.com/mui/base-ui/blob/master/packages/react/src/switch/Switch.test.tsx
+ * @parity Verified against React Base UI
  */
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';

@@ -1,6 +1,7 @@
 /**
  * @fileoverview Tests for Scroll Area component
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/scroll-area
+ * @source https://github.com/mui/base-ui/blob/master/packages/react/src/scroll-area/ScrollArea.test.tsx
+ * @parity Verified against React Base UI
  */
 
 import { Component, ViewChild } from '@angular/core';

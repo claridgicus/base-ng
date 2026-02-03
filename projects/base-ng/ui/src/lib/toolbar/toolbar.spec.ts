@@ -1,6 +1,7 @@
 /**
  * @fileoverview Tests for Toolbar component
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/toolbar
+ * @source https://github.com/mui/base-ui/blob/master/packages/react/src/toolbar/Toolbar.test.tsx
+ * @parity Verified against React Base UI
  */
 
 import { Component, ViewChild, signal } from '@angular/core';

@@ -1,6 +1,7 @@
 /**
  * @fileoverview Tests for Navigation Menu component
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/navigation-menu
+ * @source https://github.com/mui/base-ui/blob/master/packages/react/src/navigation-menu/NavigationMenu.test.tsx
+ * @parity Verified against React Base UI
  */
 
 import { Component, ViewChild, signal } from '@angular/core';

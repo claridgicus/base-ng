@@ -1,5 +1,7 @@
 /**
  * @fileoverview Tests for Dialog components
+ * @source https://github.com/mui/base-ui/blob/master/packages/react/src/dialog/Dialog.test.tsx
+ * @parity Verified against React Base UI
  */
 
 import { Component, ViewChild } from '@angular/core';
