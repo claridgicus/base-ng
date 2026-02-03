@@ -1,15 +1,32 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  AccordionRootDirective,
+  AccordionItemDirective,
+  AccordionHeaderDirective,
+  AccordionTriggerDirective,
+  AccordionPanelDirective,
+} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-accordion',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    AccordionRootDirective,
+    AccordionItemDirective,
+    AccordionHeaderDirective,
+    AccordionTriggerDirective,
+    AccordionPanelDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,12 +38,63 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <docs-demo [code]="basicDemoCode" language="html">
+          <div baseUiAccordionRoot [(value)]="expandedItems" class="demo-accordion">
+            <div baseUiAccordionItem value="faq-1" class="demo-item">
+              <h3 baseUiAccordionHeader>
+                <button baseUiAccordionTrigger class="demo-trigger">
+                  <span>What is Base UI Angular?</span>
+                  <svg class="demo-chevron" viewBox="0 0 24 24" width="16" height="16">
+                    <path d="M6 9l6 6 6-6" stroke="currentColor" fill="none" stroke-width="2"/>
+                  </svg>
+                </button>
+              </h3>
+              <div baseUiAccordionPanel [keepMounted]="true" class="demo-panel">
+                <div class="demo-panel-content">
+                  Base UI Angular is a collection of unstyled, accessible UI components
+                  for Angular applications.
+                </div>
+              </div>
+            </div>
+            <div baseUiAccordionItem value="faq-2" class="demo-item">
+              <h3 baseUiAccordionHeader>
+                <button baseUiAccordionTrigger class="demo-trigger">
+                  <span>How do I install it?</span>
+                  <svg class="demo-chevron" viewBox="0 0 24 24" width="16" height="16">
+                    <path d="M6 9l6 6 6-6" stroke="currentColor" fill="none" stroke-width="2"/>
+                  </svg>
+                </button>
+              </h3>
+              <div baseUiAccordionPanel [keepMounted]="true" class="demo-panel">
+                <div class="demo-panel-content">
+                  Run <code>npm install &#64;base-ng/ui</code> and import the components you need.
+                </div>
+              </div>
+            </div>
+            <div baseUiAccordionItem value="faq-3" class="demo-item">
+              <h3 baseUiAccordionHeader>
+                <button baseUiAccordionTrigger class="demo-trigger">
+                  <span>Is it accessible?</span>
+                  <svg class="demo-chevron" viewBox="0 0 24 24" width="16" height="16">
+                    <path d="M6 9l6 6 6-6" stroke="currentColor" fill="none" stroke-width="2"/>
+                  </svg>
+                </button>
+              </h3>
+              <div baseUiAccordionPanel [keepMounted]="true" class="demo-panel">
+                <div class="demo-panel-content">
+                  Yes! All components follow WAI-ARIA guidelines and support keyboard navigation.
+                </div>
+              </div>
+            </div>
+          </div>
+        </docs-demo>
+      </section>
 
-        <p class="docs-paragraph">Import the Accordion directives:</p>
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -55,7 +123,49 @@ import {
           Enable <code>multiple</code> to allow more than one item to be
           expanded at a time:
         </p>
-        <docs-code-block [code]="multipleDemoCode" language="html" />
+        <docs-demo [code]="multipleDemoCode" language="html">
+          <div baseUiAccordionRoot [(value)]="multipleItems" [multiple]="true" class="demo-accordion">
+            <div baseUiAccordionItem value="section-1" class="demo-item">
+              <h3 baseUiAccordionHeader>
+                <button baseUiAccordionTrigger class="demo-trigger">
+                  <span>Section 1</span>
+                  <svg class="demo-chevron" viewBox="0 0 24 24" width="16" height="16">
+                    <path d="M6 9l6 6 6-6" stroke="currentColor" fill="none" stroke-width="2"/>
+                  </svg>
+                </button>
+              </h3>
+              <div baseUiAccordionPanel [keepMounted]="true" class="demo-panel">
+                <div class="demo-panel-content">Content for section 1</div>
+              </div>
+            </div>
+            <div baseUiAccordionItem value="section-2" class="demo-item">
+              <h3 baseUiAccordionHeader>
+                <button baseUiAccordionTrigger class="demo-trigger">
+                  <span>Section 2</span>
+                  <svg class="demo-chevron" viewBox="0 0 24 24" width="16" height="16">
+                    <path d="M6 9l6 6 6-6" stroke="currentColor" fill="none" stroke-width="2"/>
+                  </svg>
+                </button>
+              </h3>
+              <div baseUiAccordionPanel [keepMounted]="true" class="demo-panel">
+                <div class="demo-panel-content">Content for section 2</div>
+              </div>
+            </div>
+            <div baseUiAccordionItem value="section-3" class="demo-item">
+              <h3 baseUiAccordionHeader>
+                <button baseUiAccordionTrigger class="demo-trigger">
+                  <span>Section 3</span>
+                  <svg class="demo-chevron" viewBox="0 0 24 24" width="16" height="16">
+                    <path d="M6 9l6 6 6-6" stroke="currentColor" fill="none" stroke-width="2"/>
+                  </svg>
+                </button>
+              </h3>
+              <div baseUiAccordionPanel [keepMounted]="true" class="demo-panel">
+                <div class="demo-panel-content">Content for section 3</div>
+              </div>
+            </div>
+          </div>
+        </docs-demo>
 
         <h3 class="docs-section-subtitle">Default expanded</h3>
         <p class="docs-paragraph">
@@ -166,22 +276,113 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-accordion {
+      border: 1px solid var(--docs-border);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .demo-item {
+      border-bottom: 1px solid var(--docs-border);
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    h3[baseUiAccordionHeader] {
+      margin: 0;
+    }
+
+    .demo-trigger {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      background: var(--docs-bg);
+      border: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--docs-text);
+      cursor: pointer;
+      transition: background 0.15s;
+
+      &:hover:not([data-disabled]) {
+        background: var(--docs-bg-hover, rgba(0, 0, 0, 0.05));
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--docs-accent, #0066ff);
+        outline-offset: -2px;
+      }
+
+      &[data-open] {
+        background: var(--docs-bg-muted, rgba(0, 0, 0, 0.02));
+      }
+    }
+
+    .demo-chevron {
+      transition: transform 0.2s;
+
+      [data-open] & {
+        transform: rotate(180deg);
+      }
+    }
+
+    .demo-panel {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.2s ease;
+      background: var(--docs-bg-muted, rgba(0, 0, 0, 0.02));
+
+      &[data-open] {
+        grid-template-rows: 1fr;
+      }
+    }
+
+    .demo-panel-content {
+      overflow: hidden;
+      padding: 0 1rem;
+      font-size: 0.875rem;
+      color: var(--docs-text-secondary);
+      line-height: 1.6;
+
+      [data-open] & {
+        padding: 1rem;
+      }
+
+      code {
+        background: var(--docs-bg-code, rgba(0, 0, 0, 0.05));
+        padding: 0.125rem 0.375rem;
+        border-radius: 0.25rem;
+        font-size: 0.8125rem;
+      }
+    }
+  `,
 })
 export class AccordionDocsComponent {
+  // Demo state
+  protected readonly expandedItems = signal<string[]>([]);
+  protected readonly multipleItems = signal<string[]>([]);
+
   protected readonly importCode = `import {
   AccordionRootDirective,
   AccordionItemDirective,
   AccordionHeaderDirective,
   AccordionTriggerDirective,
-  AccordionPanelDirective
-} from '@base-ng/ui/accordion';
+  AccordionPanelDirective,
+} from '@base-ng/ui';
 
 @Component({
   imports: [
@@ -189,7 +390,7 @@ export class AccordionDocsComponent {
     AccordionItemDirective,
     AccordionHeaderDirective,
     AccordionTriggerDirective,
-    AccordionPanelDirective
+    AccordionPanelDirective,
   ],
   // ...
 })`;
