@@ -1,15 +1,42 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   CodeBlockComponent,
   EditOnGitHubComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  SelectRootDirective,
+  SelectTriggerDirective,
+  SelectValueDirective,
+  SelectIconDirective,
+  SelectPositionerDirective,
+  SelectPopupDirective,
+  SelectListDirective,
+  SelectItemDirective,
+  SelectItemIndicatorDirective,
+  SelectItemTextDirective,
+} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-select',
-  imports: [CodeBlockComponent, EditOnGitHubComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    CodeBlockComponent,
+    EditOnGitHubComponent,
+    DemoComponent,
+    PropsTableComponent,
+    SelectRootDirective,
+    SelectTriggerDirective,
+    SelectValueDirective,
+    SelectIconDirective,
+    SelectPositionerDirective,
+    SelectPopupDirective,
+    SelectListDirective,
+    SelectItemDirective,
+    SelectItemIndicatorDirective,
+    SelectItemTextDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,12 +48,44 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <h2 class="docs-section-title">Live Demo</h2>
+        <docs-demo [code]="basicCode">
+          <div baseUiSelectRoot [(value)]="selectedFruit" class="demo-select">
+            <button baseUiSelectTrigger class="demo-select-trigger">
+              <span baseUiSelectValue [placeholder]="'Select a fruit...'">
+                {{ selectedFruit() || 'Select a fruit...' }}
+              </span>
+              <span baseUiSelectIcon class="demo-select-icon">
+                <svg viewBox="0 0 12 12" width="12" height="12">
+                  <path d="M2 4l4 4 4-4" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                </svg>
+              </span>
+            </button>
+            <div baseUiSelectPositioner class="demo-select-positioner">
+              <div baseUiSelectPopup class="demo-select-popup">
+                <div baseUiSelectList class="demo-select-list">
+                  @for (fruit of fruits; track fruit.value) {
+                    <div baseUiSelectItem [value]="fruit.value" class="demo-select-item">
+                      <span baseUiSelectItemIndicator class="demo-select-indicator">
+                        <svg viewBox="0 0 12 12" width="12" height="12">
+                          <path d="M2 6l3 3 5-6" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                        </svg>
+                      </span>
+                      <span baseUiSelectItemText>{{ fruit.label }}</span>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </docs-demo>
+      </section>
 
-        <p class="docs-paragraph">Import the Select directives:</p>
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -439,9 +498,121 @@ import {
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
     }
+
+    /* Demo styles */
+    .demo-select {
+      position: relative;
+      display: inline-block;
+    }
+
+    .demo-select-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-width: 200px;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--docs-border);
+      border-radius: 6px;
+      background: var(--docs-bg);
+      color: var(--docs-text);
+      cursor: pointer;
+      font-size: 0.875rem;
+      transition: all 0.15s ease;
+    }
+
+    .demo-select-trigger:hover {
+      background: var(--docs-bg-hover);
+    }
+
+    .demo-select-trigger:focus {
+      outline: none;
+      border-color: var(--docs-accent);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    }
+
+    .demo-select-trigger[data-placeholder] {
+      color: var(--docs-text-tertiary);
+    }
+
+    .demo-select-icon {
+      transition: transform 0.15s ease;
+    }
+
+    .demo-select-trigger[data-open] .demo-select-icon {
+      transform: rotate(180deg);
+    }
+
+    .demo-select-positioner {
+      position: absolute;
+      z-index: 50;
+    }
+
+    .demo-select-popup {
+      background: var(--docs-bg);
+      border: 1px solid var(--docs-border);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      animation: selectIn 0.15s ease;
+    }
+
+    @keyframes selectIn {
+      from {
+        opacity: 0;
+        transform: translateY(-4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .demo-select-list {
+      padding: 0.25rem;
+    }
+
+    .demo-select-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      color: var(--docs-text);
+      transition: background 0.1s ease;
+    }
+
+    .demo-select-item:hover,
+    .demo-select-item[data-highlighted] {
+      background: var(--docs-bg-hover);
+    }
+
+    .demo-select-item[data-selected] {
+      font-weight: 500;
+    }
+
+    .demo-select-indicator {
+      width: 16px;
+      visibility: hidden;
+    }
+
+    .demo-select-item[data-selected] .demo-select-indicator {
+      visibility: visible;
+      color: var(--docs-accent);
+    }
   `,
 })
 export class SelectDocsComponent {
+  protected readonly selectedFruit = signal<string | null>(null);
+  protected readonly fruits = [
+    { value: 'apple', label: 'Apple' },
+    { value: 'banana', label: 'Banana' },
+    { value: 'cherry', label: 'Cherry' },
+    { value: 'mango', label: 'Mango' },
+    { value: 'orange', label: 'Orange' },
+    { value: 'strawberry', label: 'Strawberry' },
+  ];
+
   importCode = `import {
   SelectRootDirective,
   SelectTriggerDirective,

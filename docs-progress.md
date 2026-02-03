@@ -216,7 +216,7 @@
 | 104 | Fix Menubar docs - add live interactive demo       | [x]    | Use `<docs-demo>` with actual component |
 | 105 | Fix Navigation Menu docs - add live interactive demo| [x]   | Use `<docs-demo>` with actual component |
 | 106 | Fix Toolbar docs - add live interactive demo       | [x]    | Use `<docs-demo>` with actual component |
-| 107 | Fix Select docs - add live interactive demo        | [ ]    | Use `<docs-demo>` with actual component |
+| 107 | Fix Select docs - add live interactive demo        | [x]    | Use `<docs-demo>` with actual component |
 | 108 | Fix Combobox docs - add live interactive demo      | [ ]    | Use `<docs-demo>` with actual component |
 | 109 | Fix Autocomplete docs - add live interactive demo  | [ ]    | Use `<docs-demo>` with actual component |
 | 110 | Fix Scroll Area docs - add live interactive demo   | [ ]    | Use `<docs-demo>` with actual component |
@@ -272,9 +272,9 @@ Each component page should include:
 ## Progress Summary
 
 - **Total Tasks:** 112
-- **Completed:** 106
+- **Completed:** 107
 - **In Progress:** 0
-- **Remaining:** 6 (Phase 15 - CRITICAL)
+- **Remaining:** 5 (Phase 15 - CRITICAL)
 
 ---
 
