@@ -155,8 +155,7 @@
               "projects/base-ng/docs/src/styles.scss"
             ],
             "server": "projects/base-ng/docs/src/main.server.ts",
-            "outputMode": "static",
-            "baseHref": "/angular/"
+            "outputMode": "static"
           },
           "configurations": {
             "production": {
