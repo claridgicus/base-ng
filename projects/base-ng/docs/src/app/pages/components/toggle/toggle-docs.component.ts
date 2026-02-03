@@ -1,15 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import { ToggleDirective } from '@base-ng/ui';
 
 @Component({
   selector: 'docs-toggle',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    ToggleDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -20,14 +27,27 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <docs-demo [code]="basicDemoCode" language="html">
+          <div class="demo-toggle-container">
+            <button
+              baseUiToggle
+              [(pressed)]="isBold"
+              class="demo-toggle"
+            >
+              <strong>B</strong>
+            </button>
+            <span class="demo-toggle-label">
+              Bold: {{ isBold() ? 'On' : 'Off' }}
+            </span>
+          </div>
+        </docs-demo>
+      </section>
 
-        <p class="docs-paragraph">
-          Import the Toggle directive from the package:
-        </p>
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -44,42 +64,53 @@ import {
       <section class="docs-section">
         <h2 class="docs-section-title">Examples</h2>
 
-        <h3 class="docs-section-subtitle">Basic usage</h3>
+        <h3 class="docs-section-subtitle">Text formatting toolbar</h3>
         <p class="docs-paragraph">
-          Create a simple toggle button with two-way binding.
+          Multiple toggle buttons for text formatting options:
         </p>
-        <docs-code-block [code]="basicDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">Controlled state</h3>
-        <p class="docs-paragraph">
-          Control the toggle state from your component using
-          <code>[(pressed)]</code> binding.
-        </p>
-        <docs-code-block [code]="controlledDemoCode" language="typescript" />
+        <docs-demo [code]="toolbarDemoCode" language="html">
+          <div class="demo-toolbar">
+            <button baseUiToggle [(pressed)]="isBold" aria-label="Bold" class="demo-toggle">
+              <strong>B</strong>
+            </button>
+            <button baseUiToggle [(pressed)]="isItalic" aria-label="Italic" class="demo-toggle">
+              <em>I</em>
+            </button>
+            <button baseUiToggle [(pressed)]="isUnderline" aria-label="Underline" class="demo-toggle">
+              <u>U</u>
+            </button>
+          </div>
+        </docs-demo>
 
         <h3 class="docs-section-subtitle">Disabled toggle</h3>
         <p class="docs-paragraph">
-          Use the <code>disabled</code> input to prevent user interaction.
+          Use the <code>disabled</code> input to prevent user interaction:
         </p>
-        <docs-code-block [code]="disabledDemoCode" language="html" />
+        <docs-demo [code]="disabledDemoCode" language="html">
+          <div class="demo-row">
+            <button baseUiToggle [pressed]="true" [disabled]="true" class="demo-toggle">
+              Locked On
+            </button>
+            <button baseUiToggle [pressed]="false" [disabled]="true" class="demo-toggle">
+              Locked Off
+            </button>
+          </div>
+        </docs-demo>
 
-        <h3 class="docs-section-subtitle">Icon toggle</h3>
+        <h3 class="docs-section-subtitle">Favorite toggle</h3>
         <p class="docs-paragraph">
-          A common pattern is using icons that change based on pressed state.
+          Common pattern using icons that change based on state:
         </p>
-        <docs-code-block [code]="iconToggleDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">Text formatting toolbar</h3>
-        <p class="docs-paragraph">
-          Multiple toggle buttons for text formatting options.
-        </p>
-        <docs-code-block [code]="toolbarDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">With change event</h3>
-        <p class="docs-paragraph">
-          Listen to state changes using the <code>pressedChange</code> output.
-        </p>
-        <docs-code-block [code]="eventDemoCode" language="html" />
+        <docs-demo [code]="iconToggleDemoCode" language="html">
+          <button
+            baseUiToggle
+            [(pressed)]="isFavorite"
+            aria-label="Add to favorites"
+            class="demo-toggle demo-icon-toggle"
+          >
+            {{ isFavorite() ? '★' : '☆' }}
+          </button>
+        </docs-demo>
       </section>
 
       <!-- Styling -->
@@ -174,15 +205,80 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-toggle-container {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .demo-toolbar,
+    .demo-row {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .demo-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 36px;
+      height: 36px;
+      padding: 0 0.75rem;
+      background: var(--docs-bg-secondary);
+      border: 1px solid var(--docs-border);
+      border-radius: 0.375rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--docs-text);
+      transition: all 0.15s;
+
+      &:hover:not([data-disabled]) {
+        background: var(--docs-border);
+      }
+
+      &[data-pressed] {
+        background: var(--docs-accent, #0066ff);
+        border-color: var(--docs-accent, #0066ff);
+        color: white;
+      }
+
+      &[data-disabled] {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--docs-accent, #0066ff);
+        outline-offset: 2px;
+      }
+    }
+
+    .demo-icon-toggle {
+      font-size: 1.25rem;
+      min-width: 44px;
+      height: 44px;
+    }
+
+    .demo-toggle-label {
+      font-size: 0.875rem;
+      color: var(--docs-text-secondary);
+    }
+  `,
 })
 export class ToggleDocsComponent {
+  protected readonly isBold = signal(false);
+  protected readonly isItalic = signal(false);
+  protected readonly isUnderline = signal(false);
+  protected readonly isFavorite = signal(false);
   protected readonly importCode = `import { ToggleDirective } from '@base-ng/ui/toggle';
 
 @Component({
