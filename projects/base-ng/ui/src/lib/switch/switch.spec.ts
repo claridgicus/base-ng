@@ -1,7 +1,8 @@
 /**
+ * @component Switch
  * @fileoverview Tests for Switch component
  * @source https://github.com/mui/base-ui/blob/master/packages/react/src/switch/Switch.test.tsx
- * @parity Verified against React Base UI
+ * @parity Verified against React Base UI - includes Keyboard Navigation, Focus Management, State Attributes, and Accessibility test categories
  */
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -402,6 +403,56 @@ describe('Switch component', () => {
       expect(component.checkedChangeSpy).toHaveBeenCalledTimes(2);
       expect(component.checkedChangeSpy).toHaveBeenNthCalledWith(1, true);
       expect(component.checkedChangeSpy).toHaveBeenNthCalledWith(2, false);
+    });
+  });
+
+  describe('Switch Focus Management', () => {
+    @Component({
+      template: `
+        <button baseUiSwitchRoot [disabled]="disabled()">
+          <span baseUiSwitchThumb></span>
+        </button>
+      `,
+      standalone: true,
+      imports: [SwitchRootDirective, SwitchThumbDirective],
+    })
+    class FocusTestComponent {
+      disabled = signal(false);
+    }
+
+    let fixture: ComponentFixture<FocusTestComponent>;
+    let component: FocusTestComponent;
+    let root: HTMLElement;
+    let switchDirective: SwitchRootDirective;
+
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
+        imports: [FocusTestComponent],
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(FocusTestComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+      root = fixture.nativeElement.querySelector('[baseUiSwitchRoot]');
+      switchDirective = fixture.debugElement.children[0].injector.get(SwitchRootDirective);
+    });
+
+    it('should be focusable when not disabled', () => {
+      expect(root.hasAttribute('disabled')).toBe(false);
+      expect(root.getAttribute('tabindex')).not.toBe('-1');
+    });
+
+    it('should not be focusable when disabled', () => {
+      component.disabled.set(true);
+      fixture.detectChanges();
+
+      expect(root.hasAttribute('disabled')).toBe(true);
+    });
+
+    it('should receive focus via focus() method', () => {
+      const focusSpy = vi.spyOn(root, 'focus');
+      switchDirective.focus();
+      expect(focusSpy).toHaveBeenCalled();
     });
   });
 
