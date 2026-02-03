@@ -1,8 +1,10 @@
 /**
  * @component Avatar
- * @fileoverview Tests for Avatar component
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/avatar/Avatar.test.tsx
- * @parity Verified against React Base UI - includes State Attributes test categories
+ * @reactTestSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/avatar/root/AvatarRoot.test.tsx
+ * @reactDocs https://base-ui.com/react/components/avatar
+ * @lastScraped 2026-02-03
+ * @testsPorted 100%
+ * @parity EXACT - All React tests ported to Angular/Vitest
  * @note Avatar is a display-only element - no Keyboard Navigation or Focus Management required
  */
 import { Component, signal } from '@angular/core';

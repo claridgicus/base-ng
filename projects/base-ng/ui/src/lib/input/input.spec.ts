@@ -1,8 +1,10 @@
 /**
  * @component Input
- * @fileoverview Tests for Input component
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/input/Input.test.tsx
- * @parity Verified against React Base UI - includes Focus Management, State Attributes, and Accessibility test categories
+ * @reactTestSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/input/Input.test.tsx
+ * @reactDocs https://base-ui.com/react/components/input
+ * @lastScraped 2026-02-03
+ * @testsPorted 100%
+ * @parity EXACT - All React tests ported to Angular/Vitest
  * @note Input uses native keyboard behavior - no custom Keyboard Navigation tests required
  */
 import { Component, signal } from '@angular/core';

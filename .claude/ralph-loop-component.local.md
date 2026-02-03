@@ -8,7 +8,7 @@ started_at: null
 
 # Base UI Angular Component Parity - Ralph Loop Prompt
 
-You are ensuring all `@base-ng/ui` components have EXACT test and implementation parity with React Base UI. All styling MUST use Tailwind CSS 4 only.
+You are ensuring all `@base-ng/ui` components have EXACT aesthetic, tailwind css, functioanl parity with React Base UI. All styling MUST use Tailwind CSS 4 only.
 
 ## EXACT GitHub URLs
 
@@ -65,6 +65,7 @@ mkdir -p .claude/screenshots/diff
 ```
 
 **Running the scripts:**
+
 ```bash
 # Capture React screenshots
 npx tsx .claude/scripts/capture-react-screenshots.ts {component}
@@ -77,6 +78,7 @@ npx tsx .claude/scripts/compare-screenshots.ts {component}
 ```
 
 **Scripts location:** `.claude/scripts/`
+
 - `capture-react-screenshots.ts` - Captures React Base UI docs screenshots
 - `capture-angular-screenshots.ts` - Captures Angular docs screenshots
 - `compare-screenshots.ts` - Compares and generates diff report
@@ -121,6 +123,7 @@ Screenshots for visual parity verification are stored in:
 Before capturing screenshots, ensure Angular docs demos have **identical content** to React Base UI demos:
 
 1. **Fetch React demo content** from the docs page:
+
    ```
    WebFetch: https://base-ui.com/react/components/{component}
    ```
@@ -134,6 +137,7 @@ Before capturing screenshots, ensure Angular docs demos have **identical content
    - Example data (list items, options, etc.)
 
 3. **Update Angular docs demo** to match:
+
    ```
    Read: projects/base-ng/docs/src/app/pages/{component}/{component}-demo.component.ts
    Edit: Update demo content to match React exactly
@@ -147,17 +151,17 @@ Before capturing screenshots, ensure Angular docs demos have **identical content
 
 ### What Must Match Exactly
 
-| Aspect | Details |
-|--------|---------|
-| **Dimensions** | Width, height, min/max constraints |
-| **Positioning** | Anchor alignment, offset, arrow placement |
-| **Colors** | Background, text, border, shadow colors |
-| **Typography** | Font size, weight, line-height, letter-spacing |
-| **Spacing** | Padding, margins, gaps |
-| **Borders** | Width, radius, style |
-| **Shadows** | Box-shadow values |
-| **Animations** | Duration, easing, transform values |
-| **Z-index** | Stacking order |
+| Aspect              | Details                                         |
+| ------------------- | ----------------------------------------------- |
+| **Dimensions**      | Width, height, min/max constraints              |
+| **Positioning**     | Anchor alignment, offset, arrow placement       |
+| **Colors**          | Background, text, border, shadow colors         |
+| **Typography**      | Font size, weight, line-height, letter-spacing  |
+| **Spacing**         | Padding, margins, gaps                          |
+| **Borders**         | Width, radius, style                            |
+| **Shadows**         | Box-shadow values                               |
+| **Animations**      | Duration, easing, transform values              |
+| **Z-index**         | Stacking order                                  |
 | **Data attributes** | `data-side`, `data-state`, `data-align` styling |
 
 ### If Visual Differences Are Found
@@ -282,7 +286,9 @@ async function captureReactScreenshots() {
   await page.waitForLoadState('networkidle');
 
   // Find the DemoPlayground - adjust selector as needed
-  const playground = page.locator('[class*="DemoPlayground"], [class*="demo"], .demo-container').first();
+  const playground = page
+    .locator('[class*="DemoPlayground"], [class*="demo"], .demo-container')
+    .first();
   await playground.waitFor();
 
   // Find the trigger element within the playground
@@ -313,11 +319,11 @@ async function captureReactScreenshots() {
 
   // Extract text content
   const triggerText = await trigger.textContent();
-  const classes = await playground.evaluate(el => {
+  const classes = await playground.evaluate((el) => {
     const popup = el.querySelector('[role="tooltip"], [role="dialog"], [data-popup]');
     return {
       trigger: el.querySelector('button, [role="button"]')?.className || '',
-      popup: popup?.className || ''
+      popup: popup?.className || '',
     };
   });
 
@@ -344,11 +350,13 @@ captureReactScreenshots();
 ```
 
 **Run with:**
+
 ```bash
 npx tsx .claude/scripts/capture-react-screenshots.ts {component}
 ```
 
 **Or spawn a subagent to run the script:**
+
 ```typescript
 Task(subagent_type: 'general-purpose', prompt: `
   Use Playwright to capture React {Component} screenshots.
@@ -514,6 +522,7 @@ git add -A && git commit -m "test({component}): port X/Y tests from React Base U
 **10. Visual Screenshot Comparison with Playwright (Before Completion)**
 
 When you believe the component is complete:
+
 1. Update Angular docs demo to match React content
 2. Capture Angular screenshots with Playwright
 3. Compare screenshots programmatically
@@ -561,7 +570,9 @@ async function captureAngularScreenshots() {
   const playground = page.locator('[class*="demo"], .demo-container, app-demo-playground').first();
   await playground.waitFor();
 
-  const trigger = playground.locator('button, [role="button"], [buiTooltipTrigger], [buiPopoverTrigger]').first();
+  const trigger = playground
+    .locator('button, [role="button"], [buiTooltipTrigger], [buiPopoverTrigger]')
+    .first();
 
   // 1. DEFAULT STATE
   await playground.screenshot({ path: `${outputDir}/${component}-default.png` });
@@ -628,13 +639,13 @@ async function compareScreenshots() {
     // Simple size comparison first
     const reactSize = reactBuffer.length;
     const angularSize = angularBuffer.length;
-    const sizeDiff = Math.abs(reactSize - angularSize) / reactSize * 100;
+    const sizeDiff = (Math.abs(reactSize - angularSize) / reactSize) * 100;
 
     results[state] = {
       status: sizeDiff < 5 ? 'PASS' : 'REVIEW',
       reactSize,
       angularSize,
-      sizeDiffPercent: sizeDiff.toFixed(2)
+      sizeDiffPercent: sizeDiff.toFixed(2),
     };
 
     await browser.close();
@@ -648,15 +659,17 @@ Generated: ${new Date().toISOString()}
 
 | State | Status | React Size | Angular Size | Diff % |
 |-------|--------|------------|--------------|--------|
-${states.map(s => {
-  const r = results[s];
-  if (r.status === 'SKIPPED') return `| ${s} | SKIPPED | - | - | - |`;
-  return `| ${s} | ${r.status} | ${r.reactSize} | ${r.angularSize} | ${r.sizeDiffPercent}% |`;
-}).join('\n')}
+${states
+  .map((s) => {
+    const r = results[s];
+    if (r.status === 'SKIPPED') return `| ${s} | SKIPPED | - | - | - |`;
+    return `| ${s} | ${r.status} | ${r.reactSize} | ${r.angularSize} | ${r.sizeDiffPercent}% |`;
+  })
+  .join('\n')}
 
 ## Verdict
 
-${Object.values(results).every(r => r.status === 'PASS' || r.status === 'SKIPPED') ? '✅ PASS - Visual parity achieved' : '⚠️ REVIEW NEEDED - Check screenshots manually'}
+${Object.values(results).every((r) => r.status === 'PASS' || r.status === 'SKIPPED') ? '✅ PASS - Visual parity achieved' : '⚠️ REVIEW NEEDED - Check screenshots manually'}
 
 ## Manual Review
 
@@ -683,6 +696,7 @@ compareScreenshots();
 ```
 
 **Run the full comparison:**
+
 ```bash
 # Ensure Angular docs server is running
 npx ng serve docs &
@@ -701,6 +715,7 @@ cat .claude/screenshots/diff/{component}/report.md
 ```
 
 **Or spawn a subagent:**
+
 ```typescript
 Task(subagent_type: 'general-purpose', prompt: `
   Capture Angular screenshots and compare with React for {Component}.
@@ -722,6 +737,7 @@ Task(subagent_type: 'general-purpose', prompt: `
 ```
 
 **IMPORTANT**: Do NOT mark the component as complete until the Visual Screenshot Comparison passes. If differences are found:
+
 1. Identify the specific Tailwind classes causing the difference
 2. Update the Angular component to match
 3. Re-run tests
@@ -844,6 +860,7 @@ For standalone directives (trigger, positioner, etc.):
 ## Completion Signal
 
 When ALL components have:
+
 - 100% test parity (all React tests ported)
 - 100% functionality parity (all behaviors match)
 - **100% visual parity (screenshot comparison PASSED)**
