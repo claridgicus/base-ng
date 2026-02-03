@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Angular component library with accessible, unstyled primitives",
   "license": "MIT",
+  "homepage": "https://base-ng.com",
   "repository": {
     "type": "git",
     "url": "https://github.com/claridgicus/base-ng.git",

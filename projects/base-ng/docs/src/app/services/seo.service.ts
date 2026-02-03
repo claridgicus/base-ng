@@ -18,7 +18,7 @@ export class SeoService {
   private readonly activatedRoute = inject(ActivatedRoute);
 
   private readonly siteName = 'Base UI for Angular';
-  private readonly baseUrl = 'https://base-ng.dev';
+  private readonly baseUrl = 'https://base-ng.com';
   private readonly defaultOgImage = '/assets/og-image.png';
 
   init(): void {

@@ -139,7 +139,7 @@ import {
     }`,
 })
 export class LlmsTxtComponent {
-  protected readonly urlCode = `https://base-ng.dev/llms.txt`;
+  protected readonly urlCode = `https://base-ng.com/llms.txt`;
 
   protected readonly formatExampleCode = `# Base NG
 
@@ -168,7 +168,7 @@ export class LlmsTxtComponent {
 \`\`\``;
 
   protected readonly claudeExampleCode = `"I'm working with Base NG, an Angular component library.
-Documentation: https://base-ng.dev/llms.txt
+Documentation: https://base-ng.com/llms.txt
 
 Help me create a dialog component that..."`;
 
@@ -177,7 +177,7 @@ Help me create a dialog component that..."`;
 When working with AI assistants on this project, provide them with
 our component library documentation:
 
-- Base NG: https://base-ng.dev/llms.txt
+- Base NG: https://base-ng.com/llms.txt
 
 This helps AI tools generate correct code for our UI components.`;
 
@@ -258,7 +258,7 @@ npm install @copied/base-ng
 
 ## Links
 
-- Documentation: https://base-ng.dev
+- Documentation: https://base-ng.com
 - GitHub: https://github.com/anthropics/base-ng
 - npm: https://npmjs.com/package/@copied/base-ng`;
 }
