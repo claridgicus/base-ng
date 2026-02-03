@@ -222,6 +222,33 @@ Use Tailwind CSS with custom design tokens matching Base UI's aesthetic:
 - **Fast** - Lazy load all page components
 - **SEO optimized** - Meta tags, structured data, sitemap
 
+## CRITICAL Requirements (Mandatory)
+
+### 1. Live Preview MUST Work
+Every component documentation page MUST have working live demos that render actual `@base-ng/ui` components:
+
+```typescript
+// WRONG - just showing code blocks
+<docs-code-block [code]="buttonCode" language="html" />
+
+// CORRECT - live interactive demo with actual component
+<docs-demo [code]="buttonCode">
+  <base-ui-button (buttonClick)="handleClick()">Click me</base-ui-button>
+</docs-demo>
+```
+
+The `<docs-demo>` component should:
+- Render the actual component in a preview area via `<ng-content />`
+- Show/hide the source code on toggle
+- Import and use real components from `@base-ng/ui`
+
+### 2. Remove Redundant Installation Sections
+Do NOT include installation instructions on every component page. Installation should only appear on:
+- Quick Start page
+- First-time setup guides
+
+Component pages should jump straight to usage, anatomy, and examples.
+
 ## Fetching Base UI Docs for Reference
 
 When implementing a page, fetch the original for reference:

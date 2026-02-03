@@ -178,6 +178,53 @@
 
 ---
 
+## Phase 15: CRITICAL - Live Demos & Cleanup (MANDATORY)
+
+> **⚠️ BLOCKING:** The documentation is NOT complete until these tasks are done.
+> Live preview demos MUST render actual `@base-ng/ui` components, not just code blocks.
+
+| #   | Task                                               | Status | Notes                         |
+| --- | -------------------------------------------------- | ------ | ----------------------------- |
+| 76  | Fix Button docs - add live interactive demo        | [ ]    | Use `<docs-demo>` with actual component |
+| 77  | Fix Separator docs - add live interactive demo     | [ ]    | Use `<docs-demo>` with actual component |
+| 78  | Fix Progress docs - add live interactive demo      | [ ]    | Use `<docs-demo>` with actual component |
+| 79  | Fix Meter docs - add live interactive demo         | [ ]    | Use `<docs-demo>` with actual component |
+| 80  | Fix Switch docs - add live interactive demo        | [ ]    | Use `<docs-demo>` with actual component |
+| 81  | Fix Toggle docs - add live interactive demo        | [ ]    | Use `<docs-demo>` with actual component |
+| 82  | Fix Toggle Group docs - add live interactive demo  | [ ]    | Use `<docs-demo>` with actual component |
+| 83  | Fix Avatar docs - add live interactive demo        | [ ]    | Use `<docs-demo>` with actual component |
+| 84  | Fix Input docs - add live interactive demo         | [ ]    | Use `<docs-demo>` with actual component |
+| 85  | Fix Field docs - add live interactive demo         | [ ]    | Use `<docs-demo>` with actual component |
+| 86  | Fix Fieldset docs - add live interactive demo      | [ ]    | Use `<docs-demo>` with actual component |
+| 87  | Fix Checkbox docs - add live interactive demo      | [ ]    | Use `<docs-demo>` with actual component |
+| 88  | Fix Checkbox Group docs - add live interactive demo| [ ]    | Use `<docs-demo>` with actual component |
+| 89  | Fix Radio docs - add live interactive demo         | [ ]    | Use `<docs-demo>` with actual component |
+| 90  | Fix Radio Group docs - add live interactive demo   | [ ]    | Use `<docs-demo>` with actual component |
+| 91  | Fix Slider docs - add live interactive demo        | [ ]    | Use `<docs-demo>` with actual component |
+| 92  | Fix Number Field docs - add live interactive demo  | [ ]    | Use `<docs-demo>` with actual component |
+| 93  | Fix Form docs - add live interactive demo          | [ ]    | Use `<docs-demo>` with actual component |
+| 94  | Fix Collapsible docs - add live interactive demo   | [ ]    | Use `<docs-demo>` with actual component |
+| 95  | Fix Accordion docs - add live interactive demo     | [ ]    | Use `<docs-demo>` with actual component |
+| 96  | Fix Tabs docs - add live interactive demo          | [ ]    | Use `<docs-demo>` with actual component |
+| 97  | Fix Tooltip docs - add live interactive demo       | [ ]    | Use `<docs-demo>` with actual component |
+| 98  | Fix Popover docs - add live interactive demo       | [ ]    | Use `<docs-demo>` with actual component |
+| 99  | Fix Preview Card docs - add live interactive demo  | [ ]    | Use `<docs-demo>` with actual component |
+| 100 | Fix Dialog docs - add live interactive demo        | [ ]    | Use `<docs-demo>` with actual component |
+| 101 | Fix Alert Dialog docs - add live interactive demo  | [ ]    | Use `<docs-demo>` with actual component |
+| 102 | Fix Menu docs - add live interactive demo          | [ ]    | Use `<docs-demo>` with actual component |
+| 103 | Fix Context Menu docs - add live interactive demo  | [ ]    | Use `<docs-demo>` with actual component |
+| 104 | Fix Menubar docs - add live interactive demo       | [ ]    | Use `<docs-demo>` with actual component |
+| 105 | Fix Navigation Menu docs - add live interactive demo| [ ]   | Use `<docs-demo>` with actual component |
+| 106 | Fix Toolbar docs - add live interactive demo       | [ ]    | Use `<docs-demo>` with actual component |
+| 107 | Fix Select docs - add live interactive demo        | [ ]    | Use `<docs-demo>` with actual component |
+| 108 | Fix Combobox docs - add live interactive demo      | [ ]    | Use `<docs-demo>` with actual component |
+| 109 | Fix Autocomplete docs - add live interactive demo  | [ ]    | Use `<docs-demo>` with actual component |
+| 110 | Fix Scroll Area docs - add live interactive demo   | [ ]    | Use `<docs-demo>` with actual component |
+| 111 | Fix Toast docs - add live interactive demo         | [ ]    | Use `<docs-demo>` with actual component |
+| 112 | Remove redundant Installation sections from all component pages | [ ] | Keep only on Quick Start |
+
+---
+
 ## Documentation Page Structure
 
 Each component page should include:
@@ -224,10 +271,10 @@ Each component page should include:
 
 ## Progress Summary
 
-- **Total Tasks:** 75
+- **Total Tasks:** 112
 - **Completed:** 75
 - **In Progress:** 0
-- **Remaining:** 0
+- **Remaining:** 37 (Phase 15 - CRITICAL)
 
 ---
 
