@@ -16,7 +16,7 @@ import {
   effect,
   ElementRef,
   inject,
-  input,
+  Input,
   numberAttribute,
   OnDestroy,
   signal,
@@ -72,30 +72,60 @@ export class TooltipPositionerDirective implements OnDestroy {
   protected readonly floatingService = inject(FloatingService);
   private readonly elementRef = inject(ElementRef<HTMLElement>);
 
+  // Internal signals for reactive updates
+  readonly _side = signal<Side>('top');
+  readonly _align = signal<Alignment | null>(null);
+  readonly _sideOffset = signal(8);
+  readonly _alignOffset = signal(0);
+
   /**
    * The preferred side of the trigger to position the tooltip.
    */
-  readonly side = input<Side>('top');
+  @Input()
+  set side(value: Side) {
+    this._side.set(value);
+  }
+  get side(): Side {
+    return this._side();
+  }
 
   /**
    * The preferred alignment of the tooltip.
    */
-  readonly align = input<Alignment | null>(null);
+  @Input()
+  set align(value: Alignment | null) {
+    this._align.set(value);
+  }
+  get align(): Alignment | null {
+    return this._align();
+  }
 
   /**
    * The offset from the trigger.
    */
-  readonly sideOffset = input(8, { transform: numberAttribute });
+  @Input({ transform: numberAttribute })
+  set sideOffset(value: number) {
+    this._sideOffset.set(value);
+  }
+  get sideOffset(): number {
+    return this._sideOffset();
+  }
 
   /**
    * The alignment offset.
    */
-  readonly alignOffset = input(0, { transform: numberAttribute });
+  @Input({ transform: numberAttribute })
+  set alignOffset(value: number) {
+    this._alignOffset.set(value);
+  }
+  get alignOffset(): number {
+    return this._alignOffset();
+  }
 
   /** Computed placement */
   readonly placementSignal = computed<FloatingPlacement>(() => {
-    const side = this.side();
-    const alignment = this.align();
+    const side = this._side();
+    const alignment = this._align();
     if (alignment) {
       return `${side}-${alignment}` as FloatingPlacement;
     }
@@ -166,8 +196,8 @@ export class TooltipPositionerDirective implements OnDestroy {
     // Watch for placement changes
     effect(() => {
       const placement = this.placementSignal();
-      const sideOffset = this.sideOffset();
-      const alignOffset = this.alignOffset();
+      const sideOffset = this._sideOffset();
+      const alignOffset = this._alignOffset();
 
       this.floatingService.configure({
         placement,
@@ -195,7 +225,7 @@ export class TooltipPositionerDirective implements OnDestroy {
     this.floatingService.configure({
       placement: this.placementSignal(),
       middleware: [
-        offset({ mainAxis: this.sideOffset(), crossAxis: this.alignOffset() }),
+        offset({ mainAxis: this._sideOffset(), crossAxis: this._alignOffset() }),
         flip(),
         shift({ padding: 8 }),
       ],

@@ -6,7 +6,8 @@
 import {
   Directive,
   inject,
-  input,
+  Input,
+  signal,
   OnInit,
   OnDestroy,
 } from '@angular/core';
@@ -54,11 +55,16 @@ let itemIdCounter = 0;
 export class NavigationMenuItemDirective implements OnInit, OnDestroy {
   private readonly rootContext = inject(NAVIGATION_MENU_ROOT_CONTEXT);
 
+  // Internal signal for input
+  private readonly _value = signal<string>(`navigation-menu-item-${itemIdCounter++}`);
+
   /**
    * A unique value that identifies this navigation menu item.
    * If no value is provided, a unique ID will be generated automatically.
    */
-  readonly value = input<string>(`navigation-menu-item-${itemIdCounter++}`);
+  @Input()
+  set value(value: string) { this._value.set(value); }
+  get value(): string { return this._value(); }
 
   /**
    * The context provided to child components.
@@ -73,7 +79,7 @@ export class NavigationMenuItemDirective implements OnInit, OnDestroy {
   private actualValue = '';
 
   ngOnInit(): void {
-    this.actualValue = this.value();
+    this.actualValue = this._value();
     // Update the context with actual value using defineProperty
     Object.defineProperty(this.itemContext, 'value', {
       get: () => this.actualValue,

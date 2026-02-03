@@ -14,11 +14,11 @@ import {
   booleanAttribute,
   Directive,
   effect,
+  EventEmitter,
   HostListener,
   inject,
-  input,
-  model,
-  output,
+  Input,
+  Output,
   signal,
   DestroyRef,
 } from '@angular/core';
@@ -71,27 +71,67 @@ export class PopoverRootDirective {
   /**
    * The controlled open state of the popover.
    */
-  readonly open = model<boolean>(false);
+  private readonly _open = signal<boolean>(false);
+  @Input()
+  get open(): boolean {
+    return this._open();
+  }
+  set open(value: boolean) {
+    this._open.set(value);
+  }
+
+  /**
+   * Emits when the open state changes with detailed event info.
+   */
+  @Output() readonly openChange = new EventEmitter<boolean>();
 
   /**
    * The default open state when uncontrolled.
    */
-  readonly defaultOpen = input(false, { transform: booleanAttribute });
+  private readonly _defaultOpen = signal(false);
+  @Input({ transform: booleanAttribute })
+  get defaultOpen(): boolean {
+    return this._defaultOpen();
+  }
+  set defaultOpen(value: boolean) {
+    this._defaultOpen.set(value);
+  }
 
   /**
    * Whether the popover is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  private readonly _disabled = signal(false);
+  @Input({ transform: booleanAttribute })
+  get disabled(): boolean {
+    return this._disabled();
+  }
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
 
   /**
    * Whether to close on outside click.
    */
-  readonly closeOnOutsideClick = input(true, { transform: booleanAttribute });
+  private readonly _closeOnOutsideClick = signal(true);
+  @Input({ transform: booleanAttribute })
+  get closeOnOutsideClick(): boolean {
+    return this._closeOnOutsideClick();
+  }
+  set closeOnOutsideClick(value: boolean) {
+    this._closeOnOutsideClick.set(value);
+  }
 
   /**
    * Whether to close on escape key.
    */
-  readonly closeOnEscape = input(true, { transform: booleanAttribute });
+  private readonly _closeOnEscape = signal(true);
+  @Input({ transform: booleanAttribute })
+  get closeOnEscape(): boolean {
+    return this._closeOnEscape();
+  }
+  set closeOnEscape(value: boolean) {
+    this._closeOnEscape.set(value);
+  }
 
   /**
    * Whether the popover is modal.
@@ -99,12 +139,19 @@ export class PopoverRootDirective {
    * - `true`: The popover blocks outside interactions.
    * - `'trap-focus'`: Focus is trapped within the popover.
    */
-  readonly modal = input<boolean | 'trap-focus'>(false);
+  private readonly _modal = signal<boolean | 'trap-focus'>(false);
+  @Input()
+  get modal(): boolean | 'trap-focus' {
+    return this._modal();
+  }
+  set modal(value: boolean | 'trap-focus') {
+    this._modal.set(value);
+  }
 
   /**
    * Emits when the open state changes with detailed event info.
    */
-  readonly openChanged = output<PopoverOpenChangeEventDetails>();
+  @Output() readonly openChanged = new EventEmitter<PopoverOpenChangeEventDetails>();
 
   /** Internal open state */
   private readonly internalOpen = signal(false);
@@ -125,9 +172,9 @@ export class PopoverRootDirective {
   readonly context: PopoverContext = {
     open: this.internalOpen(),
     openSignal: this.internalOpen,
-    disabled: this.disabled(),
-    disabledSignal: this.disabled,
-    modalSignal: this.modal,
+    disabled: this._disabled(),
+    disabledSignal: this._disabled,
+    modalSignal: this._modal,
     openPopover: (reason?: PopoverOpenChangeReason) => this.setOpen(true, reason),
     closePopover: (reason?: PopoverOpenChangeReason) => this.setOpen(false, reason),
     togglePopover: (reason?: PopoverOpenChangeReason) =>
@@ -157,14 +204,14 @@ export class PopoverRootDirective {
   constructor() {
     // Initialize with default open
     effect(() => {
-      if (this.defaultOpen() && !this.internalOpen()) {
+      if (this._defaultOpen() && !this.internalOpen()) {
         this.internalOpen.set(true);
       }
     });
 
-    // Sync model to internal state
+    // Sync input to internal state
     effect(() => {
-      this.internalOpen.set(this.open());
+      this.internalOpen.set(this._open());
     });
 
     // Set up outside click and escape handlers
@@ -200,7 +247,7 @@ export class PopoverRootDirective {
    * Set the open state with a reason.
    */
   setOpen(open: boolean, reason: PopoverOpenChangeReason = 'imperative'): void {
-    if (this.disabled()) {
+    if (this._disabled()) {
       return;
     }
 
@@ -209,7 +256,8 @@ export class PopoverRootDirective {
     }
 
     this.internalOpen.set(open);
-    this.open.set(open);
+    this._open.set(open);
+    this.openChange.emit(open);
 
     this.openChanged.emit({
       open,
@@ -225,7 +273,7 @@ export class PopoverRootDirective {
 
     // Outside click handler
     this.clickListener = (event: MouseEvent) => {
-      if (!this.closeOnOutsideClick()) return;
+      if (!this._closeOnOutsideClick()) return;
 
       const target = event.target as HTMLElement;
       const trigger = this.triggerElement();
@@ -241,7 +289,7 @@ export class PopoverRootDirective {
 
     // Escape key handler
     this.keydownListener = (event: KeyboardEvent) => {
-      if (!this.closeOnEscape()) return;
+      if (!this._closeOnEscape()) return;
 
       if (event.key === 'Escape') {
         this.setOpen(false, 'escape-key');

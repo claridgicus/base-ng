@@ -9,8 +9,9 @@ import {
   Signal,
   computed,
   inject,
-  input,
-  output,
+  Input,
+  Output,
+  EventEmitter,
   signal,
   booleanAttribute,
 } from '@angular/core';
@@ -60,12 +61,12 @@ let autocompleteCounter = 0;
   ],
   host: {
     '[attr.data-open]': 'isOpen() ? "" : null',
-    '[attr.data-disabled]': 'disabled() ? "" : null',
-    '[attr.data-readonly]': 'readOnly() ? "" : null',
-    '[attr.data-mode]': 'mode()',
+    '[attr.data-disabled]': '_disabled() ? "" : null',
+    '[attr.data-readonly]': '_readOnly() ? "" : null',
+    '[attr.data-mode]': '_mode()',
     '[class.base-ui-autocomplete-root]': 'true',
     '[class.base-ui-autocomplete-root-open]': 'isOpen()',
-    '[class.base-ui-autocomplete-root-disabled]': 'disabled()',
+    '[class.base-ui-autocomplete-root-disabled]': '_disabled()',
   },
 })
 export class AutocompleteRootDirective<T = unknown> {
@@ -74,7 +75,25 @@ export class AutocompleteRootDirective<T = unknown> {
   /** Unique ID for this autocomplete instance */
   readonly rootId = `base-ui-autocomplete-${++autocompleteCounter}`;
 
-  // Inputs
+  // Internal signals for inputs
+  readonly _mode = signal<AutocompleteMode>('list');
+  private readonly _open = signal<boolean | undefined>(undefined);
+  private readonly _defaultOpen = signal(false);
+  private readonly _value = signal<T | T[] | null | undefined>(undefined);
+  private readonly _defaultValue = signal<T | T[] | null>(null);
+  private readonly _inputValue = signal<string | undefined>(undefined);
+  private readonly _defaultInputValue = signal('');
+  readonly _disabled = signal(false);
+  readonly _readOnly = signal(false);
+  private readonly _required = signal(false);
+  private readonly _multiple = signal(false);
+  private readonly _filterFn = signal<AutocompleteFilterFn<T>>(
+    defaultAutocompleteFilter as AutocompleteFilterFn<T>
+  );
+  private readonly _filterOptions = signal<AutocompleteFilterOptions>({});
+  private readonly _valueEqualityFn = signal<(a: T, b: T) => boolean>((a, b) => a === b);
+  private readonly _valueToString = signal<(value: T) => string>((value) => String(value));
+
   /**
    * Autocomplete mode:
    * - 'list': Shows filtered items only (default)
@@ -82,67 +101,155 @@ export class AutocompleteRootDirective<T = unknown> {
    * - 'inline': Shows static items with inline completion
    * - 'none': Shows static items without filtering or completion
    */
-  readonly mode = input<AutocompleteMode>('list');
+  @Input()
+  get mode(): AutocompleteMode {
+    return this._mode();
+  }
+  set mode(value: AutocompleteMode) {
+    this._mode.set(value);
+  }
 
   /** Whether the autocomplete is open (controlled) */
-  readonly open = input<boolean | undefined>(undefined);
+  @Input()
+  get open(): boolean | undefined {
+    return this._open();
+  }
+  set open(value: boolean | undefined) {
+    this._open.set(value);
+  }
 
   /** Default open state for uncontrolled mode */
-  readonly defaultOpen = input(false);
+  @Input()
+  get defaultOpen(): boolean {
+    return this._defaultOpen();
+  }
+  set defaultOpen(value: boolean) {
+    this._defaultOpen.set(value);
+  }
 
   /** Selected value (controlled) */
-  readonly value = input<T | T[] | null | undefined>(undefined);
+  @Input()
+  get value(): T | T[] | null | undefined {
+    return this._value();
+  }
+  set value(val: T | T[] | null | undefined) {
+    this._value.set(val);
+  }
 
   /** Default selected value for uncontrolled mode */
-  readonly defaultValue = input<T | T[] | null>(null);
+  @Input()
+  get defaultValue(): T | T[] | null {
+    return this._defaultValue();
+  }
+  set defaultValue(value: T | T[] | null) {
+    this._defaultValue.set(value);
+  }
 
   /** Input value (controlled) */
-  readonly inputValue = input<string | undefined>(undefined);
+  @Input()
+  get inputValue(): string | undefined {
+    return this._inputValue();
+  }
+  set inputValue(value: string | undefined) {
+    this._inputValue.set(value);
+  }
 
   /** Default input value for uncontrolled mode */
-  readonly defaultInputValue = input('');
+  @Input()
+  get defaultInputValue(): string {
+    return this._defaultInputValue();
+  }
+  set defaultInputValue(value: string) {
+    this._defaultInputValue.set(value);
+  }
 
   /** Whether the autocomplete is disabled */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get disabled(): boolean {
+    return this._disabled();
+  }
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
 
   /** Whether the autocomplete is read-only */
-  readonly readOnly = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get readOnly(): boolean {
+    return this._readOnly();
+  }
+  set readOnly(value: boolean) {
+    this._readOnly.set(value);
+  }
 
   /** Whether the autocomplete is required */
-  readonly required = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get required(): boolean {
+    return this._required();
+  }
+  set required(value: boolean) {
+    this._required.set(value);
+  }
 
   /** Whether multiple selection is enabled */
-  readonly multiple = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get multiple(): boolean {
+    return this._multiple();
+  }
+  set multiple(value: boolean) {
+    this._multiple.set(value);
+  }
 
   /** Custom filter function */
-  readonly filterFn = input<AutocompleteFilterFn<T>>(
-    defaultAutocompleteFilter as AutocompleteFilterFn<T>
-  );
+  @Input()
+  get filterFn(): AutocompleteFilterFn<T> {
+    return this._filterFn();
+  }
+  set filterFn(value: AutocompleteFilterFn<T>) {
+    this._filterFn.set(value);
+  }
 
   /** Filter options */
-  readonly filterOptions = input<AutocompleteFilterOptions>({});
+  @Input()
+  get filterOptions(): AutocompleteFilterOptions {
+    return this._filterOptions();
+  }
+  set filterOptions(value: AutocompleteFilterOptions) {
+    this._filterOptions.set(value);
+  }
 
   /** Custom equality function for comparing values */
-  readonly valueEqualityFn = input<(a: T, b: T) => boolean>((a, b) => a === b);
+  @Input()
+  get valueEqualityFn(): (a: T, b: T) => boolean {
+    return this._valueEqualityFn();
+  }
+  set valueEqualityFn(value: (a: T, b: T) => boolean) {
+    this._valueEqualityFn.set(value);
+  }
 
   /** Function to convert value to string for display */
-  readonly valueToString = input<(value: T) => string>((value) => String(value));
+  @Input()
+  get valueToString(): (value: T) => string {
+    return this._valueToString();
+  }
+  set valueToString(value: (value: T) => string) {
+    this._valueToString.set(value);
+  }
 
   // Outputs
   /** Emitted when open state changes */
-  readonly openChange = output<boolean>();
+  @Output() readonly openChange = new EventEmitter<boolean>();
 
   /** Emitted when value changes */
-  readonly valueChange = output<T | T[] | null>();
+  @Output() readonly valueChange = new EventEmitter<T | T[] | null>();
 
   /** Emitted when input value changes */
-  readonly inputValueChange = output<string>();
+  @Output() readonly inputValueChange = new EventEmitter<string>();
 
   /** Emitted with change details */
-  readonly change = output<AutocompleteChangeDetails<T>>();
+  @Output() readonly change = new EventEmitter<AutocompleteChangeDetails<T>>();
 
   /** Emitted when highlighted value changes */
-  readonly highlightChange = output<AutocompleteHighlightDetails<T>>();
+  @Output() readonly highlightChange = new EventEmitter<AutocompleteHighlightDetails<T>>();
 
   // Internal state
   protected readonly openInternal = signal(false);
@@ -159,13 +266,13 @@ export class AutocompleteRootDirective<T = unknown> {
 
   /** Computed open state */
   readonly isOpen = computed(() => {
-    const controlled = this.open();
+    const controlled = this._open();
     return controlled !== undefined ? controlled : this.openInternal();
   });
 
   /** Computed value */
   readonly currentValue = computed(() => {
-    const controlled = this.value();
+    const controlled = this._value();
     return controlled !== undefined ? controlled : this.valueInternal();
   });
 
@@ -176,7 +283,7 @@ export class AutocompleteRootDirective<T = unknown> {
       return inlineVal;
     }
 
-    const controlled = this.inputValue();
+    const controlled = this._inputValue();
     return controlled !== undefined ? controlled : this.inputValueInternal();
   });
 
@@ -184,8 +291,8 @@ export class AutocompleteRootDirective<T = unknown> {
   readonly filteredItems = computed(() => {
     const allItems = this.itemsInternal();
     const inputVal = this.currentInputValue();
-    const currentMode = this.mode();
-    const options = this.filterOptions();
+    const currentMode = this._mode();
+    const options = this._filterOptions();
 
     // In 'inline' or 'none' mode, don't filter the list
     if (currentMode === 'inline' || currentMode === 'none') {
@@ -193,7 +300,7 @@ export class AutocompleteRootDirective<T = unknown> {
     }
 
     // In 'list' or 'both' mode, filter the items
-    return this.filterFn()(allItems, inputVal, this.valueToString(), options);
+    return this._filterFn()(allItems, inputVal, this._valueToString(), options);
   });
 
   /** The context object for child components */
@@ -201,9 +308,9 @@ export class AutocompleteRootDirective<T = unknown> {
 
   constructor() {
     // Initialize from defaults
-    const defaultOpenVal = this.defaultOpen();
-    const defaultVal = this.defaultValue();
-    const defaultInputVal = this.defaultInputValue();
+    const defaultOpenVal = this._defaultOpen();
+    const defaultVal = this._defaultValue();
+    const defaultInputVal = this._defaultInputValue();
 
     if (defaultOpenVal) {
       this.openInternal.set(defaultOpenVal);
@@ -234,19 +341,19 @@ export class AutocompleteRootDirective<T = unknown> {
         return self.highlightedValueInternal();
       },
       get disabled() {
-        return self.disabled();
+        return self._disabled();
       },
       get readOnly() {
-        return self.readOnly();
+        return self._readOnly();
       },
       get required() {
-        return self.required();
+        return self._required();
       },
       get multiple() {
-        return self.multiple();
+        return self._multiple();
       },
       get mode() {
-        return self.mode();
+        return self._mode();
       },
       get inlineValue() {
         return self.inlineValueInternal();
@@ -256,11 +363,11 @@ export class AutocompleteRootDirective<T = unknown> {
       valueSignal: this.currentValue,
       inputValueSignal: this.currentInputValue,
       highlightedValueSignal: this.highlightedValueInternal.asReadonly(),
-      disabledSignal: computed(() => this.disabled()) as Signal<boolean>,
-      readOnlySignal: computed(() => this.readOnly()) as Signal<boolean>,
-      requiredSignal: computed(() => this.required()) as Signal<boolean>,
-      multipleSignal: computed(() => this.multiple()) as Signal<boolean>,
-      modeSignal: computed(() => this.mode()) as Signal<AutocompleteMode>,
+      disabledSignal: this._disabled.asReadonly(),
+      readOnlySignal: this._readOnly.asReadonly(),
+      requiredSignal: this._required.asReadonly(),
+      multipleSignal: this._multiple.asReadonly(),
+      modeSignal: this._mode.asReadonly(),
       inlineValueSignal: this.inlineValueInternal.asReadonly(),
 
       triggerElement: this.triggerElementInternal.asReadonly(),
@@ -285,19 +392,19 @@ export class AutocompleteRootDirective<T = unknown> {
       setListElement: (el) => this.listElementInternal.set(el),
 
       isSelected: this.isSelected.bind(this),
-      valueEquality: (a, b) => this.valueEqualityFn()(a, b),
+      valueEquality: (a, b) => this._valueEqualityFn()(a, b),
       hasSelectedValue: this.hasSelectedValue.bind(this),
-      getValueString: (value) => this.valueToString()(value),
+      getValueString: (value) => this._valueToString()(value),
     };
   }
 
   /** Set the open state */
   setOpen(open: boolean, _reason?: string): void {
-    if (this.disabled() || this.readOnly()) {
+    if (this._disabled() || this._readOnly()) {
       return;
     }
 
-    if (this.open() === undefined) {
+    if (this._open() === undefined) {
       this.openInternal.set(open);
     }
     this.openChange.emit(open);
@@ -310,11 +417,11 @@ export class AutocompleteRootDirective<T = unknown> {
 
   /** Set the selected value */
   setValue(value: T | T[] | null): void {
-    if (this.disabled() || this.readOnly()) {
+    if (this._disabled() || this._readOnly()) {
       return;
     }
 
-    if (this.value() === undefined) {
+    if (this._value() === undefined) {
       this.valueInternal.set(value);
     }
     this.valueChange.emit(value);
@@ -324,24 +431,24 @@ export class AutocompleteRootDirective<T = unknown> {
     });
 
     // Update input value to show selected value (single mode)
-    if (!this.multiple() && value !== null) {
-      const stringValue = this.valueToString()(value as T);
+    if (!this._multiple() && value !== null) {
+      const stringValue = this._valueToString()(value as T);
       this.setInputValue(stringValue);
     }
   }
 
   /** Toggle a value in multiple mode */
   toggleValue(value: T): void {
-    if (!this.multiple()) {
+    if (!this._multiple()) {
       this.setValue(value);
       return;
     }
 
     const current = (this.currentValue() as T[]) ?? [];
-    const isSelected = current.some((v) => this.valueEqualityFn()(v, value));
+    const isSelected = current.some((v) => this._valueEqualityFn()(v, value));
 
     if (isSelected) {
-      const newValue = current.filter((v) => !this.valueEqualityFn()(v, value));
+      const newValue = current.filter((v) => !this._valueEqualityFn()(v, value));
       this.setValue(newValue);
       this.change.emit({ reason: 'removeOption', value: newValue });
     } else {
@@ -356,13 +463,13 @@ export class AutocompleteRootDirective<T = unknown> {
     // Clear inline value when user types
     this.inlineValueInternal.set('');
 
-    if (this.inputValue() === undefined) {
+    if (this._inputValue() === undefined) {
       this.inputValueInternal.set(value);
     }
     this.inputValueChange.emit(value);
 
     // Handle inline completion in 'both' or 'inline' mode
-    const currentMode = this.mode();
+    const currentMode = this._mode();
     if (currentMode === 'both' || currentMode === 'inline') {
       this.updateInlineCompletion(value);
     }
@@ -377,13 +484,13 @@ export class AutocompleteRootDirective<T = unknown> {
 
     const items = this.itemsInternal();
     const matchingItem = items.find((item) => {
-      const itemString = item.textValue ?? item.label ?? this.valueToString()(item.value);
+      const itemString = item.textValue ?? item.label ?? this._valueToString()(item.value);
       return itemString.toLowerCase().startsWith(inputVal.toLowerCase());
     });
 
     if (matchingItem) {
       const itemString =
-        matchingItem.textValue ?? matchingItem.label ?? this.valueToString()(matchingItem.value);
+        matchingItem.textValue ?? matchingItem.label ?? this._valueToString()(matchingItem.value);
       // Only set inline value if it would extend the current input
       if (itemString.length > inputVal.length) {
         this.inlineValueInternal.set(itemString);
@@ -420,9 +527,9 @@ export class AutocompleteRootDirective<T = unknown> {
   /** Register an item */
   registerItem(item: AutocompleteItemData<T>): void {
     this.itemsInternal.update((items) => {
-      const exists = items.some((i) => this.valueEqualityFn()(i.value, item.value));
+      const exists = items.some((i) => this._valueEqualityFn()(i.value, item.value));
       if (exists) {
-        return items.map((i) => (this.valueEqualityFn()(i.value, item.value) ? item : i));
+        return items.map((i) => (this._valueEqualityFn()(i.value, item.value) ? item : i));
       }
       return [...items, item];
     });
@@ -431,7 +538,7 @@ export class AutocompleteRootDirective<T = unknown> {
   /** Unregister an item */
   unregisterItem(value: T): void {
     this.itemsInternal.update((items) =>
-      items.filter((i) => !this.valueEqualityFn()(i.value, value))
+      items.filter((i) => !this._valueEqualityFn()(i.value, value))
     );
   }
 
@@ -442,11 +549,11 @@ export class AutocompleteRootDirective<T = unknown> {
       return false;
     }
 
-    if (this.multiple()) {
-      return (current as T[]).some((v) => this.valueEqualityFn()(v, value));
+    if (this._multiple()) {
+      return (current as T[]).some((v) => this._valueEqualityFn()(v, value));
     }
 
-    return this.valueEqualityFn()(current as T, value);
+    return this._valueEqualityFn()(current as T, value);
   }
 
   /** Check if there's any selected value */
@@ -456,7 +563,7 @@ export class AutocompleteRootDirective<T = unknown> {
       return false;
     }
 
-    if (this.multiple()) {
+    if (this._multiple()) {
       return (current as T[]).length > 0;
     }
 
@@ -465,7 +572,7 @@ export class AutocompleteRootDirective<T = unknown> {
 
   /** Get string representation of value for item lookup */
   private itemToStringLabel(value: T): string {
-    const item = this.itemsInternal().find((i) => this.valueEqualityFn()(i.value, value));
-    return item?.textValue ?? item?.label ?? this.valueToString()(value);
+    const item = this.itemsInternal().find((i) => this._valueEqualityFn()(i.value, value));
+    return item?.textValue ?? item?.label ?? this._valueToString()(value);
   }
 }

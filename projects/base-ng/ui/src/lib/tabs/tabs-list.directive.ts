@@ -10,7 +10,7 @@ import {
   Directive,
   ElementRef,
   inject,
-  input,
+  Input,
   signal,
 } from '@angular/core';
 import {
@@ -64,12 +64,28 @@ export class TabsListDirective {
    * Whether to activate tabs on focus (arrow key navigation).
    * If false, tabs are only activated on click/Enter/Space.
    */
-  readonly activateOnFocus = input(false, { transform: booleanAttribute });
+  readonly _activateOnFocus = signal<boolean>(false);
+
+  @Input({ transform: booleanAttribute })
+  set activateOnFocus(val: boolean) {
+    this._activateOnFocus.set(val);
+  }
+  get activateOnFocus(): boolean {
+    return this._activateOnFocus();
+  }
 
   /**
    * Whether keyboard focus should loop from last to first tab and vice versa.
    */
-  readonly loopFocus = input(true, { transform: booleanAttribute });
+  readonly _loopFocus = signal<boolean>(true);
+
+  @Input({ transform: booleanAttribute })
+  set loopFocus(val: boolean) {
+    this._loopFocus.set(val);
+  }
+  get loopFocus(): boolean {
+    return this._loopFocus();
+  }
 
   /** Currently highlighted tab index */
   private readonly highlightedIndex = signal(0);
@@ -87,7 +103,7 @@ export class TabsListDirective {
 
   /** Context provided to tab children */
   readonly listContext: TabsListContext = {
-    activateOnFocus: this.activateOnFocus(),
+    activateOnFocus: this._activateOnFocus(),
     highlightedTabIndex: this.highlightedIndex(),
     setHighlightedTabIndex: (index: number) => this.highlightedIndex.set(index),
     tabsListElement: this.elementRef.nativeElement,
@@ -162,7 +178,7 @@ export class TabsListDirective {
       tab?.focus();
 
       // If activateOnFocus is enabled, activate the tab
-      if (this.activateOnFocus()) {
+      if (this._activateOnFocus()) {
         const value = tab?.getAttribute('data-value');
         if (value !== null && value !== undefined) {
           this.context.selectTab(value);
@@ -181,7 +197,7 @@ export class TabsListDirective {
   ): number {
     const next = current + direction;
 
-    if (this.loopFocus()) {
+    if (this._loopFocus()) {
       if (next < 0) return total - 1;
       if (next >= total) return 0;
       return next;

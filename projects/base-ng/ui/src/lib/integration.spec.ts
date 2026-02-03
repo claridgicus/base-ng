@@ -620,7 +620,7 @@ describe('Integration Tests', () => {
       template: `
         <div baseUiDialogRoot #dialog="dialogRoot">
           <button baseUiDialogTrigger>Open Dialog</button>
-          @if (dialog.open()) {
+          @if (dialog.internalOpen()) {
             <div baseUiDialogBackdrop></div>
             <div baseUiDialogPopup>
               <h2 baseUiDialogTitle>Dialog Title</h2>
@@ -658,7 +658,7 @@ describe('Integration Tests', () => {
       trigger.click();
       fixture.detectChanges();
 
-      expect(component.dialog.open()).toBe(true);
+      expect(component.dialog.internalOpen()).toBe(true);
     });
 
     it('should close dialog on close button click', () => {
@@ -672,7 +672,7 @@ describe('Integration Tests', () => {
       closeBtn.click();
       fixture.detectChanges();
 
-      expect(component.dialog.open()).toBe(false);
+      expect(component.dialog.internalOpen()).toBe(false);
     });
   });
 

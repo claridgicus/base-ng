@@ -8,8 +8,9 @@ import {
   computed,
   effect,
   inject,
-  input,
-  output,
+  Input,
+  Output,
+  EventEmitter,
   signal,
   booleanAttribute,
   numberAttribute,
@@ -52,7 +53,7 @@ let navigationMenuIdCounter = 0;
   standalone: true,
   exportAs: 'navigationMenuRoot',
   host: {
-    '[attr.data-orientation]': 'orientation()',
+    '[attr.data-orientation]': '_orientation()',
     '[attr.data-open]': 'openSignal() ? "" : null',
     '[class.base-ui-navigation-menu-root]': 'true',
     '[class.base-ui-navigation-menu-root-open]': 'openSignal()',
@@ -71,40 +72,60 @@ export class NavigationMenuRootDirective {
   private readonly elementRef = inject(ElementRef);
   private readonly rootId = `base-ui-navigation-menu-${navigationMenuIdCounter++}`;
 
+  // Internal signals for inputs
+  private readonly _defaultValue = signal<string | null>(null);
+  private readonly _value = signal<string | null>(null);
+  readonly _orientation = signal<NavigationMenuOrientation>('horizontal');
+  private readonly _delay = signal<number>(50);
+  private readonly _closeDelay = signal<number>(50);
+  private readonly _disabled = signal<boolean>(false);
+
   /**
    * The default value (which item is initially active).
    */
-  readonly defaultValue = input<string | null>(null);
+  @Input()
+  set defaultValue(value: string | null) { this._defaultValue.set(value); }
+  get defaultValue(): string | null { return this._defaultValue(); }
 
   /**
    * The controlled value (which item is active).
    */
-  readonly value = input<string | null>(null);
+  @Input()
+  set value(value: string | null) { this._value.set(value); }
+  get value(): string | null { return this._value(); }
 
   /**
    * Orientation of the navigation menu.
    */
-  readonly orientation = input<NavigationMenuOrientation>('horizontal');
+  @Input()
+  set orientation(value: NavigationMenuOrientation) { this._orientation.set(value); }
+  get orientation(): NavigationMenuOrientation { return this._orientation(); }
 
   /**
    * Delay before opening a menu on hover (in ms).
    */
-  readonly delay = input(50, { transform: numberAttribute });
+  @Input({ transform: numberAttribute })
+  set delay(value: number) { this._delay.set(value); }
+  get delay(): number { return this._delay(); }
 
   /**
    * Delay before closing a menu (in ms).
    */
-  readonly closeDelay = input(50, { transform: numberAttribute });
+  @Input({ transform: numberAttribute })
+  set closeDelay(value: number) { this._closeDelay.set(value); }
+  get closeDelay(): number { return this._closeDelay(); }
 
   /**
    * Whether the navigation menu is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  set disabled(value: boolean) { this._disabled.set(value); }
+  get disabled(): boolean { return this._disabled(); }
 
   /**
    * Event emitted when the value changes.
    */
-  readonly valueChange = output<{
+  @Output() readonly valueChange = new EventEmitter<{
     value: string | null;
     details: NavigationMenuChangeEventDetails;
   }>();
@@ -112,7 +133,7 @@ export class NavigationMenuRootDirective {
   /**
    * Event emitted when open/close animation completes.
    */
-  readonly openChangeComplete = output<boolean>();
+  @Output() readonly openChangeComplete = new EventEmitter<boolean>();
 
   // Internal state signals
   private readonly valueInternal = signal<string | null>(null);
@@ -141,14 +162,14 @@ export class NavigationMenuRootDirective {
     const self = this;
 
     // Initialize with defaultValue
-    const initialValue = this.defaultValue();
+    const initialValue = this._defaultValue();
     if (initialValue !== null) {
       this.valueInternal.set(initialValue);
     }
 
     // Sync controlled value to internal state
     effect(() => {
-      const controlledValue = this.value();
+      const controlledValue = this._value();
       if (controlledValue !== null) {
         this.valueInternal.set(controlledValue);
       }
@@ -254,14 +275,14 @@ export class NavigationMenuRootDirective {
         return self.elementRef.nativeElement;
       },
       get orientation() {
-        return self.orientation();
+        return self._orientation();
       },
-      orientationSignal: this.orientation as Signal<NavigationMenuOrientation>,
+      orientationSignal: this._orientation.asReadonly(),
       get delay() {
-        return self.delay();
+        return self._delay();
       },
       get closeDelay() {
-        return self.closeDelay();
+        return self._closeDelay();
       },
       get viewportInert() {
         return self.viewportInertInternal();

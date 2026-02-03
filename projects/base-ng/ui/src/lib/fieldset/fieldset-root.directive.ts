@@ -13,7 +13,7 @@ import {
   booleanAttribute,
   computed,
   Directive,
-  input,
+  Input,
   signal,
 } from '@angular/core';
 import { FIELDSET_CONTEXT, FieldsetContext } from './fieldset.types';
@@ -39,24 +39,28 @@ import { FIELDSET_CONTEXT, FieldsetContext } from './fieldset.types';
       provide: FIELDSET_CONTEXT,
       useFactory: (directive: FieldsetRootDirective): FieldsetContext => ({
         legendId: directive.legendId,
-        disabled: directive.disabled,
+        disabled: directive._disabled,
       }),
       deps: [FieldsetRootDirective],
     },
   ],
   host: {
     '[attr.aria-labelledby]': 'legendId()',
-    '[attr.data-disabled]': 'disabled() ? "" : null',
-    '[attr.disabled]': 'disabled() ? "" : null',
+    '[attr.data-disabled]': '_disabled() ? "" : null',
+    '[attr.disabled]': '_disabled() ? "" : null',
     '[class.base-ui-fieldset]': 'true',
-    '[class.base-ui-fieldset-disabled]': 'disabled()',
+    '[class.base-ui-fieldset-disabled]': '_disabled()',
   },
 })
 export class FieldsetRootDirective {
   /**
    * Whether the fieldset is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  readonly _disabled = signal<boolean>(false);
+
+  @Input({ transform: booleanAttribute })
+  set disabled(value: boolean) { this._disabled.set(value); }
+  get disabled(): boolean { return this._disabled(); }
 
   /**
    * ID of the legend element, set by FieldsetLegendDirective.

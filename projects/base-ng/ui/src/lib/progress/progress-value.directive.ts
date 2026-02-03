@@ -5,7 +5,7 @@
  * Displays the current progress value as text.
  */
 
-import { computed, Directive, inject, input, type Signal } from '@angular/core';
+import { computed, Directive, inject, Input, signal, type Signal } from '@angular/core';
 import { PROGRESS_CONTEXT, ProgressFormatOptions } from './progress.types';
 
 /**
@@ -39,24 +39,47 @@ import { PROGRESS_CONTEXT, ProgressFormatOptions } from './progress.types';
 export class ProgressValueDirective {
   protected readonly context = inject(PROGRESS_CONTEXT);
 
+  // Internal signals for reactive updates
+  readonly _format = signal<ProgressFormatOptions | undefined>(undefined);
+  readonly _locale = signal<string | undefined>(undefined);
+  readonly _renderValue = signal<((value: number | null, formattedValue: string | null) => string) | undefined>(
+    undefined
+  );
+
   /**
    * Override format options for this value display.
    * If not provided, uses the format from the root.
    */
-  readonly format = input<ProgressFormatOptions | undefined>(undefined);
+  @Input()
+  set format(value: ProgressFormatOptions | undefined) {
+    this._format.set(value);
+  }
+  get format(): ProgressFormatOptions | undefined {
+    return this._format();
+  }
 
   /**
    * Override locale for this value display.
    * If not provided, uses the locale from the root.
    */
-  readonly locale = input<string | undefined>(undefined);
+  @Input()
+  set locale(value: string | undefined) {
+    this._locale.set(value);
+  }
+  get locale(): string | undefined {
+    return this._locale();
+  }
 
   /**
    * Custom render function for the value.
    */
-  readonly renderValue = input<((value: number | null, formattedValue: string | null) => string) | undefined>(
-    undefined
-  );
+  @Input()
+  set renderValue(value: ((value: number | null, formattedValue: string | null) => string) | undefined) {
+    this._renderValue.set(value);
+  }
+  get renderValue(): ((value: number | null, formattedValue: string | null) => string) | undefined {
+    return this._renderValue();
+  }
 
   /**
    * The display value (uses context's formatted value or custom rendering).
@@ -64,15 +87,15 @@ export class ProgressValueDirective {
   readonly displayValue: Signal<string> = computed(() => {
     const value = this.context.value();
     const formattedValue = this.context.formattedValue();
-    const customRender = this.renderValue();
+    const customRender = this._renderValue();
 
     if (customRender) {
       return customRender(value, formattedValue);
     }
 
     // Use local format if provided
-    const localFormat = this.format();
-    const localLocale = this.locale();
+    const localFormat = this._format();
+    const localLocale = this._locale();
 
     if (localFormat !== undefined || localLocale !== undefined) {
       if (value === null || !Number.isFinite(value)) {

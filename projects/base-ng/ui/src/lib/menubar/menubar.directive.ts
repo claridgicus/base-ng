@@ -7,9 +7,9 @@
 
 import {
   Directive,
+  Input,
   computed,
   inject,
-  input,
   signal,
   booleanAttribute,
   type Signal,
@@ -51,14 +51,14 @@ let menubarIdCounter = 0;
   exportAs: 'menubar',
   host: {
     role: 'menubar',
-    '[attr.aria-orientation]': 'orientation()',
-    '[attr.aria-disabled]': 'disabled() ? "true" : null',
-    '[attr.data-orientation]': 'orientation()',
-    '[attr.data-disabled]': 'disabled() ? "" : null',
+    '[attr.aria-orientation]': '_orientation()',
+    '[attr.aria-disabled]': '_disabled() ? "true" : null',
+    '[attr.data-orientation]': '_orientation()',
+    '[attr.data-disabled]': '_disabled() ? "" : null',
     '[class.base-ui-menubar]': 'true',
-    '[class.base-ui-menubar-horizontal]': 'orientation() === "horizontal"',
-    '[class.base-ui-menubar-vertical]': 'orientation() === "vertical"',
-    '[class.base-ui-menubar-disabled]': 'disabled()',
+    '[class.base-ui-menubar-horizontal]': '_orientation() === "horizontal"',
+    '[class.base-ui-menubar-vertical]': '_orientation() === "vertical"',
+    '[class.base-ui-menubar-disabled]': '_disabled()',
     '(keydown)': 'handleKeydown($event)',
   },
   providers: [
@@ -77,17 +77,41 @@ export class MenubarDirective {
   /**
    * The orientation of the menubar.
    */
-  readonly orientation = input<MenubarOrientation>('horizontal');
+  readonly _orientation = signal<MenubarOrientation>('horizontal');
+
+  @Input()
+  set orientation(value: MenubarOrientation) {
+    this._orientation.set(value);
+  }
+  get orientation(): MenubarOrientation {
+    return this._orientation();
+  }
 
   /**
    * Whether the menubar is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  readonly _disabled = signal<boolean>(false);
+
+  @Input({ transform: booleanAttribute })
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
+  get disabled(): boolean {
+    return this._disabled();
+  }
 
   /**
    * Whether to loop focus when navigating with keyboard.
    */
-  readonly loop = input(true, { transform: booleanAttribute });
+  private readonly _loop = signal<boolean>(true);
+
+  @Input({ transform: booleanAttribute })
+  set loop(value: boolean) {
+    this._loop.set(value);
+  }
+  get loop(): boolean {
+    return this._loop();
+  }
 
   /** Whether any menu is open */
   private hasOpenMenu = signal(false);
@@ -116,20 +140,20 @@ export class MenubarDirective {
         // Setter is a no-op, use setHasOpenMenu instead
       },
       get orientation() {
-        return self.orientation();
+        return self._orientation();
       },
       set orientation(_: MenubarOrientation) {
         // Setter is a no-op, read from input signal
       },
       get disabled() {
-        return self.disabled();
+        return self._disabled();
       },
       set disabled(_: boolean) {
         // Setter is a no-op, read from input signal
       },
       hasOpenMenuSignal: this.hasOpenMenu.asReadonly(),
-      orientationSignal: this.orientation as Signal<MenubarOrientation>,
-      disabledSignal: computed(() => this.disabled()) as Signal<boolean>,
+      orientationSignal: this._orientation.asReadonly(),
+      disabledSignal: this._disabled.asReadonly(),
       setHasOpenMenu: (hasOpen) => {
         this.hasOpenMenu.set(hasOpen);
       },
@@ -164,9 +188,9 @@ export class MenubarDirective {
    * Handle keydown events for keyboard navigation.
    */
   protected handleKeydown(event: KeyboardEvent): void {
-    if (this.disabled()) return;
+    if (this._disabled()) return;
 
-    const isHorizontal = this.orientation() === 'horizontal';
+    const isHorizontal = this._orientation() === 'horizontal';
 
     switch (event.key) {
       case 'ArrowRight':
@@ -219,7 +243,7 @@ export class MenubarDirective {
     } else {
       newIndex = currentIndex + direction;
 
-      if (this.loop()) {
+      if (this._loop()) {
         if (newIndex < 0) {
           newIndex = this.registeredMenus.length - 1;
         } else if (newIndex >= this.registeredMenus.length) {

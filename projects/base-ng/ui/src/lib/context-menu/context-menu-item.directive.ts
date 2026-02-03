@@ -10,12 +10,14 @@ import {
   Directive,
   ElementRef,
   inject,
-  input,
-  output,
+  Input,
+  Output,
+  EventEmitter,
   booleanAttribute,
   OnInit,
   OnDestroy,
   effect,
+  signal,
 } from '@angular/core';
 import { CONTEXT_MENU_CONTEXT } from './context-menu.types';
 
@@ -37,13 +39,13 @@ let contextMenuItemIdCounter = 0;
   host: {
     role: 'menuitem',
     '[id]': 'itemId',
-    '[attr.aria-disabled]': 'disabled()',
+    '[attr.aria-disabled]': '_disabled()',
     '[attr.data-highlighted]': 'isHighlighted() ? "" : null',
-    '[attr.data-disabled]': 'disabled() ? "" : null',
+    '[attr.data-disabled]': '_disabled() ? "" : null',
     '[attr.tabindex]': 'isHighlighted() ? "0" : "-1"',
     '[class.base-ui-context-menu-item]': 'true',
     '[class.base-ui-context-menu-item-highlighted]': 'isHighlighted()',
-    '[class.base-ui-context-menu-item-disabled]': 'disabled()',
+    '[class.base-ui-context-menu-item-disabled]': '_disabled()',
     '(click)': 'handleClick($event)',
     '(mouseenter)': 'handleMouseEnter()',
     '(keydown)': 'handleKeydown($event)',
@@ -56,25 +58,52 @@ export class ContextMenuItemDirective implements OnInit, OnDestroy {
   /** Unique ID for this item */
   readonly itemId = `base-ui-context-menu-item-${contextMenuItemIdCounter++}`;
 
+  /** Internal signal for disabled */
+  readonly _disabled = signal<boolean>(false);
+
   /**
    * Whether the item is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
+  get disabled(): boolean {
+    return this._disabled();
+  }
+
+  /** Internal signal for closeOnClick */
+  private readonly _closeOnClick = signal<boolean>(true);
 
   /**
    * Whether clicking the item closes the menu.
    */
-  readonly closeOnClick = input(true, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  set closeOnClick(value: boolean) {
+    this._closeOnClick.set(value);
+  }
+  get closeOnClick(): boolean {
+    return this._closeOnClick();
+  }
+
+  /** Internal signal for label */
+  private readonly _label = signal<string | undefined>(undefined);
 
   /**
    * Label for keyboard navigation (typeahead).
    */
-  readonly label = input<string>();
+  @Input()
+  set label(value: string | undefined) {
+    this._label.set(value);
+  }
+  get label(): string | undefined {
+    return this._label();
+  }
 
   /**
    * Emitted when the item is clicked.
    */
-  readonly itemClick = output<MouseEvent>();
+  @Output() readonly itemClick = new EventEmitter<MouseEvent>();
 
   /**
    * Whether this item is currently highlighted.
@@ -104,14 +133,14 @@ export class ContextMenuItemDirective implements OnInit, OnDestroy {
    * Handle click events.
    */
   protected handleClick(event: MouseEvent): void {
-    if (this.disabled()) {
+    if (this._disabled()) {
       event.preventDefault();
       return;
     }
 
     this.itemClick.emit(event);
 
-    if (this.closeOnClick()) {
+    if (this._closeOnClick()) {
       this.context.closeContextMenu('item-press');
     }
   }
@@ -120,7 +149,7 @@ export class ContextMenuItemDirective implements OnInit, OnDestroy {
    * Handle mouse enter for highlighting.
    */
   protected handleMouseEnter(): void {
-    if (this.disabled()) return;
+    if (this._disabled()) return;
     this.context.setActiveItemId(this.itemId);
   }
 
@@ -128,7 +157,7 @@ export class ContextMenuItemDirective implements OnInit, OnDestroy {
    * Handle keydown events.
    */
   protected handleKeydown(event: KeyboardEvent): void {
-    if (this.disabled()) return;
+    if (this._disabled()) return;
 
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();

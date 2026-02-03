@@ -10,10 +10,10 @@ import {
   booleanAttribute,
   Directive,
   effect,
+  EventEmitter,
   inject,
-  input,
-  model,
-  output,
+  Input,
+  Output,
   signal,
   DestroyRef,
 } from '@angular/core';
@@ -71,17 +71,38 @@ export class AlertDialogRootDirective {
   /**
    * The controlled open state of the alert dialog.
    */
-  readonly open = model<boolean>(false);
+  private readonly _open = signal<boolean>(false);
+
+  @Input()
+  set open(value: boolean) {
+    this._open.set(value);
+  }
+  get open(): boolean {
+    return this._open();
+  }
+
+  /**
+   * Emits when the open state changes.
+   */
+  @Output() readonly openChange = new EventEmitter<boolean>();
 
   /**
    * The default open state when uncontrolled.
    */
-  readonly defaultOpen = input(false, { transform: booleanAttribute });
+  private readonly _defaultOpen = signal<boolean>(false);
+
+  @Input({ transform: booleanAttribute })
+  set defaultOpen(value: boolean) {
+    this._defaultOpen.set(value);
+  }
+  get defaultOpen(): boolean {
+    return this._defaultOpen();
+  }
 
   /**
    * Emits when the open state changes with detailed event info.
    */
-  readonly openChanged = output<AlertDialogOpenChangeEventDetails>();
+  @Output() readonly openChanged = new EventEmitter<AlertDialogOpenChangeEventDetails>();
 
   /** Internal open state */
   private readonly internalOpen = signal(false);
@@ -129,14 +150,14 @@ export class AlertDialogRootDirective {
   constructor() {
     // Initialize with default open
     effect(() => {
-      if (this.defaultOpen() && !this.internalOpen()) {
+      if (this._defaultOpen() && !this.internalOpen()) {
         this.internalOpen.set(true);
       }
     });
 
     // Sync model to internal state
     effect(() => {
-      this.internalOpen.set(this.open());
+      this.internalOpen.set(this._open());
     });
 
     // Handle open/close
@@ -179,7 +200,8 @@ export class AlertDialogRootDirective {
     }
 
     this.internalOpen.set(open);
-    this.open.set(open);
+    this._open.set(open);
+    this.openChange.emit(open);
 
     this.openChanged.emit({
       open,

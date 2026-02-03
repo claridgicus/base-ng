@@ -5,9 +5,10 @@
 
 import {
   Directive,
+  Input,
   computed,
   inject,
-  input,
+  signal,
   booleanAttribute,
 } from '@angular/core';
 import {
@@ -45,17 +46,26 @@ export class ToolbarInputDirective {
   protected readonly rootContext = inject(TOOLBAR_ROOT_CONTEXT);
   private readonly groupContext = inject(TOOLBAR_GROUP_CONTEXT, { optional: true });
 
+  /** Internal signal for disabled state */
+  private readonly _disabled = signal<boolean>(false);
+
   /**
    * Whether the input is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
+  get disabled(): boolean {
+    return this._disabled();
+  }
 
   /** Whether this input is disabled (combines all disabled states) */
   readonly isDisabled = computed(() => {
     return (
       this.rootContext.disabledSignal() ||
       this.groupContext?.disabledSignal() ||
-      this.disabled()
+      this._disabled()
     );
   });
 }

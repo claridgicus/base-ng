@@ -12,9 +12,10 @@ import {
   effect,
   ElementRef,
   inject,
-  input,
+  Input,
   numberAttribute,
   OnDestroy,
+  signal,
 } from '@angular/core';
 import { CONTEXT_MENU_CONTEXT } from './context-menu.types';
 import {
@@ -50,33 +51,69 @@ export type ContextMenuAlign = 'start' | 'center' | 'end';
     '[style.display]': 'context.openSignal() ? null : "none"',
     '[style.pointerEvents]': 'context.openSignal() ? null : "none"',
     '[attr.data-state]': 'context.openSignal() ? "open" : "closed"',
-    '[attr.data-side]': 'side()',
-    '[attr.data-align]': 'align()',
+    '[attr.data-side]': '_side()',
+    '[attr.data-align]': '_align()',
   },
 })
 export class ContextMenuPositionerDirective implements OnDestroy {
   protected readonly context = inject(CONTEXT_MENU_CONTEXT);
   private readonly elementRef = inject(ElementRef<HTMLElement>);
 
+  /** Internal signal for side */
+  readonly _side = signal<ContextMenuSide>('bottom');
+
   /**
    * The side of the anchor where the menu should appear.
    */
-  readonly side = input<ContextMenuSide>('bottom');
+  @Input()
+  set side(value: ContextMenuSide) {
+    this._side.set(value);
+  }
+  get side(): ContextMenuSide {
+    return this._side();
+  }
+
+  /** Internal signal for align */
+  readonly _align = signal<ContextMenuAlign>('start');
 
   /**
    * The alignment of the menu relative to the anchor.
    */
-  readonly align = input<ContextMenuAlign>('start');
+  @Input()
+  set align(value: ContextMenuAlign) {
+    this._align.set(value);
+  }
+  get align(): ContextMenuAlign {
+    return this._align();
+  }
+
+  /** Internal signal for sideOffset */
+  private readonly _sideOffset = signal<number>(0);
 
   /**
    * Offset from the anchor along the side axis.
    */
-  readonly sideOffset = input(0, { transform: numberAttribute });
+  @Input({ transform: numberAttribute })
+  set sideOffset(value: number) {
+    this._sideOffset.set(value);
+  }
+  get sideOffset(): number {
+    return this._sideOffset();
+  }
+
+  /** Internal signal for alignOffset */
+  private readonly _alignOffset = signal<number>(0);
 
   /**
    * Offset from the anchor along the align axis.
    */
-  readonly alignOffset = input(0, { transform: numberAttribute });
+  @Input({ transform: numberAttribute })
+  set alignOffset(value: number) {
+    this._alignOffset.set(value);
+  }
+  get alignOffset(): number {
+    return this._alignOffset();
+  }
 
   constructor() {
     // Ensure menu stays within viewport

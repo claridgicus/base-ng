@@ -8,8 +8,9 @@ import {
   ElementRef,
   computed,
   inject,
-  input,
-  output,
+  Input,
+  Output,
+  EventEmitter,
   signal,
   afterNextRender,
   OnDestroy,
@@ -54,16 +55,16 @@ let toastRootCounter = 0;
     '[attr.aria-atomic]': '"true"',
     '[attr.aria-labelledby]': 'titleId',
     '[attr.aria-describedby]': 'descriptionId',
-    '[attr.data-type]': 'toast().type',
-    '[attr.data-priority]': 'toast().priority',
-    '[attr.data-transition-status]': 'toast().transitionStatus',
+    '[attr.data-type]': '_toast().type',
+    '[attr.data-priority]': '_toast().priority',
+    '[attr.data-transition-status]': '_toast().transitionStatus',
     '[attr.data-swiping]': 'swiping() ? "" : null',
-    '[attr.data-limited]': 'toast().limited ? "" : null',
-    '[style.display]': 'toast().limited ? "none" : null',
+    '[attr.data-limited]': '_toast().limited ? "" : null',
+    '[style.display]': '_toast().limited ? "none" : null',
     '[style.transform]': 'swipeTransform()',
     '[class.base-ui-toast-root]': 'true',
-    '[class.base-ui-toast-root-starting]': 'toast().transitionStatus === "starting"',
-    '[class.base-ui-toast-root-ending]': 'toast().transitionStatus === "ending"',
+    '[class.base-ui-toast-root-starting]': '_toast().transitionStatus === "starting"',
+    '[class.base-ui-toast-root-ending]': '_toast().transitionStatus === "ending"',
     '(pointerdown)': 'handlePointerDown($event)',
     '(pointermove)': 'handlePointerMove($event)',
     '(pointerup)': 'handlePointerUp($event)',
@@ -75,11 +76,15 @@ export class ToastRootDirective implements OnDestroy {
   protected readonly providerContext = inject(TOAST_PROVIDER_CONTEXT);
   private readonly elementRef = inject(ElementRef<HTMLElement>);
 
-  /** Toast data */
-  readonly toast = input.required<ToastObject>();
+  /** Toast data (internal signal) */
+  readonly _toast = signal<ToastObject>(undefined as any);
+
+  @Input({ required: true })
+  set toast(value: ToastObject) { this._toast.set(value); }
+  get toast(): ToastObject { return this._toast(); }
 
   /** Emitted when toast is closed */
-  readonly closed = output<void>();
+  @Output() readonly closed = new EventEmitter<void>();
 
   // IDs for accessibility
   private readonly rootIdNum = ++toastRootCounter;
@@ -98,12 +103,12 @@ export class ToastRootDirective implements OnDestroy {
 
   /** Role based on priority */
   readonly role = computed(() => {
-    return this.toast().priority === 'high' ? 'alertdialog' : 'dialog';
+    return this._toast().priority === 'high' ? 'alertdialog' : 'dialog';
   });
 
   /** Aria-live based on priority */
   readonly ariaLive = computed(() => {
-    return this.toast().priority === 'high' ? 'assertive' : 'polite';
+    return this._toast().priority === 'high' ? 'assertive' : 'polite';
   });
 
   /** Transform for swipe animation */
@@ -125,7 +130,7 @@ export class ToastRootDirective implements OnDestroy {
 
     this.context = {
       get toast() {
-        return self.toast();
+        return self._toast();
       },
       close: () => this.close(),
       titleId: this.titleId,
@@ -143,7 +148,7 @@ export class ToastRootDirective implements OnDestroy {
 
       // Mark as entered after a tick
       setTimeout(() => {
-        const toast = this.toast();
+        const toast = this._toast();
         if (toast.transitionStatus === 'starting') {
           this.providerContext.update({
             id: toast.id,
@@ -165,7 +170,7 @@ export class ToastRootDirective implements OnDestroy {
    * Close this toast.
    */
   close(): void {
-    const toast = this.toast();
+    const toast = this._toast();
     this.providerContext.close(toast.id);
     this.closed.emit();
   }
@@ -175,7 +180,7 @@ export class ToastRootDirective implements OnDestroy {
    */
   private measureHeight(): void {
     const height = this.elementRef.nativeElement.offsetHeight;
-    const toast = this.toast();
+    const toast = this._toast();
     if (height !== toast.height) {
       this.providerContext.setToastHeight(toast.id, height);
     }

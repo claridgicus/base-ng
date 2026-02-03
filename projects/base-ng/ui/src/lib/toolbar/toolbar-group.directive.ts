@@ -5,9 +5,10 @@
 
 import {
   Directive,
+  Input,
   computed,
   inject,
-  input,
+  signal,
   booleanAttribute,
   type Signal,
 } from '@angular/core';
@@ -62,14 +63,23 @@ import {
 export class ToolbarGroupDirective {
   protected readonly rootContext = inject(TOOLBAR_ROOT_CONTEXT);
 
+  /** Internal signal for disabled state */
+  private readonly _disabled = signal<boolean>(false);
+
   /**
    * Whether the group is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
+  get disabled(): boolean {
+    return this._disabled();
+  }
 
   /** Whether this group is disabled (combines root and group disabled state) */
   readonly isDisabled = computed(() => {
-    return this.rootContext.disabledSignal() || this.disabled();
+    return this.rootContext.disabledSignal() || this._disabled();
   });
 
   /**

@@ -1,1 +1,12 @@
+@import 'tailwindcss';
+
+/* Scan component library for Tailwind classes */
+@source "../projects/base-ng/ui/src/**/*.ts";
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+@theme {
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
 /* You can add global styles to this file, and also import other style files */

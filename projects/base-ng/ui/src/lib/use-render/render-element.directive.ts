@@ -15,9 +15,11 @@ import {
   effect,
   ElementRef,
   inject,
-  input,
+  Input,
   Renderer2,
+  signal,
   type Signal,
+  type WritableSignal,
 } from '@angular/core';
 import {
   getStateAttributes,
@@ -69,21 +71,43 @@ export class RenderElementDirective {
   private readonly renderer = inject(Renderer2);
 
   /**
+   * Internal signal for state.
+   */
+  private readonly _state: WritableSignal<Record<string, unknown>> = signal({});
+
+  /**
+   * Internal signal for state mapping.
+   */
+  private readonly _stateMapping: WritableSignal<StateAttributesMapping<Record<string, unknown>> | undefined> = signal(undefined);
+
+  /**
    * The state object to convert to data attributes.
    */
-  readonly state = input.required<Record<string, unknown>>({ alias: 'baseUiState' });
+  @Input({ required: true, alias: 'baseUiState' })
+  set state(value: Record<string, unknown>) {
+    this._state.set(value);
+  }
+  get state(): Record<string, unknown> {
+    return this._state();
+  }
 
   /**
    * Optional custom mapping for state to attributes.
    */
-  readonly stateMapping = input<StateAttributesMapping<Record<string, unknown>>>();
+  @Input()
+  set stateMapping(value: StateAttributesMapping<Record<string, unknown>> | undefined) {
+    this._stateMapping.set(value);
+  }
+  get stateMapping(): StateAttributesMapping<Record<string, unknown>> | undefined {
+    return this._stateMapping();
+  }
 
   /**
    * Computed data attributes from state.
    */
   readonly dataAttributes = computed(() => {
-    const state = this.state();
-    const mapping = this.stateMapping();
+    const state = this._state();
+    const mapping = this._stateMapping();
     return getStateAttributes(state, mapping);
   });
 

@@ -3,7 +3,7 @@
  * @source https://github.com/mui/base-ui/blob/master/packages/react/src/combobox/positioner/ComboboxPositioner.tsx
  */
 
-import { Directive, computed, inject, input } from '@angular/core';
+import { Directive, computed, inject, Input, signal } from '@angular/core';
 import { AUTOCOMPLETE_ROOT_CONTEXT, AUTOCOMPLETE_POSITIONER_CONTEXT } from './autocomplete.types';
 
 export type AutocompleteSide = 'top' | 'bottom';
@@ -54,28 +54,58 @@ export type AutocompleteAlign = 'start' | 'center' | 'end';
 export class AutocompletePositionerDirective {
   protected readonly rootContext = inject(AUTOCOMPLETE_ROOT_CONTEXT);
 
+  // Internal signals for inputs
+  private readonly _side = signal<AutocompleteSide>('bottom');
+  private readonly _align = signal<AutocompleteAlign>('start');
+  private readonly _sideOffset = signal(4);
+  private readonly _alignOffset = signal(0);
+
   /** Preferred side for the popup */
-  readonly side = input<AutocompleteSide>('bottom');
+  @Input()
+  get side(): AutocompleteSide {
+    return this._side();
+  }
+  set side(value: AutocompleteSide) {
+    this._side.set(value);
+  }
 
   /** Preferred alignment for the popup */
-  readonly align = input<AutocompleteAlign>('start');
+  @Input()
+  get align(): AutocompleteAlign {
+    return this._align();
+  }
+  set align(value: AutocompleteAlign) {
+    this._align.set(value);
+  }
 
   /** Offset from the anchor in pixels */
-  readonly sideOffset = input(4);
+  @Input()
+  get sideOffset(): number {
+    return this._sideOffset();
+  }
+  set sideOffset(value: number) {
+    this._sideOffset.set(value);
+  }
 
   /** Alignment offset in pixels */
-  readonly alignOffset = input(0);
+  @Input()
+  get alignOffset(): number {
+    return this._alignOffset();
+  }
+  set alignOffset(value: number) {
+    this._alignOffset.set(value);
+  }
 
   /** Current side after positioning - computed from preferred side */
   readonly currentSide = computed<AutocompleteSide>(() => {
     // In a full implementation, this would flip based on available space
-    return this.side();
+    return this._side();
   });
 
   /** Current alignment after positioning - computed from preferred align */
   readonly currentAlign = computed<AutocompleteAlign>(() => {
     // In a full implementation, this would adjust based on available space
-    return this.align();
+    return this._align();
   });
 
   /** Top position style */
@@ -86,8 +116,8 @@ export class AutocompletePositionerDirective {
     }
 
     const rect = input.getBoundingClientRect();
-    const offset = this.sideOffset();
-    const preferredSide = this.side();
+    const offset = this._sideOffset();
+    const preferredSide = this._side();
 
     // Simple positioning - in a real implementation, would use floating-ui
     let top: number;
@@ -107,7 +137,7 @@ export class AutocompletePositionerDirective {
       return '0px';
     }
 
-    const alignOffsetVal = this.alignOffset();
+    const alignOffsetVal = this._alignOffset();
 
     // Simple positioning
     const left = alignOffsetVal;

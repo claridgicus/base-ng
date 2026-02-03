@@ -9,9 +9,10 @@ import {
   booleanAttribute,
   computed,
   Directive,
-  input,
-  model,
-  output,
+  EventEmitter,
+  Input,
+  Output,
+  signal,
   type Signal,
 } from '@angular/core';
 import type { ToggleChangeEventDetails } from '../toggle';
@@ -56,13 +57,13 @@ import {
   ],
   host: {
     role: 'group',
-    '[attr.aria-orientation]': 'orientation()',
-    '[attr.data-orientation]': 'orientation()',
-    '[attr.data-disabled]': 'disabled() ? "" : null',
+    '[attr.aria-orientation]': '_orientation()',
+    '[attr.data-orientation]': '_orientation()',
+    '[attr.data-disabled]': '_disabled() ? "" : null',
     '[class.base-ui-toggle-group]': 'true',
-    '[class.base-ui-toggle-group-horizontal]': 'orientation() === "horizontal"',
-    '[class.base-ui-toggle-group-vertical]': 'orientation() === "vertical"',
-    '[class.base-ui-toggle-group-disabled]': 'disabled()',
+    '[class.base-ui-toggle-group-horizontal]': '_orientation() === "horizontal"',
+    '[class.base-ui-toggle-group-vertical]': '_orientation() === "vertical"',
+    '[class.base-ui-toggle-group-disabled]': '_disabled()',
   },
 })
 export class ToggleGroupDirective {
@@ -70,40 +71,90 @@ export class ToggleGroupDirective {
    * Currently selected toggle values.
    * Supports two-way binding with [(value)].
    */
-  readonly value = model<string[]>([]);
+  private readonly _value = signal<string[]>([]);
+  readonly internalValue = signal<string[]>([]);
+
+  @Input()
+  set value(val: string[]) {
+    this._value.set(val);
+    this.internalValue.set(val);
+  }
+  get value(): string[] {
+    return this._value();
+  }
+
+  /**
+   * Emitted when the selected values change.
+   */
+  @Output() valueChange = new EventEmitter<string[]>();
 
   /**
    * Whether multiple toggles can be selected.
    * @default false
    */
-  readonly multiple = input(false, { transform: booleanAttribute });
+  private readonly _multiple = signal(false);
+  readonly internalMultiple = signal(false);
+
+  @Input({ transform: booleanAttribute })
+  set multiple(val: boolean) {
+    this._multiple.set(val);
+    this.internalMultiple.set(val);
+  }
+  get multiple(): boolean {
+    return this._multiple();
+  }
 
   /**
    * Whether the toggle group is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  readonly _disabled = signal(false);
+  readonly internalDisabled = signal(false);
+
+  @Input({ transform: booleanAttribute })
+  set disabled(val: boolean) {
+    this._disabled.set(val);
+    this.internalDisabled.set(val);
+  }
+  get disabled(): boolean {
+    return this._disabled();
+  }
 
   /**
    * Orientation of the toggle group for accessibility.
    * @default 'horizontal'
    */
-  readonly orientation = input<Orientation>('horizontal');
+  readonly _orientation = signal<Orientation>('horizontal');
+  readonly internalOrientation = signal<Orientation>('horizontal');
+
+  @Input()
+  set orientation(val: Orientation) {
+    this._orientation.set(val);
+    this.internalOrientation.set(val);
+  }
+  get orientation(): Orientation {
+    return this._orientation();
+  }
 
   /**
    * Whether keyboard focus should loop when reaching the ends.
    * @default true
    */
-  readonly loopFocus = input(true, { transform: booleanAttribute });
+  private readonly _loopFocus = signal(true);
+  readonly internalLoopFocus = signal(true);
 
-  /**
-   * Emitted when the selected values change.
-   */
-  readonly valueChange = output<string[]>();
+  @Input({ transform: booleanAttribute })
+  set loopFocus(val: boolean) {
+    this._loopFocus.set(val);
+    this.internalLoopFocus.set(val);
+  }
+  get loopFocus(): boolean {
+    return this._loopFocus();
+  }
 
   /**
    * Emitted with full event details when values change.
    */
-  readonly valueChangeDetails = output<{
+  @Output() valueChangeDetails = new EventEmitter<{
     value: string[];
     details: ToggleChangeEventDetails;
   }>();
@@ -112,26 +163,26 @@ export class ToggleGroupDirective {
    * Current state object.
    */
   readonly state: Signal<ToggleGroupState> = computed(() => ({
-    value: this.value(),
-    disabled: this.disabled(),
-    orientation: this.orientation(),
+    value: this._value(),
+    disabled: this._disabled(),
+    orientation: this._orientation(),
   }));
 
   /**
    * Context provided to child Toggle components.
    */
   readonly context: ToggleGroupContext = {
-    value: computed(() => this.value()),
-    disabled: computed(() => this.disabled()),
+    value: computed(() => this._value()),
+    disabled: computed(() => this._disabled()),
     setGroupValue: (toggleValue: string, pressed: boolean, details: ToggleChangeEventDetails) => {
       if (details.isCanceled) {
         return;
       }
 
-      const currentValue = this.value();
+      const currentValue = this._value();
       let newValue: string[];
 
-      if (this.multiple()) {
+      if (this._multiple()) {
         // Multiple selection mode
         if (pressed) {
           newValue = [...currentValue, toggleValue];
@@ -147,7 +198,8 @@ export class ToggleGroupDirective {
         }
       }
 
-      this.value.set(newValue);
+      this._value.set(newValue);
+      this.internalValue.set(newValue);
       this.valueChange.emit(newValue);
       this.valueChangeDetails.emit({ value: newValue, details });
     },
@@ -157,30 +209,31 @@ export class ToggleGroupDirective {
    * Check if a toggle value is currently selected.
    */
   isSelected(toggleValue: string): boolean {
-    return this.value().includes(toggleValue);
+    return this._value().includes(toggleValue);
   }
 
   /**
    * Select a toggle value programmatically.
    */
   select(toggleValue: string): void {
-    if (this.disabled()) {
+    if (this._disabled()) {
       return;
     }
 
-    const currentValue = this.value();
+    const currentValue = this._value();
     if (currentValue.includes(toggleValue)) {
       return; // Already selected
     }
 
     let newValue: string[];
-    if (this.multiple()) {
+    if (this._multiple()) {
       newValue = [...currentValue, toggleValue];
     } else {
       newValue = [toggleValue];
     }
 
-    this.value.set(newValue);
+    this._value.set(newValue);
+    this.internalValue.set(newValue);
     this.valueChange.emit(newValue);
   }
 
@@ -188,17 +241,18 @@ export class ToggleGroupDirective {
    * Deselect a toggle value programmatically.
    */
   deselect(toggleValue: string): void {
-    if (this.disabled()) {
+    if (this._disabled()) {
       return;
     }
 
-    const currentValue = this.value();
+    const currentValue = this._value();
     if (!currentValue.includes(toggleValue)) {
       return; // Not selected
     }
 
     const newValue = currentValue.filter(v => v !== toggleValue);
-    this.value.set(newValue);
+    this._value.set(newValue);
+    this.internalValue.set(newValue);
     this.valueChange.emit(newValue);
   }
 
@@ -206,11 +260,12 @@ export class ToggleGroupDirective {
    * Clear all selections.
    */
   clear(): void {
-    if (this.disabled()) {
+    if (this._disabled()) {
       return;
     }
 
-    this.value.set([]);
+    this._value.set([]);
+    this.internalValue.set([]);
     this.valueChange.emit([]);
   }
 }

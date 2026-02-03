@@ -8,10 +8,11 @@ import {
   ElementRef,
   computed,
   inject,
-  input,
+  Input,
   booleanAttribute,
   afterNextRender,
   effect,
+  signal,
 } from '@angular/core';
 import { AUTOCOMPLETE_ROOT_CONTEXT } from './autocomplete.types';
 
@@ -61,10 +62,19 @@ export class AutocompleteInputDirective {
   protected readonly rootContext = inject(AUTOCOMPLETE_ROOT_CONTEXT);
   private readonly elementRef = inject(ElementRef<HTMLInputElement>);
 
+  // Internal signal for disabled input
+  private readonly _disabled = signal(false);
+
   /**
    * Whether the input is disabled independently.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get disabled(): boolean {
+    return this._disabled();
+  }
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
 
   /** Input element ID */
   readonly inputId = `${this.rootContext.rootId}-input`;
@@ -74,7 +84,7 @@ export class AutocompleteInputDirective {
 
   /** Whether the input is disabled */
   readonly isDisabled = computed(() => {
-    return this.rootContext.disabledSignal() || this.disabled();
+    return this.rootContext.disabledSignal() || this._disabled();
   });
 
   /** Aria-autocomplete value based on mode */

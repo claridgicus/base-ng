@@ -10,7 +10,7 @@ import {
   Directive,
   effect,
   inject,
-  input,
+  Input,
   OnDestroy,
   OnInit,
   signal,
@@ -53,7 +53,11 @@ export class AvatarFallbackDirective implements OnInit, OnDestroy {
    * Delay in milliseconds before showing the fallback.
    * Useful to prevent a flash of fallback content when the image loads quickly.
    */
-  readonly delay = input<number | undefined>(undefined);
+  private readonly _delay = signal<number | undefined>(undefined);
+
+  @Input()
+  set delay(value: number | undefined) { this._delay.set(value); }
+  get delay(): number | undefined { return this._delay(); }
 
   // Internal state
   private readonly delayPassed = signal(true);
@@ -70,7 +74,7 @@ export class AvatarFallbackDirective implements OnInit, OnDestroy {
   constructor() {
     // Handle delay changes
     effect(() => {
-      const delayMs = this.delay();
+      const delayMs = this._delay();
       if (delayMs !== undefined) {
         this.delayPassed.set(false);
         this.clearTimeout();
@@ -85,7 +89,7 @@ export class AvatarFallbackDirective implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // Initialize delay state
-    const delayMs = this.delay();
+    const delayMs = this._delay();
     if (delayMs === undefined) {
       this.delayPassed.set(true);
     }

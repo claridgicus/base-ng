@@ -10,7 +10,8 @@ import {
   Directive,
   ElementRef,
   inject,
-  input,
+  Input,
+  signal,
   booleanAttribute,
   OnInit,
   OnDestroy,
@@ -59,38 +60,74 @@ export class MenuRadioItemDirective implements OnInit, OnDestroy {
   /** Unique ID for this item */
   readonly itemId = `base-ui-menu-radio-item-${radioItemIdCounter++}`;
 
+  /** Internal signal for value */
+  private readonly _value = signal<unknown>(undefined);
+
   /**
    * The value of this radio item.
    */
-  readonly value = input.required<unknown>();
+  @Input({ required: true })
+  get value(): unknown {
+    return this._value();
+  }
+  set value(val: unknown) {
+    this._value.set(val);
+  }
+
+  /** Internal signal for disabled state */
+  private readonly _disabled = signal<boolean>(false);
 
   /**
    * Whether the item is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get disabled(): boolean {
+    return this._disabled();
+  }
+  set disabled(val: boolean) {
+    this._disabled.set(val);
+  }
+
+  /** Internal signal for closeOnClick */
+  private readonly _closeOnClick = signal<boolean>(true);
 
   /**
    * Whether clicking the item closes the menu.
    */
-  readonly closeOnClick = input(true, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get closeOnClick(): boolean {
+    return this._closeOnClick();
+  }
+  set closeOnClick(val: boolean) {
+    this._closeOnClick.set(val);
+  }
+
+  /** Internal signal for label */
+  private readonly _label = signal<string | undefined>(undefined);
 
   /**
    * Label for keyboard navigation (typeahead).
    */
-  readonly label = input<string>();
+  @Input()
+  get label(): string | undefined {
+    return this._label();
+  }
+  set label(val: string | undefined) {
+    this._label.set(val);
+  }
 
   /**
    * Whether this item is currently checked.
    */
   readonly isChecked = computed(() => {
-    return this.radioGroupContext.valueSignal() === this.value();
+    return this.radioGroupContext.valueSignal() === this._value();
   });
 
   /**
    * Whether this item is disabled (item or group).
    */
   readonly isDisabled = computed(() => {
-    return this.disabled() || this.radioGroupContext.disabled;
+    return this._disabled() || this.radioGroupContext.disabled;
   });
 
   /**
@@ -126,9 +163,9 @@ export class MenuRadioItemDirective implements OnInit, OnDestroy {
       return;
     }
 
-    this.radioGroupContext.setValue(this.value(), 'click');
+    this.radioGroupContext.setValue(this._value(), 'click');
 
-    if (this.closeOnClick()) {
+    if (this._closeOnClick()) {
       this.context.closeMenu('item-press');
     }
   }
@@ -149,9 +186,9 @@ export class MenuRadioItemDirective implements OnInit, OnDestroy {
 
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      this.radioGroupContext.setValue(this.value(), 'keydown');
+      this.radioGroupContext.setValue(this._value(), 'keydown');
 
-      if (this.closeOnClick()) {
+      if (this._closeOnClick()) {
         this.context.closeMenu('item-press');
       }
     }

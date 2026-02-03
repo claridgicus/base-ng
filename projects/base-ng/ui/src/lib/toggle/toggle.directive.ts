@@ -10,11 +10,12 @@ import {
   computed,
   Directive,
   ElementRef,
+  EventEmitter,
   HostListener,
   inject,
-  input,
-  model,
-  output,
+  Input,
+  Output,
+  signal,
   type Signal,
 } from '@angular/core';
 import { createChangeEventDetails, REASONS } from '../types';
@@ -65,27 +66,51 @@ export class ToggleDirective {
    * Whether the toggle is pressed.
    * Supports two-way binding with [(pressed)].
    */
-  readonly pressed = model<boolean>(false);
+  readonly _pressed = signal<boolean>(false);
+
+  @Input()
+  set pressed(value: boolean) {
+    this._pressed.set(value);
+  }
+  get pressed(): boolean {
+    return this._pressed();
+  }
 
   /**
    * Whether the toggle is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  readonly _disabled = signal<boolean>(false);
+
+  @Input({ transform: booleanAttribute })
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
+  get disabled(): boolean {
+    return this._disabled();
+  }
 
   /**
    * Value identifier for use with toggle groups.
    */
-  readonly value = input<string | undefined>(undefined);
+  readonly _value = signal<string | undefined>(undefined);
+
+  @Input()
+  set value(value: string | undefined) {
+    this._value.set(value);
+  }
+  get value(): string | undefined {
+    return this._value();
+  }
 
   /**
    * Emitted when pressed state changes.
    */
-  readonly pressedChange = output<boolean>();
+  @Output() readonly pressedChange = new EventEmitter<boolean>();
 
   /**
    * Emitted with full event details when pressed changes.
    */
-  readonly pressedChangeDetails = output<{
+  @Output() readonly pressedChangeDetails = new EventEmitter<{
     pressed: boolean;
     details: ToggleChangeEventDetails;
   }>();
@@ -95,12 +120,12 @@ export class ToggleDirective {
    */
   readonly isPressed: Signal<boolean> = computed(() => {
     if (this.groupContext) {
-      const val = this.value();
+      const val = this._value();
       if (val) {
         return this.groupContext.value().includes(val);
       }
     }
-    return this.pressed();
+    return this._pressed();
   });
 
   /**
@@ -110,7 +135,7 @@ export class ToggleDirective {
     if (this.groupContext?.disabled()) {
       return true;
     }
-    return this.disabled();
+    return this._disabled();
   });
 
   /**
@@ -142,13 +167,13 @@ export class ToggleDirective {
 
     // Handle group context
     if (this.groupContext) {
-      const val = this.value();
+      const val = this._value();
       if (val) {
         this.groupContext.setGroupValue(val, nextPressed, details);
       }
     } else {
       // Standalone toggle
-      this.pressed.set(nextPressed);
+      this._pressed.set(nextPressed);
       this.pressedChange.emit(nextPressed);
     }
   }

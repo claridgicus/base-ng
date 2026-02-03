@@ -3,7 +3,7 @@
  * @source https://github.com/mui/base-ui/blob/master/packages/react/src/combobox/item-indicator/ComboboxItemIndicator.tsx
  */
 
-import { Directive, computed, inject, input, booleanAttribute } from '@angular/core';
+import { Directive, computed, inject, Input, booleanAttribute, signal } from '@angular/core';
 import { AUTOCOMPLETE_ITEM_CONTEXT, AUTOCOMPLETE_ROOT_CONTEXT } from './autocomplete.types';
 
 /**
@@ -34,11 +34,20 @@ export class AutocompleteItemIndicatorDirective {
   private readonly rootContext = inject(AUTOCOMPLETE_ROOT_CONTEXT);
   private readonly itemContext = inject(AUTOCOMPLETE_ITEM_CONTEXT, { optional: true });
 
+  // Internal signal for keepMounted input
+  private readonly _keepMounted = signal(false);
+
   /**
    * Whether to keep the indicator mounted when not selected.
    * If false, the indicator is hidden when the item is not selected.
    */
-  readonly keepMounted = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get keepMounted(): boolean {
+    return this._keepMounted();
+  }
+  set keepMounted(value: boolean) {
+    this._keepMounted.set(value);
+  }
 
   /** Whether the parent item is selected */
   readonly isSelected = computed(() => {
@@ -50,6 +59,6 @@ export class AutocompleteItemIndicatorDirective {
 
   /** Whether to show the indicator */
   readonly shouldShow = computed(() => {
-    return this.keepMounted() || this.isSelected();
+    return this._keepMounted() || this.isSelected();
   });
 }

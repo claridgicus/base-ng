@@ -14,7 +14,8 @@ import {
   computed,
   Directive,
   inject,
-  input,
+  Input,
+  signal,
   type Signal,
 } from '@angular/core';
 import { CHECKBOX_CONTEXT } from './checkbox.types';
@@ -50,13 +51,20 @@ export class CheckboxIndicatorDirective {
   /**
    * Whether to keep the indicator mounted when hidden.
    */
-  readonly keepMounted = input(false, { transform: booleanAttribute });
+  readonly _keepMounted = signal<boolean>(false);
+  @Input({ transform: booleanAttribute })
+  set keepMounted(value: boolean) {
+    this._keepMounted.set(value);
+  }
+  get keepMounted(): boolean {
+    return this._keepMounted();
+  }
 
   /**
    * Whether the indicator should be displayed.
    */
   readonly shouldShow: Signal<boolean> = computed(() => {
-    if (this.keepMounted()) {
+    if (this._keepMounted()) {
       return true;
     }
     return this.context.checkedSignal() || this.context.indeterminateSignal();

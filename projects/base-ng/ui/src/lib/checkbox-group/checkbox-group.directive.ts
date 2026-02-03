@@ -13,10 +13,10 @@ import {
   booleanAttribute,
   computed,
   Directive,
+  EventEmitter,
   forwardRef,
-  input,
-  model,
-  output,
+  Input,
+  Output,
   signal,
 } from '@angular/core';
 import {
@@ -50,13 +50,13 @@ import {
     {
       provide: CHECKBOX_GROUP_CONTEXT,
       useFactory: (directive: CheckboxGroupDirective): CheckboxGroupContext => ({
-        value: directive.value,
-        disabled: directive.disabled,
+        value: directive._value,
+        disabled: directive._disabled,
         addValue: directive.addValue.bind(directive),
         removeValue: directive.removeValue.bind(directive),
         toggleValue: directive.toggleValue.bind(directive),
         isSelected: directive.isSelected.bind(directive),
-        allValues: directive.allValues,
+        allValues: directive._allValues,
       }),
       deps: [CheckboxGroupDirective],
     },
@@ -68,31 +68,69 @@ import {
   ],
   host: {
     role: 'group',
-    '[attr.data-disabled]': 'disabled() ? "" : null',
+    '[attr.data-disabled]': '_disabled() ? "" : null',
     '[class.base-ui-checkbox-group]': 'true',
-    '[class.base-ui-checkbox-group-disabled]': 'disabled()',
+    '[class.base-ui-checkbox-group-disabled]': '_disabled()',
   },
 })
 export class CheckboxGroupDirective implements ControlValueAccessor {
   /**
+   * Internal signal for value.
+   */
+  readonly _value = signal<string[]>([]);
+
+  /**
    * Current selected values.
    */
-  readonly value = model<string[]>([]);
+  @Input()
+  set value(val: string[]) {
+    this._value.set(val);
+  }
+  get value(): string[] {
+    return this._value();
+  }
+
+  /**
+   * Event emitter for two-way binding.
+   */
+  @Output() valueChange = new EventEmitter<string[]>();
+
+  /**
+   * Internal signal for disabled state.
+   */
+  readonly _disabled = signal<boolean>(false);
 
   /**
    * Whether the group is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  set disabled(val: boolean) {
+    this._disabled.set(val);
+  }
+  get disabled(): boolean {
+    return this._disabled();
+  }
+
+  /**
+   * Internal signal for allValues.
+   */
+  readonly _allValues = signal<string[]>([]);
 
   /**
    * All possible values (for parent checkbox "select all" functionality).
    */
-  readonly allValues = input<string[]>([]);
+  @Input()
+  set allValues(val: string[]) {
+    this._allValues.set(val);
+  }
+  get allValues(): string[] {
+    return this._allValues();
+  }
 
   /**
    * Event emitted when value changes with details.
    */
-  readonly valueChanged = output<CheckboxGroupChangeEventDetails>();
+  @Output() valueChanged = new EventEmitter<CheckboxGroupChangeEventDetails>();
 
   // ControlValueAccessor
   private onChange: (value: string[]) => void = () => {};
@@ -102,9 +140,9 @@ export class CheckboxGroupDirective implements ControlValueAccessor {
    * Add a value to the selection.
    */
   addValue(val: string): void {
-    if (this.disabled()) return;
+    if (this._disabled()) return;
 
-    const current = this.value();
+    const current = this._value();
     if (!current.includes(val)) {
       const newValue = [...current, val];
       this.updateValue(newValue);
@@ -115,9 +153,9 @@ export class CheckboxGroupDirective implements ControlValueAccessor {
    * Remove a value from the selection.
    */
   removeValue(val: string): void {
-    if (this.disabled()) return;
+    if (this._disabled()) return;
 
-    const current = this.value();
+    const current = this._value();
     const index = current.indexOf(val);
     if (index !== -1) {
       const newValue = current.filter(v => v !== val);
@@ -129,7 +167,7 @@ export class CheckboxGroupDirective implements ControlValueAccessor {
    * Toggle a value in the selection.
    */
   toggleValue(val: string): void {
-    if (this.disabled()) return;
+    if (this._disabled()) return;
 
     if (this.isSelected(val)) {
       this.removeValue(val);
@@ -142,14 +180,15 @@ export class CheckboxGroupDirective implements ControlValueAccessor {
    * Check if a value is selected.
    */
   isSelected(val: string): boolean {
-    return this.value().includes(val);
+    return this._value().includes(val);
   }
 
   /**
    * Update the value and notify.
    */
   private updateValue(newValue: string[]): void {
-    this.value.set(newValue);
+    this._value.set(newValue);
+    this.valueChange.emit(newValue);
     this.onChange(newValue);
     this.onTouched();
     this.valueChanged.emit({ value: newValue });
@@ -157,7 +196,7 @@ export class CheckboxGroupDirective implements ControlValueAccessor {
 
   // ControlValueAccessor methods
   writeValue(value: string[]): void {
-    this.value.set(value ?? []);
+    this._value.set(value ?? []);
   }
 
   registerOnChange(fn: (value: string[]) => void): void {

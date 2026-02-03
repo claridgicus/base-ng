@@ -13,8 +13,9 @@ import {
   booleanAttribute,
   computed,
   Directive,
-  input,
-  output,
+  EventEmitter,
+  Input,
+  Output,
   signal,
   type Signal,
   type WritableSignal,
@@ -55,7 +56,7 @@ let fieldIdCounter = 0;
     },
   ],
   host: {
-    '[attr.data-disabled]': 'disabled() ? "" : null',
+    '[attr.data-disabled]': '_disabled() ? "" : null',
     '[attr.data-touched]': '_touched() ? "" : null',
     '[attr.data-dirty]': '_dirty() ? "" : null',
     '[attr.data-filled]': '_filled() ? "" : null',
@@ -63,7 +64,7 @@ let fieldIdCounter = 0;
     '[attr.data-valid]': 'isValid() ? "" : null',
     '[attr.data-invalid]': '!isValid() ? "" : null',
     '[class.base-ui-field]': 'true',
-    '[class.base-ui-field-disabled]': 'disabled()',
+    '[class.base-ui-field-disabled]': '_disabled()',
     '[class.base-ui-field-touched]': '_touched()',
     '[class.base-ui-field-dirty]': '_dirty()',
     '[class.base-ui-field-filled]': '_filled()',
@@ -75,31 +76,61 @@ let fieldIdCounter = 0;
 export class FieldRootDirective {
   private readonly fieldId = `base-ui-field-${++fieldIdCounter}`;
 
+  // Internal signals for reactive updates
+  readonly _name = signal<string | undefined>(undefined);
+  readonly _disabled = signal(false);
+  readonly _validationMode = signal<FieldValidationMode>('onBlur');
+  readonly _validate = signal<((value: unknown) => string | string[] | null) | undefined>(undefined);
+
   /**
    * Field name for form submission.
    */
-  readonly name = input<string | undefined>(undefined);
+  @Input()
+  set name(value: string | undefined) {
+    this._name.set(value);
+  }
+  get name(): string | undefined {
+    return this._name();
+  }
 
   /**
    * Whether the field is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
+  get disabled(): boolean {
+    return this._disabled();
+  }
 
   /**
    * Validation mode.
    * @default 'onBlur'
    */
-  readonly validationMode = input<FieldValidationMode>('onBlur');
+  @Input()
+  set validationMode(value: FieldValidationMode) {
+    this._validationMode.set(value);
+  }
+  get validationMode(): FieldValidationMode {
+    return this._validationMode();
+  }
 
   /**
    * Custom validation function.
    */
-  readonly validate = input<((value: unknown) => string | string[] | null) | undefined>(undefined);
+  @Input()
+  set validate(value: ((value: unknown) => string | string[] | null) | undefined) {
+    this._validate.set(value);
+  }
+  get validate(): ((value: unknown) => string | string[] | null) | undefined {
+    return this._validate();
+  }
 
   /**
    * Emitted when validity changes.
    */
-  readonly validityChange = output<FieldValidityData | null>();
+  @Output() validityChange = new EventEmitter<FieldValidityData | null>();
 
   // Internal state
   readonly _touched: WritableSignal<boolean> = signal(false);
@@ -124,7 +155,7 @@ export class FieldRootDirective {
    * Current state object.
    */
   readonly state: Signal<FieldState> = computed(() => ({
-    disabled: this.disabled(),
+    disabled: this._disabled(),
     touched: this._touched(),
     dirty: this._dirty(),
     filled: this._filled(),
@@ -137,8 +168,8 @@ export class FieldRootDirective {
    * Context provided to child components.
    */
   readonly context: FieldContext = {
-    name: computed(() => this.name()),
-    disabled: computed(() => this.disabled()),
+    name: this._name,
+    disabled: this._disabled,
     touched: this._touched.asReadonly(),
     dirty: this._dirty.asReadonly(),
     filled: this._filled.asReadonly(),
@@ -165,7 +196,7 @@ export class FieldRootDirective {
    * Run custom validation.
    */
   private runValidation(): void {
-    const validateFn = this.validate();
+    const validateFn = this._validate();
     if (!validateFn) {
       return;
     }

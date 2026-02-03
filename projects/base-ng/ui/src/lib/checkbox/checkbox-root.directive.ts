@@ -15,11 +15,12 @@ import {
   Directive,
   effect,
   ElementRef,
+  EventEmitter,
   forwardRef,
   inject,
-  input,
-  model,
-  output,
+  Input,
+  Output,
+  signal,
   Signal,
 } from '@angular/core';
 import {
@@ -53,12 +54,12 @@ import { CHECKBOX_GROUP_CONTEXT } from '../checkbox-group/checkbox-group.types';
       provide: CHECKBOX_CONTEXT,
       useFactory: (directive: CheckboxRootDirective): CheckboxContext => ({
         checked: directive.effectiveChecked(),
-        disabled: directive.disabled(),
-        indeterminate: directive.indeterminate(),
-        readOnly: directive.readOnly(),
-        required: directive.required(),
+        disabled: directive._disabled(),
+        indeterminate: directive._indeterminate(),
+        readOnly: directive._readOnly(),
+        required: directive._required(),
         checkedSignal: directive.effectiveChecked,
-        indeterminateSignal: directive.indeterminate,
+        indeterminateSignal: directive._indeterminate,
       }),
       deps: [CheckboxRootDirective],
     },
@@ -72,21 +73,21 @@ import { CHECKBOX_GROUP_CONTEXT } from '../checkbox-group/checkbox-group.types';
     type: 'button',
     role: 'checkbox',
     '[attr.aria-checked]': 'ariaChecked()',
-    '[attr.aria-disabled]': 'disabled() ? "true" : null',
-    '[attr.aria-readonly]': 'readOnly() ? "true" : null',
-    '[attr.aria-required]': 'required() ? "true" : null',
+    '[attr.aria-disabled]': '_disabled() ? "true" : null',
+    '[attr.aria-readonly]': '_readOnly() ? "true" : null',
+    '[attr.aria-required]': '_required() ? "true" : null',
     '[attr.data-checked]': 'effectiveChecked() ? "" : null',
-    '[attr.data-unchecked]': '!effectiveChecked() && !indeterminate() ? "" : null',
-    '[attr.data-indeterminate]': 'indeterminate() ? "" : null',
-    '[attr.data-disabled]': 'disabled() ? "" : null',
-    '[attr.data-readonly]': 'readOnly() ? "" : null',
-    '[attr.data-required]': 'required() ? "" : null',
-    '[attr.disabled]': 'disabled() ? "" : null',
+    '[attr.data-unchecked]': '!effectiveChecked() && !_indeterminate() ? "" : null',
+    '[attr.data-indeterminate]': '_indeterminate() ? "" : null',
+    '[attr.data-disabled]': '_disabled() ? "" : null',
+    '[attr.data-readonly]': '_readOnly() ? "" : null',
+    '[attr.data-required]': '_required() ? "" : null',
+    '[attr.disabled]': '_disabled() ? "" : null',
     '[class.base-ui-checkbox]': 'true',
     '[class.base-ui-checkbox-checked]': 'effectiveChecked()',
-    '[class.base-ui-checkbox-unchecked]': '!effectiveChecked() && !indeterminate()',
-    '[class.base-ui-checkbox-indeterminate]': 'indeterminate()',
-    '[class.base-ui-checkbox-disabled]': 'disabled()',
+    '[class.base-ui-checkbox-unchecked]': '!effectiveChecked() && !_indeterminate()',
+    '[class.base-ui-checkbox-indeterminate]': '_indeterminate()',
+    '[class.base-ui-checkbox-disabled]': '_disabled()',
     '(click)': 'handleClick($event)',
     '(keydown)': 'handleKeydown($event)',
   },
@@ -99,62 +100,116 @@ export class CheckboxRootDirective implements ControlValueAccessor {
    * Whether the checkbox is checked.
    * Supports two-way binding with [(checked)].
    */
-  readonly checked = model<boolean>(false);
+  readonly _checked = signal<boolean>(false);
+  @Input()
+  set checked(value: boolean) {
+    this._checked.set(value);
+  }
+  get checked(): boolean {
+    return this._checked();
+  }
 
   /**
    * Whether the checkbox is indeterminate.
    */
-  readonly indeterminate = model<boolean>(false);
+  readonly _indeterminate = signal<boolean>(false);
+  @Input()
+  set indeterminate(value: boolean) {
+    this._indeterminate.set(value);
+  }
+  get indeterminate(): boolean {
+    return this._indeterminate();
+  }
 
   /**
    * Whether the checkbox is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  readonly _disabled = signal<boolean>(false);
+  @Input({ transform: booleanAttribute })
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
+  get disabled(): boolean {
+    return this._disabled();
+  }
 
   /**
    * Whether the checkbox is read-only.
    */
-  readonly readOnly = input(false, { transform: booleanAttribute });
+  readonly _readOnly = signal<boolean>(false);
+  @Input({ transform: booleanAttribute })
+  set readOnly(value: boolean) {
+    this._readOnly.set(value);
+  }
+  get readOnly(): boolean {
+    return this._readOnly();
+  }
 
   /**
    * Whether the checkbox is required.
    */
-  readonly required = input(false, { transform: booleanAttribute });
+  readonly _required = signal<boolean>(false);
+  @Input({ transform: booleanAttribute })
+  set required(value: boolean) {
+    this._required.set(value);
+  }
+  get required(): boolean {
+    return this._required();
+  }
 
   /**
    * Value to use when part of a checkbox group.
    */
-  readonly value = input<string>();
+  readonly _value = signal<string | undefined>(undefined);
+  @Input()
+  set value(value: string | undefined) {
+    this._value.set(value);
+  }
+  get value(): string | undefined {
+    return this._value();
+  }
 
   /**
    * Name for the hidden input.
    */
-  readonly name = input<string>();
+  readonly _name = signal<string | undefined>(undefined);
+  @Input()
+  set name(value: string | undefined) {
+    this._name.set(value);
+  }
+  get name(): string | undefined {
+    return this._name();
+  }
 
   /**
    * Event emitted when checked state changes.
    */
-  readonly checkedChange = output<boolean>();
+  @Output() readonly checkedChange = new EventEmitter<boolean>();
+
+  /**
+   * Event emitted when indeterminate state changes.
+   */
+  @Output() readonly indeterminateChange = new EventEmitter<boolean>();
 
   /**
    * Effective checked state.
    * When in a group with a value, this reads from the group's value array.
    */
   readonly effectiveChecked: Signal<boolean> = computed(() => {
-    const val = this.value();
+    const val = this._value();
     if (this.groupContext && val !== undefined) {
       // value is a WritableSignal, so call it to get the array
       const groupValue = this.groupContext.value();
       return Array.isArray(groupValue) ? groupValue.includes(val) : false;
     }
-    return this.checked();
+    return this._checked();
   });
 
   /**
    * Computed aria-checked attribute.
    */
   protected readonly ariaChecked = computed(() => {
-    if (this.indeterminate()) {
+    if (this._indeterminate()) {
       return 'mixed';
     }
     return this.effectiveChecked() ? 'true' : 'false';
@@ -163,12 +218,12 @@ export class CheckboxRootDirective implements ControlValueAccessor {
   constructor() {
     // Sync checked state from group when in a group
     effect(() => {
-      const val = this.value();
+      const val = this._value();
       if (this.groupContext && val !== undefined) {
         const groupValue = this.groupContext.value();
         const isInGroup = Array.isArray(groupValue) ? groupValue.includes(val) : false;
-        if (this.checked() !== isInGroup) {
-          this.checked.set(isInGroup);
+        if (this._checked() !== isInGroup) {
+          this._checked.set(isInGroup);
         }
       }
     });
@@ -182,7 +237,7 @@ export class CheckboxRootDirective implements ControlValueAccessor {
    * Handle click event.
    */
   protected handleClick(event: MouseEvent): void {
-    if (this.disabled() || this.readOnly()) {
+    if (this._disabled() || this._readOnly()) {
       event.preventDefault();
       return;
     }
@@ -196,7 +251,7 @@ export class CheckboxRootDirective implements ControlValueAccessor {
   protected handleKeydown(event: KeyboardEvent): void {
     if (event.key === ' ' || event.key === 'Enter') {
       event.preventDefault();
-      if (this.disabled() || this.readOnly()) {
+      if (this._disabled() || this._readOnly()) {
         return;
       }
       this.toggle('keyboard');
@@ -211,17 +266,18 @@ export class CheckboxRootDirective implements ControlValueAccessor {
     const newValue = !currentValue;
 
     // Clear indeterminate when toggling
-    if (this.indeterminate()) {
-      this.indeterminate.set(false);
+    if (this._indeterminate()) {
+      this._indeterminate.set(false);
+      this.indeterminateChange.emit(false);
     }
 
     // When in a group, toggle via the group context
-    const val = this.value();
+    const val = this._value();
     if (this.groupContext && val !== undefined) {
       this.groupContext.toggleValue(val);
     } else {
       // Not in a group, manage local state
-      this.checked.set(newValue);
+      this._checked.set(newValue);
     }
 
     this.onChange(newValue);
@@ -231,7 +287,7 @@ export class CheckboxRootDirective implements ControlValueAccessor {
 
   // ControlValueAccessor methods
   writeValue(value: boolean): void {
-    this.checked.set(value ?? false);
+    this._checked.set(value ?? false);
   }
 
   registerOnChange(fn: (value: boolean) => void): void {

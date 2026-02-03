@@ -12,7 +12,8 @@ import {
   ElementRef,
   HostListener,
   inject,
-  input,
+  Input,
+  signal,
   type Signal,
 } from '@angular/core';
 import { COMPOSITE_CONTEXT, CompositeMetadata } from './composite-root.directive';
@@ -46,15 +47,23 @@ export class CompositeItemDirective<T = unknown> {
   private readonly destroyRef = inject(DestroyRef);
   private readonly context = inject(COMPOSITE_CONTEXT, { optional: true });
 
+  // Internal signals
+  private readonly _metadata = signal<T | undefined>(undefined);
+  private readonly _active = signal<boolean>(false);
+
   /**
    * Custom metadata to attach to this item.
    */
-  readonly metadata = input<T>();
+  @Input()
+  set metadata(value: T | undefined) { this._metadata.set(value); }
+  get metadata(): T | undefined { return this._metadata(); }
 
   /**
    * Whether this item should be initially active.
    */
-  readonly active = input<boolean>(false);
+  @Input()
+  set active(value: boolean) { this._active.set(value); }
+  get active(): boolean { return this._active(); }
 
   /**
    * Index of this item in the list.
@@ -86,14 +95,14 @@ export class CompositeItemDirective<T = unknown> {
 
   constructor() {
     // Set active attribute if specified
-    if (this.active()) {
+    if (this._active()) {
       this.elementRef.nativeElement.setAttribute(ACTIVE_COMPOSITE_ITEM, '');
     }
 
     // Register with context
     if (this.context) {
       const compositeMetadata: CompositeMetadata<T> = {
-        data: this.metadata(),
+        data: this._metadata(),
       };
       this.context.registerItem(this.elementRef.nativeElement, compositeMetadata);
 

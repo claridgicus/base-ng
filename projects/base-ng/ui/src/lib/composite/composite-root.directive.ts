@@ -14,8 +14,9 @@ import {
   HostListener,
   inject,
   InjectionToken,
-  input,
-  output,
+  Input,
+  Output,
+  EventEmitter,
   signal,
   type Signal,
   type WritableSignal,
@@ -112,65 +113,101 @@ export class CompositeRootDirective {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly directionService = inject(DirectionService);
 
+  // Internal signals
+  private readonly _orientation = signal<'horizontal' | 'vertical' | 'both'>('both');
+  private readonly _cols = signal<number>(1);
+  private readonly _loopFocus = signal<boolean>(true);
+  private readonly _dense = signal<boolean>(false);
+  private readonly _itemSizes = signal<Dimensions[] | undefined>(undefined);
+  private readonly _enableHomeAndEndKeys = signal<boolean>(false);
+  private readonly _stopEventPropagation = signal<boolean>(true);
+  private readonly _disabledIndices = signal<number[]>([]);
+  private readonly _modifierKeys = signal<ModifierKey[]>([]);
+  private readonly _highlightItemOnHover = signal<boolean>(false);
+  private readonly _highlightedIndexInput = signal<number | undefined>(undefined);
+
   /**
    * The orientation of the composite navigation.
    */
-  readonly orientation = input<'horizontal' | 'vertical' | 'both'>('both');
+  @Input()
+  set orientation(value: 'horizontal' | 'vertical' | 'both') { this._orientation.set(value); }
+  get orientation(): 'horizontal' | 'vertical' | 'both' { return this._orientation(); }
 
   /**
    * Number of columns for grid layout.
    */
-  readonly cols = input<number>(1);
+  @Input()
+  set cols(value: number) { this._cols.set(value); }
+  get cols(): number { return this._cols(); }
 
   /**
    * Whether to loop focus when reaching boundaries.
    */
-  readonly loopFocus = input<boolean>(true);
+  @Input()
+  set loopFocus(value: boolean) { this._loopFocus.set(value); }
+  get loopFocus(): boolean { return this._loopFocus(); }
 
   /**
    * Whether to use dense packing for grid items.
    */
-  readonly dense = input<boolean>(false);
+  @Input()
+  set dense(value: boolean) { this._dense.set(value); }
+  get dense(): boolean { return this._dense(); }
 
   /**
    * Item sizes for grid layout (width and height in cells).
    */
-  readonly itemSizes = input<Dimensions[]>();
+  @Input()
+  set itemSizes(value: Dimensions[] | undefined) { this._itemSizes.set(value); }
+  get itemSizes(): Dimensions[] | undefined { return this._itemSizes(); }
 
   /**
    * Whether Home and End keys are enabled.
    */
-  readonly enableHomeAndEndKeys = input<boolean>(false);
+  @Input()
+  set enableHomeAndEndKeys(value: boolean) { this._enableHomeAndEndKeys.set(value); }
+  get enableHomeAndEndKeys(): boolean { return this._enableHomeAndEndKeys(); }
 
   /**
    * Whether to stop keyboard event propagation.
    */
-  readonly stopEventPropagation = input<boolean>(true);
+  @Input()
+  set stopEventPropagation(value: boolean) { this._stopEventPropagation.set(value); }
+  get stopEventPropagation(): boolean { return this._stopEventPropagation(); }
 
   /**
    * Indices of items that should be considered disabled.
    */
-  readonly disabledIndices = input<number[]>([]);
+  @Input()
+  set disabledIndices(value: number[]) { this._disabledIndices.set(value); }
+  get disabledIndices(): number[] { return this._disabledIndices(); }
 
   /**
    * Modifier keys that should be ignored during navigation.
    */
-  readonly modifierKeys = input<ModifierKey[]>([]);
+  @Input()
+  set modifierKeys(value: ModifierKey[]) { this._modifierKeys.set(value); }
+  get modifierKeys(): ModifierKey[] { return this._modifierKeys(); }
 
   /**
    * Whether to highlight items on hover.
    */
-  readonly highlightItemOnHover = input<boolean>(false);
+  @Input()
+  set highlightItemOnHover(value: boolean) { this._highlightItemOnHover.set(value); }
+  get highlightItemOnHover(): boolean { return this._highlightItemOnHover(); }
 
   /**
    * External control of highlighted index.
    */
-  readonly highlightedIndexInput = input<number | undefined>(undefined, { alias: 'highlightedIndex' });
+  @Input('highlightedIndex')
+  set highlightedIndexInput(value: number | undefined) { this._highlightedIndexInput.set(value); }
+  get highlightedIndexInput(): number | undefined { return this._highlightedIndexInput(); }
 
   /**
    * Emitted when highlighted index changes.
    */
-  readonly highlightedIndexChange = output<number>();
+  @Output()
+  readonly highlightedIndexChange = new EventEmitter<number>();
 
   // Internal state
   private readonly _highlightedIndex: WritableSignal<number> = signal(0);
@@ -181,20 +218,20 @@ export class CompositeRootDirective {
    * Current highlighted index.
    */
   readonly highlightedIndex: Signal<number> = computed(() => {
-    const external = this.highlightedIndexInput();
+    const external = this._highlightedIndexInput();
     return external !== undefined ? external : this._highlightedIndex();
   });
 
   /**
    * Whether this is a grid layout.
    */
-  readonly isGrid: Signal<boolean> = computed(() => this.cols() > 1);
+  readonly isGrid: Signal<boolean> = computed(() => this._cols() > 1);
 
   /**
    * ARIA orientation attribute.
    */
   readonly ariaOrientation: Signal<'horizontal' | 'vertical' | undefined> = computed(() => {
-    const orient = this.orientation();
+    const orient = this._orientation();
     return orient === 'both' ? undefined : orient;
   });
 
@@ -213,11 +250,11 @@ export class CompositeRootDirective {
           this.elementRef.nativeElement,
           element,
           this.directionService.direction(),
-          this.orientation()
+          this._orientation()
         );
       }
     },
-    highlightItemOnHover: computed(() => this.highlightItemOnHover()),
+    highlightItemOnHover: computed(() => this._highlightItemOnHover()),
     registerItem: (element: HTMLElement, metadata?: CompositeMetadata) => {
       this._elementMetadata.set(element, metadata || {});
       this.updateElementsList();
@@ -234,7 +271,7 @@ export class CompositeRootDirective {
   constructor() {
     // Sync external highlighted index
     effect(() => {
-      const external = this.highlightedIndexInput();
+      const external = this._highlightedIndexInput();
       if (external !== undefined) {
         this._highlightedIndex.set(external);
       }
@@ -286,14 +323,14 @@ export class CompositeRootDirective {
    */
   @HostListener('keydown', ['$event'])
   onKeyDown(event: KeyboardEvent): void {
-    const enableHome = this.enableHomeAndEndKeys();
+    const enableHome = this._enableHomeAndEndKeys();
     const RELEVANT_KEYS = enableHome ? ALL_KEYS : ARROW_KEYS;
 
     if (!RELEVANT_KEYS.has(event.key)) {
       return;
     }
 
-    if (isModifierKeySet(event, this.modifierKeys())) {
+    if (isModifierKeySet(event, this._modifierKeys())) {
       return;
     }
 
@@ -304,8 +341,8 @@ export class CompositeRootDirective {
 
     const direction = this.directionService.direction();
     const isRtl = direction === 'rtl';
-    const orient = this.orientation();
-    const disabledIndices = this.disabledIndices();
+    const orient = this._orientation();
+    const disabledIndices = this._disabledIndices();
 
     // Handle native input navigation
     if (isNativeInput(event.target) && !isElementDisabled(event.target as Element)) {
@@ -338,10 +375,10 @@ export class CompositeRootDirective {
     const horizontalBackwardKey = isRtl ? ARROW_RIGHT : ARROW_LEFT;
 
     if (this.isGrid()) {
-      const cols = this.cols();
-      const sizes = this.itemSizes() ||
+      const cols = this._cols();
+      const sizes = this._itemSizes() ||
         Array.from({ length: elements.length }, () => ({ width: 1, height: 1 }));
-      const cellMap = createGridCellMap(sizes, cols, this.dense());
+      const cellMap = createGridCellMap(sizes, cols, this._dense());
 
       const minGridIndex = cellMap.findIndex(
         (index) => index != null && !isListIndexDisabled(elements, index, disabledIndices)
@@ -368,7 +405,7 @@ export class CompositeRootDirective {
       const navIndex = getGridNavigatedIndex(elements, {
         event,
         orientation: orient,
-        loopFocus: this.loopFocus(),
+        loopFocus: this._loopFocus(),
         cols,
         disabledIndices: gridDisabledIndices,
         minIndex: minGridIndex,
@@ -408,9 +445,9 @@ export class CompositeRootDirective {
       }[orient];
 
       if (nextIndex === currentIndex && (forwardKeys.includes(event.key) || backwardKeys.includes(event.key))) {
-        if (this.loopFocus() && nextIndex === maxIndex && forwardKeys.includes(event.key)) {
+        if (this._loopFocus() && nextIndex === maxIndex && forwardKeys.includes(event.key)) {
           nextIndex = minIndex;
-        } else if (this.loopFocus() && nextIndex === minIndex && backwardKeys.includes(event.key)) {
+        } else if (this._loopFocus() && nextIndex === minIndex && backwardKeys.includes(event.key)) {
           nextIndex = maxIndex;
         } else {
           nextIndex = findNonDisabledListIndex(elements, {
@@ -432,7 +469,7 @@ export class CompositeRootDirective {
         }[orient];
 
     if (nextIndex !== currentIndex && !isIndexOutOfListBounds(elements, nextIndex)) {
-      if (this.stopEventPropagation()) {
+      if (this._stopEventPropagation()) {
         event.stopPropagation();
       }
 

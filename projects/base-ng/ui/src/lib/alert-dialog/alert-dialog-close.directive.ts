@@ -5,7 +5,7 @@
  * A button that closes the alert dialog.
  */
 
-import { Directive, inject, input, booleanAttribute } from '@angular/core';
+import { Directive, inject, Input, booleanAttribute, signal } from '@angular/core';
 import { ALERT_DIALOG_CONTEXT } from './alert-dialog.types';
 
 /**
@@ -24,7 +24,7 @@ import { ALERT_DIALOG_CONTEXT } from './alert-dialog.types';
   exportAs: 'alertDialogClose',
   host: {
     type: 'button',
-    '[attr.disabled]': 'disabled() ? "" : null',
+    '[attr.disabled]': '_disabled() ? "" : null',
     '[class.base-ui-alert-dialog-close]': 'true',
     '(click)': 'handleClick($event)',
   },
@@ -35,13 +35,21 @@ export class AlertDialogCloseDirective {
   /**
    * Whether the close button is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  readonly _disabled = signal<boolean>(false);
+
+  @Input({ transform: booleanAttribute })
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
+  get disabled(): boolean {
+    return this._disabled();
+  }
 
   /**
    * Handle click events.
    */
   protected handleClick(event: MouseEvent): void {
-    if (this.disabled()) {
+    if (this._disabled()) {
       event.preventDefault();
       return;
     }

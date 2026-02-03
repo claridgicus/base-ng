@@ -9,7 +9,8 @@ import {
   inject,
   contentChild,
   TemplateRef,
-  input,
+  Input,
+  signal,
 } from '@angular/core';
 import { AUTOCOMPLETE_ROOT_CONTEXT, AutocompleteValueState } from './autocomplete.types';
 
@@ -49,6 +50,9 @@ export interface AutocompleteValueTemplateContext {
 export class AutocompleteValueDirective {
   protected readonly rootContext = inject(AUTOCOMPLETE_ROOT_CONTEXT);
 
+  // Internal signal for placeholder input
+  private readonly _placeholder = signal<string>('');
+
   /**
    * Optional template for rendering the value.
    * Template receives the input value as context.
@@ -58,7 +62,13 @@ export class AutocompleteValueDirective {
   /**
    * Placeholder text when no value is present.
    */
-  readonly placeholder = input<string>('');
+  @Input()
+  get placeholder(): string {
+    return this._placeholder();
+  }
+  set placeholder(value: string) {
+    this._placeholder.set(value);
+  }
 
   /** Current input value */
   readonly inputValue = computed(() => this.rootContext.inputValueSignal());
@@ -71,8 +81,8 @@ export class AutocompleteValueDirective {
   /** The value to display */
   readonly displayValue = computed(() => {
     const value = this.inputValue();
-    if (!value && this.placeholder()) {
-      return this.placeholder();
+    if (!value && this._placeholder()) {
+      return this._placeholder();
     }
     return value;
   });

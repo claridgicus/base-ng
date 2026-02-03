@@ -8,9 +8,11 @@
 import {
   Directive,
   ElementRef,
+  EventEmitter,
   inject,
-  input,
-  output,
+  Input,
+  Output,
+  Signal,
   signal,
 } from '@angular/core';
 import {
@@ -41,11 +43,11 @@ import {
     {
       provide: FORM_CONTEXT,
       useFactory: (directive: FormRootDirective): FormContext => ({
-        validationMode: directive.validationMode(),
+        validationMode: directive['_validationMode'](),
         errors: directive.errors(),
         submitting: directive.submitting(),
         submitted: directive.submitted(),
-        validationModeSignal: directive.validationMode,
+        validationModeSignal: directive['_validationMode'],
         errorsSignal: directive.errors,
         submittingSignal: directive.submitting,
         submittedSignal: directive.submitted,
@@ -72,9 +74,20 @@ export class FormRootDirective {
   private readonly elementRef = inject(ElementRef<HTMLFormElement>);
 
   /**
-   * Validation mode.
+   * Internal signal for validation mode.
    */
-  readonly validationMode = input<FormValidationMode>('onSubmit');
+  readonly _validationMode = signal<FormValidationMode>('onSubmit');
+
+  /**
+   * Validation mode input.
+   */
+  @Input()
+  set validationMode(value: FormValidationMode) {
+    this._validationMode.set(value);
+  }
+  get validationMode(): FormValidationMode {
+    return this._validationMode();
+  }
 
   /**
    * External errors (e.g., from server).
@@ -94,12 +107,12 @@ export class FormRootDirective {
   /**
    * Event emitted on form submit.
    */
-  readonly formSubmit = output<FormSubmitEventDetails>();
+  @Output() readonly formSubmit = new EventEmitter<FormSubmitEventDetails>();
 
   /**
    * Event emitted on form reset.
    */
-  readonly formReset = output<void>();
+  @Output() readonly formReset = new EventEmitter<void>();
 
   /**
    * Set error for a field.

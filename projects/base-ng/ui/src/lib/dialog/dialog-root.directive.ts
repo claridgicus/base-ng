@@ -14,10 +14,10 @@ import {
   booleanAttribute,
   Directive,
   effect,
+  EventEmitter,
   inject,
-  input,
-  model,
-  output,
+  Input,
+  Output,
   signal,
   DestroyRef,
 } from '@angular/core';
@@ -71,38 +71,99 @@ export class DialogRootDirective {
   readonly rootId = `base-ui-dialog-${dialogIdCounter++}`;
 
   /**
+   * The controlled open state of the dialog (internal signal).
+   */
+  private readonly _open = signal<boolean>(false);
+
+  /**
    * The controlled open state of the dialog.
    */
-  readonly open = model<boolean>(false);
+  @Input()
+  get open(): boolean {
+    return this._open();
+  }
+  set open(value: boolean) {
+    this._open.set(value);
+  }
+
+  /**
+   * Emits when the open state changes (for two-way binding).
+   */
+  @Output() readonly openChange = new EventEmitter<boolean>();
+
+  /**
+   * The default open state when uncontrolled (internal signal).
+   */
+  private readonly _defaultOpen = signal<boolean>(false);
 
   /**
    * The default open state when uncontrolled.
    */
-  readonly defaultOpen = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get defaultOpen(): boolean {
+    return this._defaultOpen();
+  }
+  set defaultOpen(value: boolean) {
+    this._defaultOpen.set(value);
+  }
+
+  /**
+   * Whether the dialog is modal (internal signal).
+   * Modal dialogs prevent interaction with the rest of the page.
+   */
+  private readonly _modal = signal<boolean>(true);
 
   /**
    * Whether the dialog is modal.
    * Modal dialogs prevent interaction with the rest of the page.
    */
-  readonly modal = input(true, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get modal(): boolean {
+    return this._modal();
+  }
+  set modal(value: boolean) {
+    this._modal.set(value);
+  }
+
+  /**
+   * Whether to close on outside click (internal signal).
+   */
+  private readonly _closeOnOutsideClick = signal<boolean>(true);
 
   /**
    * Whether to close on outside click.
    */
-  readonly closeOnOutsideClick = input(true, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get closeOnOutsideClick(): boolean {
+    return this._closeOnOutsideClick();
+  }
+  set closeOnOutsideClick(value: boolean) {
+    this._closeOnOutsideClick.set(value);
+  }
+
+  /**
+   * Whether to close on escape key (internal signal).
+   */
+  private readonly _closeOnEscape = signal<boolean>(true);
 
   /**
    * Whether to close on escape key.
    */
-  readonly closeOnEscape = input(true, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get closeOnEscape(): boolean {
+    return this._closeOnEscape();
+  }
+  set closeOnEscape(value: boolean) {
+    this._closeOnEscape.set(value);
+  }
 
   /**
    * Emits when the open state changes with detailed event info.
    */
-  readonly openChanged = output<DialogOpenChangeEventDetails>();
+  @Output() readonly openChanged = new EventEmitter<DialogOpenChangeEventDetails>();
 
-  /** Internal open state */
-  private readonly internalOpen = signal(false);
+  /** Internal open state (public for template binding) */
+  readonly internalOpen = signal(false);
 
   /** Trigger element */
   private readonly triggerElement = signal<HTMLElement | null>(null);
@@ -123,8 +184,8 @@ export class DialogRootDirective {
   readonly context: DialogContext = {
     open: this.internalOpen(),
     openSignal: this.internalOpen,
-    modal: this.modal(),
-    modalSignal: this.modal,
+    modal: this._modal(),
+    modalSignal: this._modal,
     openDialog: (reason?: DialogOpenChangeReason) => this.setOpen(true, reason),
     closeDialog: (reason?: DialogOpenChangeReason) => this.setOpen(false, reason),
     setOpen: (open: boolean, reason?: DialogOpenChangeReason) =>
@@ -152,14 +213,14 @@ export class DialogRootDirective {
   constructor() {
     // Initialize with default open
     effect(() => {
-      if (this.defaultOpen() && !this.internalOpen()) {
+      if (this._defaultOpen() && !this.internalOpen()) {
         this.internalOpen.set(true);
       }
     });
 
     // Sync model to internal state
     effect(() => {
-      this.internalOpen.set(this.open());
+      this.internalOpen.set(this._open());
     });
 
     // Set up outside click, escape handlers, and focus management
@@ -201,7 +262,8 @@ export class DialogRootDirective {
     }
 
     this.internalOpen.set(open);
-    this.open.set(open);
+    this._open.set(open);
+    this.openChange.emit(open);
 
     this.openChanged.emit({
       open,
@@ -220,7 +282,7 @@ export class DialogRootDirective {
     this.setupDocumentListeners();
 
     // Lock body scroll for modal dialogs
-    if (this.modal()) {
+    if (this._modal()) {
       this.document.body.style.overflow = 'hidden';
     }
   }
@@ -232,7 +294,7 @@ export class DialogRootDirective {
     this.removeDocumentListeners();
 
     // Restore body scroll
-    if (this.modal()) {
+    if (this._modal()) {
       this.document.body.style.overflow = '';
     }
 
@@ -258,7 +320,7 @@ export class DialogRootDirective {
 
     // Outside click handler
     this.clickListener = (event: MouseEvent) => {
-      if (!this.closeOnOutsideClick()) return;
+      if (!this._closeOnOutsideClick()) return;
 
       const target = event.target as HTMLElement;
       const popup = this.popupElement();
@@ -273,7 +335,7 @@ export class DialogRootDirective {
 
     // Escape key handler
     this.keydownListener = (event: KeyboardEvent) => {
-      if (!this.closeOnEscape()) return;
+      if (!this._closeOnEscape()) return;
 
       if (event.key === 'Escape') {
         event.preventDefault();

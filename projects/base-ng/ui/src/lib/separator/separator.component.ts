@@ -14,8 +14,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
-  type Signal,
+  Input,
+  signal,
 } from '@angular/core';
 import type { Orientation } from '../types';
 
@@ -42,27 +42,36 @@ import type { Orientation } from '../types';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: 'separator',
-    '[attr.aria-orientation]': 'orientation()',
-    '[attr.data-orientation]': 'orientation()',
+    '[attr.aria-orientation]': '_orientation()',
+    '[attr.data-orientation]': '_orientation()',
     '[class.base-ui-separator]': 'true',
     '[class.base-ui-separator-horizontal]': 'isHorizontal()',
     '[class.base-ui-separator-vertical]': 'isVertical()',
   },
 })
 export class SeparatorComponent {
+  // Internal signal for reactive updates
+  readonly _orientation = signal<Orientation>('horizontal');
+
   /**
    * The orientation of the separator.
    * @default 'horizontal'
    */
-  readonly orientation = input<Orientation>('horizontal');
+  @Input()
+  set orientation(value: Orientation) {
+    this._orientation.set(value);
+  }
+  get orientation(): Orientation {
+    return this._orientation();
+  }
 
   /**
    * Whether the separator is horizontal.
    */
-  readonly isHorizontal: Signal<boolean> = computed(() => this.orientation() === 'horizontal');
+  readonly isHorizontal = computed(() => this._orientation() === 'horizontal');
 
   /**
    * Whether the separator is vertical.
    */
-  readonly isVertical: Signal<boolean> = computed(() => this.orientation() === 'vertical');
+  readonly isVertical = computed(() => this._orientation() === 'vertical');
 }

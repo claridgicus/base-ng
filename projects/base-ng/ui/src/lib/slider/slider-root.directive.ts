@@ -15,12 +15,12 @@ import {
   Directive,
   effect,
   ElementRef,
+  EventEmitter,
   forwardRef,
   inject,
-  input,
-  model,
+  Input,
   numberAttribute,
-  output,
+  Output,
   signal,
   type Signal,
 } from '@angular/core';
@@ -76,22 +76,22 @@ function roundToStep(value: number, step: number, min: number): number {
       provide: SLIDER_CONTEXT,
       useFactory: (directive: SliderRootDirective): SliderContext => ({
         values: directive.internalValues(),
-        min: directive.min(),
-        max: directive.max(),
-        step: directive.step(),
-        disabled: directive.disabled(),
-        orientation: directive.orientation(),
+        min: directive._min(),
+        max: directive._max(),
+        step: directive._step(),
+        disabled: directive._disabled(),
+        orientation: directive._orientation(),
         dragging: directive.dragging(),
         activeThumbIndex: directive.activeThumbIndex(),
         valuesSignal: directive.internalValues,
-        disabledSignal: directive.disabled,
+        disabledSignal: directive._disabled,
         draggingSignal: directive.dragging,
         activeThumbIndexSignal: directive.activeThumbIndex,
-        orientationSignal: directive.orientation,
-        minSignal: directive.min,
-        maxSignal: directive.max,
-        stepSignal: directive.step,
-        largeStepSignal: directive.largeStep,
+        orientationSignal: directive._orientation,
+        minSignal: directive._min,
+        maxSignal: directive._max,
+        stepSignal: directive._step,
+        largeStepSignal: directive._largeStep,
         setValue: directive.setValue.bind(directive),
         setActiveThumbIndex: directive.setActiveThumbIndex.bind(directive),
         setDragging: directive.setDragging.bind(directive),
@@ -111,14 +111,14 @@ function roundToStep(value: number, step: number, min: number): number {
   ],
   host: {
     role: 'group',
-    '[attr.data-disabled]': 'disabled() ? "" : null',
+    '[attr.data-disabled]': '_disabled() ? "" : null',
     '[attr.data-dragging]': 'dragging() ? "" : null',
-    '[attr.data-orientation]': 'orientation()',
+    '[attr.data-orientation]': '_orientation()',
     '[class.base-ui-slider]': 'true',
-    '[class.base-ui-slider-disabled]': 'disabled()',
+    '[class.base-ui-slider-disabled]': '_disabled()',
     '[class.base-ui-slider-dragging]': 'dragging()',
-    '[class.base-ui-slider-horizontal]': 'orientation() === "horizontal"',
-    '[class.base-ui-slider-vertical]': 'orientation() === "vertical"',
+    '[class.base-ui-slider-horizontal]': '_orientation() === "horizontal"',
+    '[class.base-ui-slider-vertical]': '_orientation() === "vertical"',
     '[style.--slider-value-percent]': 'valuePercent() + "%"',
   },
 })
@@ -128,7 +128,20 @@ export class SliderRootDirective implements ControlValueAccessor {
   /**
    * Current value (single value or array for range).
    */
-  readonly value = model<number | number[]>(0);
+  readonly _value = signal<number | number[]>(0);
+
+  @Input()
+  set value(val: number | number[] | undefined) {
+    this._value.set(val ?? 0);
+  }
+  get value(): number | number[] {
+    return this._value();
+  }
+
+  /**
+   * Event emitted when value changes (for two-way binding).
+   */
+  @Output() readonly valueChange = new EventEmitter<number | number[]>();
 
   /**
    * Internal values as array.
@@ -138,52 +151,116 @@ export class SliderRootDirective implements ControlValueAccessor {
   /**
    * Minimum value.
    */
-  readonly min = input(0, { transform: numberAttribute });
+  readonly _min = signal<number>(0);
+
+  @Input({ transform: numberAttribute })
+  set min(val: number) {
+    this._min.set(val);
+  }
+  get min(): number {
+    return this._min();
+  }
 
   /**
    * Maximum value.
    */
-  readonly max = input(100, { transform: numberAttribute });
+  readonly _max = signal<number>(100);
+
+  @Input({ transform: numberAttribute })
+  set max(val: number) {
+    this._max.set(val);
+  }
+  get max(): number {
+    return this._max();
+  }
 
   /**
    * Step increment.
    */
-  readonly step = input(1, { transform: numberAttribute });
+  readonly _step = signal<number>(1);
+
+  @Input({ transform: numberAttribute })
+  set step(val: number) {
+    this._step.set(val);
+  }
+  get step(): number {
+    return this._step();
+  }
 
   /**
    * Large step for Page Up/Down and Shift+Arrow.
    */
-  readonly largeStep = input(10, { transform: numberAttribute });
+  readonly _largeStep = signal<number>(10);
+
+  @Input({ transform: numberAttribute })
+  set largeStep(val: number) {
+    this._largeStep.set(val);
+  }
+  get largeStep(): number {
+    return this._largeStep();
+  }
 
   /**
    * Whether the slider is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  readonly _disabled = signal<boolean>(false);
+
+  @Input({ transform: booleanAttribute })
+  set disabled(val: boolean) {
+    this._disabled.set(val);
+  }
+  get disabled(): boolean {
+    return this._disabled();
+  }
 
   /**
    * Slider orientation.
    */
-  readonly orientation = input<SliderOrientation>('horizontal');
+  readonly _orientation = signal<SliderOrientation>('horizontal');
+
+  @Input()
+  set orientation(val: SliderOrientation) {
+    this._orientation.set(val);
+  }
+  get orientation(): SliderOrientation {
+    return this._orientation();
+  }
 
   /**
    * Minimum steps between values in range slider.
    */
-  readonly minStepsBetweenValues = input(0, { transform: numberAttribute });
+  readonly _minStepsBetweenValues = signal<number>(0);
+
+  @Input({ transform: numberAttribute })
+  set minStepsBetweenValues(val: number) {
+    this._minStepsBetweenValues.set(val);
+  }
+  get minStepsBetweenValues(): number {
+    return this._minStepsBetweenValues();
+  }
 
   /**
    * How thumbs behave when they collide.
    */
-  readonly thumbCollisionBehavior = input<ThumbCollisionBehavior>('push');
+  readonly _thumbCollisionBehavior = signal<ThumbCollisionBehavior>('push');
+
+  @Input()
+  set thumbCollisionBehavior(val: ThumbCollisionBehavior) {
+    this._thumbCollisionBehavior.set(val);
+  }
+  get thumbCollisionBehavior(): ThumbCollisionBehavior {
+    return this._thumbCollisionBehavior();
+  }
 
   /**
    * Event emitted when value changes.
    */
-  readonly valueChanged = output<SliderChangeEventDetails>();
+  @Output() readonly valueChanged = new EventEmitter<SliderChangeEventDetails>();
 
   /**
    * Event emitted when value is committed (on pointer up).
    */
-  readonly valueCommitted = output<SliderValueCommittedEventDetails>();
+  @Output() readonly valueCommitted = new EventEmitter<SliderValueCommittedEventDetails>();
 
   /**
    * Whether a thumb is being dragged.
@@ -216,10 +293,10 @@ export class SliderRootDirective implements ControlValueAccessor {
   constructor() {
     // Sync model value to internal values array
     effect(() => {
-      const val = this.value();
+      const val = this._value();
       const values = Array.isArray(val) ? val : [val];
       const clamped = values.map(v =>
-        clamp(roundToStep(v, this.step(), this.min()), this.min(), this.max())
+        clamp(roundToStep(v, this._step(), this._min()), this._min(), this._max())
       );
       this.internalValues.set(clamped);
     });
@@ -229,8 +306,8 @@ export class SliderRootDirective implements ControlValueAccessor {
    * Get percentage position for a value.
    */
   getPercentage(value: number): number {
-    const min = this.min();
-    const max = this.max();
+    const min = this._min();
+    const max = this._max();
     if (max === min) return 0;
     return ((value - min) / (max - min)) * 100;
   }
@@ -239,9 +316,9 @@ export class SliderRootDirective implements ControlValueAccessor {
    * Get value for a percentage position.
    */
   getValue(percent: number): number {
-    const min = this.min();
-    const max = this.max();
-    const step = this.step();
+    const min = this._min();
+    const max = this._max();
+    const step = this._step();
     const raw = (percent / 100) * (max - min) + min;
     return clamp(roundToStep(raw, step, min), min, max);
   }
@@ -250,12 +327,12 @@ export class SliderRootDirective implements ControlValueAccessor {
    * Set value at a specific index.
    */
   setValue(newValue: number, index: number = 0): void {
-    if (this.disabled()) return;
+    if (this._disabled()) return;
 
     const values = [...this.internalValues()];
-    const step = this.step();
-    const min = this.min();
-    const max = this.max();
+    const step = this._step();
+    const min = this._min();
+    const max = this._max();
 
     // Clamp and round to step
     const clamped = clamp(roundToStep(newValue, step, min), min, max);
@@ -270,7 +347,8 @@ export class SliderRootDirective implements ControlValueAccessor {
 
     // Update external value
     const externalValue = values.length === 1 ? values[0] : values;
-    this.value.set(externalValue);
+    this._value.set(externalValue);
+    this.valueChange.emit(externalValue);
     this.onChange(externalValue);
     this.valueChanged.emit({
       value: externalValue,
@@ -314,7 +392,7 @@ export class SliderRootDirective implements ControlValueAccessor {
 
   // ControlValueAccessor methods
   writeValue(value: number | number[]): void {
-    this.value.set(value ?? 0);
+    this._value.set(value ?? 0);
     const values = Array.isArray(value) ? value : [value ?? 0];
     this.internalValues.set(values);
   }

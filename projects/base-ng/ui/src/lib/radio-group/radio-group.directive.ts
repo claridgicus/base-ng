@@ -13,10 +13,10 @@ import {
   booleanAttribute,
   Directive,
   effect,
+  EventEmitter,
   forwardRef,
-  input,
-  model,
-  output,
+  Input,
+  Output,
   signal,
 } from '@angular/core';
 import {
@@ -51,11 +51,11 @@ import {
       provide: RADIO_GROUP_CONTEXT,
       useFactory: (directive: RadioGroupDirective): RadioGroupContext => ({
         value: directive.internalValue,
-        disabled: directive.disabled,
-        readOnly: directive.readOnly,
-        required: directive.required,
+        disabled: directive._disabled,
+        readOnly: directive._readOnly,
+        required: directive._required,
         setValue: directive.setValue.bind(directive),
-        name: directive.name,
+        name: directive._name,
       }),
       deps: [RadioGroupDirective],
     },
@@ -67,22 +67,36 @@ import {
   ],
   host: {
     role: 'radiogroup',
-    '[attr.aria-disabled]': 'disabled() ? "true" : null',
-    '[attr.aria-readonly]': 'readOnly() ? "true" : null',
-    '[attr.aria-required]': 'required() ? "true" : null',
-    '[attr.data-disabled]': 'disabled() ? "" : null',
-    '[attr.data-readonly]': 'readOnly() ? "" : null',
-    '[attr.data-required]': 'required() ? "" : null',
+    '[attr.aria-disabled]': '_disabled() ? "true" : null',
+    '[attr.aria-readonly]': '_readOnly() ? "true" : null',
+    '[attr.aria-required]': '_required() ? "true" : null',
+    '[attr.data-disabled]': '_disabled() ? "" : null',
+    '[attr.data-readonly]': '_readOnly() ? "" : null',
+    '[attr.data-required]': '_required() ? "" : null',
     '[class.base-ui-radio-group]': 'true',
-    '[class.base-ui-radio-group-disabled]': 'disabled()',
-    '[class.base-ui-radio-group-readonly]': 'readOnly()',
+    '[class.base-ui-radio-group-disabled]': '_disabled()',
+    '[class.base-ui-radio-group-readonly]': '_readOnly()',
   },
 })
 export class RadioGroupDirective implements ControlValueAccessor {
+  // Internal signals for reactive updates
+  readonly _value = signal<string | undefined>(undefined);
+  readonly _disabled = signal(false);
+  readonly _readOnly = signal(false);
+  readonly _required = signal(false);
+  readonly _name = signal<string | undefined>(undefined);
+
   /**
    * Current selected value.
    */
-  readonly value = model<string | undefined>(undefined);
+  @Input()
+  set value(val: string | undefined) {
+    this._value.set(val);
+    this.internalValue.set(val);
+  }
+  get value(): string | undefined {
+    return this._value();
+  }
 
   /**
    * Internal value signal for context (since model is a WritableSignal).
@@ -92,27 +106,56 @@ export class RadioGroupDirective implements ControlValueAccessor {
   /**
    * Whether the group is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  set disabled(val: boolean) {
+    this._disabled.set(val);
+  }
+  get disabled(): boolean {
+    return this._disabled();
+  }
 
   /**
    * Whether the group is read-only.
    */
-  readonly readOnly = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  set readOnly(val: boolean) {
+    this._readOnly.set(val);
+  }
+  get readOnly(): boolean {
+    return this._readOnly();
+  }
 
   /**
    * Whether the group is required.
    */
-  readonly required = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  set required(val: boolean) {
+    this._required.set(val);
+  }
+  get required(): boolean {
+    return this._required();
+  }
 
   /**
    * Name for the radio group (for form submission).
    */
-  readonly name = input<string | undefined>(undefined);
+  @Input()
+  set name(val: string | undefined) {
+    this._name.set(val);
+  }
+  get name(): string | undefined {
+    return this._name();
+  }
 
   /**
    * Event emitted when value changes with details.
    */
-  readonly valueChanged = output<RadioGroupChangeEventDetails>();
+  @Output() valueChanged = new EventEmitter<RadioGroupChangeEventDetails>();
+
+  /**
+   * Event emitter for two-way binding support.
+   */
+  @Output() valueChange = new EventEmitter<string | undefined>();
 
   // ControlValueAccessor
   private onChange: (value: string | undefined) => void = () => {};
@@ -121,7 +164,7 @@ export class RadioGroupDirective implements ControlValueAccessor {
   constructor() {
     // Sync model to internal value
     effect(() => {
-      this.internalValue.set(this.value());
+      this.internalValue.set(this._value());
     });
   }
 
@@ -129,7 +172,7 @@ export class RadioGroupDirective implements ControlValueAccessor {
    * Set the selected value.
    */
   setValue(val: string): void {
-    if (this.disabled() || this.readOnly()) return;
+    if (this._disabled() || this._readOnly()) return;
 
     this.updateValue(val);
   }
@@ -138,16 +181,17 @@ export class RadioGroupDirective implements ControlValueAccessor {
    * Update the value and notify.
    */
   private updateValue(newValue: string): void {
-    this.value.set(newValue);
+    this._value.set(newValue);
     this.internalValue.set(newValue);
     this.onChange(newValue);
     this.onTouched();
+    this.valueChange.emit(newValue);
     this.valueChanged.emit({ value: newValue });
   }
 
   // ControlValueAccessor methods
   writeValue(value: string | undefined): void {
-    this.value.set(value);
+    this._value.set(value);
     this.internalValue.set(value);
   }
 

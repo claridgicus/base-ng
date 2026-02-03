@@ -5,9 +5,10 @@
 
 import {
   Directive,
+  Input,
   computed,
   inject,
-  input,
+  signal,
   booleanAttribute,
 } from '@angular/core';
 import { COMBOBOX_ITEM_CONTEXT } from './combobox.types';
@@ -26,9 +27,19 @@ import { COMBOBOX_ITEM_CONTEXT } from './combobox.types';
 })
 export class ComboboxItemIndicatorDirective {
   protected readonly itemContext = inject(COMBOBOX_ITEM_CONTEXT);
-  readonly keepMounted = input(true, { transform: booleanAttribute });
+
+  // Private signal for internal state management
+  private readonly _keepMounted = signal(true);
+
+  @Input({ transform: booleanAttribute })
+  get keepMounted(): boolean {
+    return this._keepMounted();
+  }
+  set keepMounted(value: boolean) {
+    this._keepMounted.set(value);
+  }
 
   readonly isVisible = computed(() => {
-    return this.itemContext.selected || this.keepMounted();
+    return this.itemContext.selected || this._keepMounted();
   });
 }

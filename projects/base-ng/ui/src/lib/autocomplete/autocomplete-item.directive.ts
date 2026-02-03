@@ -8,11 +8,12 @@ import {
   ElementRef,
   computed,
   inject,
-  input,
+  Input,
   booleanAttribute,
   effect,
   OnInit,
   OnDestroy,
+  signal,
 } from '@angular/core';
 import { AUTOCOMPLETE_ROOT_CONTEXT, AUTOCOMPLETE_ITEM_CONTEXT } from './autocomplete.types';
 
@@ -40,10 +41,10 @@ let itemCounter = 0;
       provide: AUTOCOMPLETE_ITEM_CONTEXT,
       useFactory: (directive: AutocompleteItemDirective) => ({
         get value() {
-          return directive.value();
+          return directive._value();
         },
         get disabled() {
-          return directive.disabled();
+          return directive._disabled();
         },
       }),
       deps: [AutocompleteItemDirective],
@@ -53,14 +54,14 @@ let itemCounter = 0;
     role: 'option',
     '[attr.id]': 'itemId',
     '[attr.aria-selected]': 'isSelected() ? "true" : "false"',
-    '[attr.aria-disabled]': 'disabled() ? "true" : null',
+    '[attr.aria-disabled]': '_disabled() ? "true" : null',
     '[attr.data-selected]': 'isSelected() ? "" : null',
     '[attr.data-highlighted]': 'isHighlighted() ? "" : null',
-    '[attr.data-disabled]': 'disabled() ? "" : null',
+    '[attr.data-disabled]': '_disabled() ? "" : null',
     '[class.base-ui-autocomplete-item]': 'true',
     '[class.base-ui-autocomplete-item-selected]': 'isSelected()',
     '[class.base-ui-autocomplete-item-highlighted]': 'isHighlighted()',
-    '[class.base-ui-autocomplete-item-disabled]': 'disabled()',
+    '[class.base-ui-autocomplete-item-disabled]': '_disabled()',
     '(click)': 'handleClick()',
     '(mouseenter)': 'handleMouseEnter()',
     '(mouseleave)': 'handleMouseLeave()',
@@ -70,24 +71,54 @@ export class AutocompleteItemDirective<T = unknown> implements OnInit, OnDestroy
   protected readonly rootContext = inject(AUTOCOMPLETE_ROOT_CONTEXT);
   private readonly elementRef = inject(ElementRef<HTMLElement>);
 
+  // Internal signals for inputs
+  readonly _value = signal<T>(undefined as any);
+  private readonly _textValue = signal<string | undefined>(undefined);
+  private readonly _label = signal<string | undefined>(undefined);
+  readonly _disabled = signal(false);
+
   /** The value associated with this item */
-  readonly value = input.required<T>();
+  @Input({ required: true })
+  get value(): T {
+    return this._value();
+  }
+  set value(val: T) {
+    this._value.set(val);
+  }
 
   /** Text value for filtering/display (optional, defaults to text content) */
-  readonly textValue = input<string>();
+  @Input()
+  get textValue(): string | undefined {
+    return this._textValue();
+  }
+  set textValue(value: string | undefined) {
+    this._textValue.set(value);
+  }
 
   /** Label for the item (optional) */
-  readonly label = input<string>();
+  @Input()
+  get label(): string | undefined {
+    return this._label();
+  }
+  set label(value: string | undefined) {
+    this._label.set(value);
+  }
 
   /** Whether the item is disabled */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get disabled(): boolean {
+    return this._disabled();
+  }
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
 
   /** Unique ID for this item */
   readonly itemId = `base-ui-autocomplete-item-${++itemCounter}`;
 
   /** Whether this item is selected */
   readonly isSelected = computed(() => {
-    return this.rootContext.isSelected(this.value() as any);
+    return this.rootContext.isSelected(this._value() as any);
   });
 
   /** Whether this item is highlighted */
@@ -96,7 +127,7 @@ export class AutocompleteItemDirective<T = unknown> implements OnInit, OnDestroy
     if (highlighted === null) {
       return false;
     }
-    return this.rootContext.valueEquality(this.value() as any, highlighted);
+    return this.rootContext.valueEquality(this._value() as any, highlighted);
   });
 
   constructor() {
@@ -113,30 +144,30 @@ export class AutocompleteItemDirective<T = unknown> implements OnInit, OnDestroy
   ngOnInit(): void {
     // Register item with root context
     this.rootContext.registerItem({
-      value: this.value() as any,
-      label: this.label(),
-      disabled: this.disabled(),
-      textValue: this.textValue() ?? this.elementRef.nativeElement.textContent?.trim(),
+      value: this._value() as any,
+      label: this._label(),
+      disabled: this._disabled(),
+      textValue: this._textValue() ?? this.elementRef.nativeElement.textContent?.trim(),
     });
   }
 
   ngOnDestroy(): void {
     // Unregister item
-    this.rootContext.unregisterItem(this.value() as any);
+    this.rootContext.unregisterItem(this._value() as any);
   }
 
   /**
    * Handle click to select item.
    */
   handleClick(): void {
-    if (this.disabled()) {
+    if (this._disabled()) {
       return;
     }
 
     if (this.rootContext.multipleSignal()) {
-      this.rootContext.toggleValue(this.value() as any);
+      this.rootContext.toggleValue(this._value() as any);
     } else {
-      this.rootContext.setValue(this.value() as any);
+      this.rootContext.setValue(this._value() as any);
       this.rootContext.setOpen(false);
     }
   }
@@ -145,8 +176,8 @@ export class AutocompleteItemDirective<T = unknown> implements OnInit, OnDestroy
    * Handle mouse enter to highlight.
    */
   handleMouseEnter(): void {
-    if (!this.disabled()) {
-      this.rootContext.setHighlightedValue(this.value() as any);
+    if (!this._disabled()) {
+      this.rootContext.setHighlightedValue(this._value() as any);
     }
   }
 

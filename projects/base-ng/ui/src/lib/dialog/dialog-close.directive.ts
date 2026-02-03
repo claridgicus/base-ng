@@ -5,7 +5,7 @@
  * A button that closes the dialog.
  */
 
-import { Directive, inject, input, booleanAttribute } from '@angular/core';
+import { booleanAttribute, Directive, inject, Input, signal } from '@angular/core';
 import { DIALOG_CONTEXT } from './dialog.types';
 
 /**
@@ -23,7 +23,7 @@ import { DIALOG_CONTEXT } from './dialog.types';
   exportAs: 'dialogClose',
   host: {
     type: 'button',
-    '[attr.disabled]': 'disabled() ? "" : null',
+    '[attr.disabled]': '_disabled() ? "" : null',
     '[class.base-ui-dialog-close]': 'true',
     '(click)': 'handleClick($event)',
   },
@@ -32,15 +32,26 @@ export class DialogCloseDirective {
   protected readonly context = inject(DIALOG_CONTEXT);
 
   /**
+   * Whether the close button is disabled (internal signal).
+   */
+  readonly _disabled = signal<boolean>(false);
+
+  /**
    * Whether the close button is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get disabled(): boolean {
+    return this._disabled();
+  }
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
 
   /**
    * Handle click events.
    */
   protected handleClick(event: MouseEvent): void {
-    if (this.disabled()) {
+    if (this._disabled()) {
       event.preventDefault();
       return;
     }

@@ -5,11 +5,12 @@
 
 import {
   Directive,
+  Input,
   ElementRef,
   computed,
   effect,
   inject,
-  input,
+  signal,
   booleanAttribute,
   afterNextRender,
   OnDestroy,
@@ -56,13 +57,39 @@ export class ComboboxItemDirective<T = unknown> implements OnDestroy {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
 
   readonly itemId = `base-ui-combobox-item-${++itemIdCounter}`;
-  readonly value = input.required<T>();
-  readonly label = input<string>();
-  readonly disabled = input(false, { transform: booleanAttribute });
+
+  // Private signals for internal state management
+  private readonly _value = signal<T>(undefined as T);
+  private readonly _label = signal<string | undefined>(undefined);
+  private readonly _disabled = signal(false);
+
+  @Input({ required: true })
+  get value(): T {
+    return this._value();
+  }
+  set value(val: T) {
+    this._value.set(val);
+  }
+
+  @Input()
+  get label(): string | undefined {
+    return this._label();
+  }
+  set label(val: string | undefined) {
+    this._label.set(val);
+  }
+
+  @Input({ transform: booleanAttribute })
+  get disabled(): boolean {
+    return this._disabled();
+  }
+  set disabled(val: boolean) {
+    this._disabled.set(val);
+  }
 
   readonly isSelected = computed(() => {
     const selectedValue = this.rootContext.valueSignal();
-    const itemValue = this.value();
+    const itemValue = this._value();
     if (selectedValue === null || selectedValue === undefined) {
       return false;
     }
@@ -77,11 +104,11 @@ export class ComboboxItemDirective<T = unknown> implements OnDestroy {
     if (highlightedValue === null) {
       return false;
     }
-    return this.rootContext.valueEquality(highlightedValue as T, this.value());
+    return this.rootContext.valueEquality(highlightedValue as T, this._value());
   });
 
   readonly isDisabled = computed(() => {
-    return this.rootContext.disabledSignal() || this.disabled();
+    return this.rootContext.disabledSignal() || this._disabled();
   });
 
   readonly itemContext: ComboboxItemContext<T>;
@@ -89,7 +116,7 @@ export class ComboboxItemDirective<T = unknown> implements OnDestroy {
   constructor() {
     const self = this;
     this.itemContext = {
-      get value() { return self.value(); },
+      get value() { return self._value(); },
       get selected() { return self.isSelected(); },
       get highlighted() { return self.isHighlighted(); },
       get disabled() { return self.isDisabled(); },
@@ -100,9 +127,9 @@ export class ComboboxItemDirective<T = unknown> implements OnDestroy {
     });
 
     effect(() => {
-      this.value();
-      this.label();
-      this.disabled();
+      this._value();
+      this._label();
+      this._disabled();
       this.registerItem();
     });
 
@@ -114,14 +141,14 @@ export class ComboboxItemDirective<T = unknown> implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.rootContext.unregisterItem(this.value());
+    this.rootContext.unregisterItem(this._value());
   }
 
   private registerItem(): void {
     this.rootContext.registerItem({
-      value: this.value(),
-      label: this.label() || this.elementRef.nativeElement?.textContent?.trim(),
-      disabled: this.disabled(),
+      value: this._value(),
+      label: this._label() || this.elementRef.nativeElement?.textContent?.trim(),
+      disabled: this._disabled(),
       element: this.elementRef.nativeElement,
     });
   }
@@ -132,22 +159,22 @@ export class ComboboxItemDirective<T = unknown> implements OnDestroy {
       return;
     }
     if (this.rootContext.multipleSignal()) {
-      this.rootContext.toggleValue(this.value());
+      this.rootContext.toggleValue(this._value());
     } else {
-      this.rootContext.setValue(this.value());
+      this.rootContext.setValue(this._value());
       this.rootContext.setOpen(false);
     }
   }
 
   handleMouseEnter(): void {
     if (!this.isDisabled()) {
-      this.rootContext.setHighlightedValue(this.value());
+      this.rootContext.setHighlightedValue(this._value());
     }
   }
 
   handleMouseMove(): void {
     if (!this.isDisabled() && !this.isHighlighted()) {
-      this.rootContext.setHighlightedValue(this.value());
+      this.rootContext.setHighlightedValue(this._value());
     }
   }
 }

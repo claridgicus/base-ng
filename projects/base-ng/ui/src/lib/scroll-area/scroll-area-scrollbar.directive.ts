@@ -6,9 +6,9 @@
 import {
   Directive,
   ElementRef,
+  Input,
   computed,
   inject,
-  input,
   signal,
   afterNextRender,
   OnDestroy,
@@ -42,7 +42,7 @@ import {
     {
       provide: SCROLL_AREA_SCROLLBAR_CONTEXT,
       useFactory: (directive: ScrollAreaScrollbarDirective) => ({
-        orientation: directive.orientation(),
+        orientation: directive._orientation(),
         hovering: directive.hoveringInternal,
         setHovering: (h: boolean) => directive.hoveringInternal.set(h),
       }),
@@ -59,7 +59,7 @@ import {
     '[style.width]': 'isVertical() ? null : "100%"',
     '[style.height]': 'isHorizontal() ? null : "100%"',
     '[style.flexDirection]': 'isVertical() ? "column" : "row"',
-    '[attr.data-orientation]': 'orientation()',
+    '[attr.data-orientation]': '_orientation()',
     '[attr.data-hovering]': 'hoveringInternal() ? "" : null',
     '[attr.data-scrolling]': 'isScrolling() ? "" : null',
     '[class.base-ui-scroll-area-scrollbar]': 'true',
@@ -76,23 +76,31 @@ export class ScrollAreaScrollbarDirective implements OnDestroy {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
 
   /** Scrollbar orientation */
-  readonly orientation = input<ScrollAreaOrientation>('vertical');
+  readonly _orientation = signal<ScrollAreaOrientation>('vertical');
+
+  @Input()
+  set orientation(value: ScrollAreaOrientation) { this._orientation.set(value); }
+  get orientation(): ScrollAreaOrientation { return this._orientation(); }
 
   /** Whether to keep mounted when not needed */
-  readonly keepMounted = input(false, { transform: booleanAttribute });
+  private readonly _keepMounted = signal<boolean>(false);
+
+  @Input({ transform: booleanAttribute })
+  set keepMounted(value: boolean) { this._keepMounted.set(value); }
+  get keepMounted(): boolean { return this._keepMounted(); }
 
   /** Hovering state */
   readonly hoveringInternal = signal(false);
 
   /** Whether scrollbar is vertical */
-  readonly isVertical = computed(() => this.orientation() === 'vertical');
+  readonly isVertical = computed(() => this._orientation() === 'vertical');
 
   /** Whether scrollbar is horizontal */
-  readonly isHorizontal = computed(() => this.orientation() === 'horizontal');
+  readonly isHorizontal = computed(() => this._orientation() === 'horizontal');
 
   /** Whether scrollbar should be hidden */
   readonly isHidden = computed(() => {
-    if (this.keepMounted()) {
+    if (this._keepMounted()) {
       return false;
     }
     const hidden = this.rootContext.hiddenStateSignal();

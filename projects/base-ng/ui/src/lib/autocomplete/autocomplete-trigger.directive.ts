@@ -8,9 +8,10 @@ import {
   ElementRef,
   computed,
   inject,
-  input,
+  Input,
   booleanAttribute,
   afterNextRender,
+  signal,
 } from '@angular/core';
 import { AUTOCOMPLETE_ROOT_CONTEXT } from './autocomplete.types';
 
@@ -54,10 +55,19 @@ export class AutocompleteTriggerDirective {
   protected readonly rootContext = inject(AUTOCOMPLETE_ROOT_CONTEXT);
   private readonly elementRef = inject(ElementRef<HTMLButtonElement>);
 
+  // Internal signal for disabled input
+  private readonly _disabled = signal(false);
+
   /**
    * Whether the trigger is disabled independently.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get disabled(): boolean {
+    return this._disabled();
+  }
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
 
   /** Trigger element ID */
   readonly triggerId = `${this.rootContext.rootId}-trigger`;
@@ -67,7 +77,7 @@ export class AutocompleteTriggerDirective {
 
   /** Whether the trigger is disabled */
   readonly isDisabled = computed(() => {
-    return this.rootContext.disabledSignal() || this.disabled();
+    return this.rootContext.disabledSignal() || this._disabled();
   });
 
   constructor() {

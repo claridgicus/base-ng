@@ -6,7 +6,7 @@
 import {
   Directive,
   inject,
-  input,
+  Input,
   signal,
   computed,
   OnInit,
@@ -56,14 +56,26 @@ import { ToastManagerService } from './toast-manager.service';
 export class ToastProviderDirective implements OnInit, OnDestroy {
   private readonly toastManager = inject(ToastManagerService);
 
-  /** Default timeout for toasts in milliseconds */
-  readonly timeout = input(5000, { transform: numberAttribute });
+  /** Default timeout for toasts in milliseconds (internal signal) */
+  private readonly _timeout = signal<number>(5000);
 
-  /** Maximum number of visible toasts */
-  readonly limit = input(3, { transform: numberAttribute });
+  @Input({ transform: numberAttribute })
+  set timeout(value: number) { this._timeout.set(value); }
+  get timeout(): number { return this._timeout(); }
 
-  /** Swipe directions that dismiss toasts */
-  readonly swipeDirections = input<SwipeDirection[]>(['right', 'left']);
+  /** Maximum number of visible toasts (internal signal) */
+  private readonly _limit = signal<number>(3);
+
+  @Input({ transform: numberAttribute })
+  set limit(value: number) { this._limit.set(value); }
+  get limit(): number { return this._limit(); }
+
+  /** Swipe directions that dismiss toasts (internal signal) */
+  private readonly _swipeDirections = signal<SwipeDirection[]>(['right', 'left']);
+
+  @Input()
+  set swipeDirections(value: SwipeDirection[]) { this._swipeDirections.set(value); }
+  get swipeDirections(): SwipeDirection[] { return this._swipeDirections(); }
 
   // Internal state
   private readonly toastsInternal = signal<ToastObject[]>([]);
@@ -92,13 +104,13 @@ export class ToastProviderDirective implements OnInit, OnDestroy {
       hoveringSignal: this.hovering,
       focusedSignal: this.focused,
       get timeout() {
-        return self.timeout();
+        return self._timeout();
       },
       get limit() {
-        return self.limit();
+        return self._limit();
       },
       get swipeDirections() {
-        return self.swipeDirections();
+        return self._swipeDirections();
       },
       add: this.add.bind(this),
       close: this.close.bind(this),
@@ -156,7 +168,7 @@ export class ToastProviderDirective implements OnInit, OnDestroy {
       id,
       type: options.type ?? 'default',
       priority: options.priority ?? 'normal',
-      timeout: options.timeout ?? this.timeout(),
+      timeout: options.timeout ?? this._timeout(),
       transitionStatus: 'starting',
       addedAt: Date.now(),
     };
@@ -174,8 +186,8 @@ export class ToastProviderDirective implements OnInit, OnDestroy {
 
       // Mark toasts over limit as limited
       const visibleCount = newToasts.filter((t) => !t.limited && t.transitionStatus !== 'ending').length;
-      if (visibleCount > this.limit()) {
-        const excessCount = visibleCount - this.limit();
+      if (visibleCount > this._limit()) {
+        const excessCount = visibleCount - this._limit();
         let marked = 0;
         return newToasts.map((t) => {
           if (!t.limited && t.transitionStatus !== 'ending' && marked < excessCount) {
@@ -190,7 +202,7 @@ export class ToastProviderDirective implements OnInit, OnDestroy {
     });
 
     // Schedule auto-dismiss timer
-    const toastTimeout = toast.timeout ?? this.timeout();
+    const toastTimeout = toast.timeout ?? this._timeout();
     if (toastTimeout > 0) {
       this.scheduleTimer(toast.id, toastTimeout);
     }
@@ -236,7 +248,7 @@ export class ToastProviderDirective implements OnInit, OnDestroy {
     // Unmark a limited toast if we have capacity
     const currentToasts = this.toastsInternal();
     const visibleCount = currentToasts.filter((t) => !t.limited && t.transitionStatus !== 'ending').length;
-    if (visibleCount < this.limit()) {
+    if (visibleCount < this._limit()) {
       const limitedToast = currentToasts.find((t) => t.limited);
       if (limitedToast) {
         this.toastsInternal.update((toasts) =>

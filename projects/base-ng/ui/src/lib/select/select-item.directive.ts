@@ -5,11 +5,11 @@
 
 import {
   Directive,
+  Input,
   ElementRef,
   computed,
   effect,
   inject,
-  input,
   booleanAttribute,
   afterNextRender,
   OnDestroy,
@@ -72,25 +72,48 @@ export class SelectItemDirective<T = unknown> implements OnDestroy {
 
   readonly itemId = `base-ui-select-item-${++itemIdCounter}`;
 
+  // Internal signals for inputs
+  private readonly valueSignal = signal<T>(undefined as T);
+  private readonly labelSignal = signal<string | undefined>(undefined);
+  private readonly disabledSignal = signal(false);
+
   /**
    * The value of this item.
    */
-  readonly value = input.required<T>();
+  @Input({ required: true })
+  get value(): T {
+    return this.valueSignal();
+  }
+  set value(value: T) {
+    this.valueSignal.set(value);
+  }
 
   /**
    * Optional label for the item (defaults to text content).
    */
-  readonly label = input<string>();
+  @Input()
+  get label(): string | undefined {
+    return this.labelSignal();
+  }
+  set label(value: string | undefined) {
+    this.labelSignal.set(value);
+  }
 
   /**
    * Whether the item is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get disabled(): boolean {
+    return this.disabledSignal();
+  }
+  set disabled(value: boolean) {
+    this.disabledSignal.set(value);
+  }
 
   /** Whether this item is selected */
   readonly isSelected = computed(() => {
     const selectedValue = this.rootContext.valueSignal();
-    const itemValue = this.value();
+    const itemValue = this.valueSignal();
 
     if (selectedValue === null || selectedValue === undefined) {
       return false;
@@ -111,12 +134,12 @@ export class SelectItemDirective<T = unknown> implements OnDestroy {
     if (highlightedValue === null) {
       return false;
     }
-    return this.rootContext.valueEquality(highlightedValue as T, this.value());
+    return this.rootContext.valueEquality(highlightedValue as T, this.valueSignal());
   });
 
   /** Whether this item is disabled */
   readonly isDisabled = computed(() => {
-    return this.rootContext.disabledSignal() || this.disabled();
+    return this.rootContext.disabledSignal() || this.disabledSignal();
   });
 
   /** Context provided to child components */
@@ -126,7 +149,7 @@ export class SelectItemDirective<T = unknown> implements OnDestroy {
     const self = this;
     this.itemContext = {
       get value() {
-        return self.value();
+        return self.valueSignal();
       },
       get selected() {
         return self.isSelected();
@@ -147,9 +170,9 @@ export class SelectItemDirective<T = unknown> implements OnDestroy {
     // Update registration when value/label changes
     effect(() => {
       // Track these values
-      this.value();
-      this.label();
-      this.disabled();
+      this.valueSignal();
+      this.labelSignal();
+      this.disabledSignal();
       // Re-register
       this.registerItem();
     });
@@ -163,14 +186,14 @@ export class SelectItemDirective<T = unknown> implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.rootContext.unregisterItem(this.value());
+    this.rootContext.unregisterItem(this.valueSignal());
   }
 
   private registerItem(): void {
     this.rootContext.registerItem({
-      value: this.value(),
-      label: this.label() || this.elementRef.nativeElement?.textContent?.trim(),
-      disabled: this.disabled(),
+      value: this.valueSignal(),
+      label: this.labelSignal() || this.elementRef.nativeElement?.textContent?.trim(),
+      disabled: this.disabledSignal(),
       element: this.elementRef.nativeElement,
     });
   }
@@ -185,9 +208,9 @@ export class SelectItemDirective<T = unknown> implements OnDestroy {
     }
 
     if (this.rootContext.multipleSignal()) {
-      this.rootContext.toggleValue(this.value());
+      this.rootContext.toggleValue(this.valueSignal());
     } else {
-      this.rootContext.setValue(this.value());
+      this.rootContext.setValue(this.valueSignal());
       this.rootContext.setOpen(false);
     }
   }
@@ -197,7 +220,7 @@ export class SelectItemDirective<T = unknown> implements OnDestroy {
    */
   handleMouseEnter(): void {
     if (!this.isDisabled()) {
-      this.rootContext.setHighlightedValue(this.value());
+      this.rootContext.setHighlightedValue(this.valueSignal());
     }
   }
 
@@ -206,7 +229,7 @@ export class SelectItemDirective<T = unknown> implements OnDestroy {
    */
   handleMouseMove(): void {
     if (!this.isDisabled() && !this.isHighlighted()) {
-      this.rootContext.setHighlightedValue(this.value());
+      this.rootContext.setHighlightedValue(this.valueSignal());
     }
   }
 }

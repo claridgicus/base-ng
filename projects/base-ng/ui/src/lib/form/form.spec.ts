@@ -159,7 +159,7 @@ describe('Form component', () => {
       const fixture = TestBed.createComponent(TestComponent);
       fixture.detectChanges();
       const formDirective = fixture.debugElement.children[0].injector.get(FormRootDirective);
-      expect(formDirective.validationMode()).toBe('onSubmit');
+      expect(formDirective.validationMode).toBe('onSubmit');
     });
   });
 
@@ -183,7 +183,7 @@ describe('Form component', () => {
       const fixture = TestBed.createComponent(TestComponent);
       fixture.detectChanges();
       const formDirective = fixture.debugElement.children[0].injector.get(FormRootDirective);
-      expect(formDirective.validationMode()).toBe('onBlur');
+      expect(formDirective.validationMode).toBe('onBlur');
     });
   });
 
@@ -207,7 +207,7 @@ describe('Form component', () => {
       const fixture = TestBed.createComponent(TestComponent);
       fixture.detectChanges();
       const formDirective = fixture.debugElement.children[0].injector.get(FormRootDirective);
-      expect(formDirective.validationMode()).toBe('onChange');
+      expect(formDirective.validationMode).toBe('onChange');
     });
   });
 

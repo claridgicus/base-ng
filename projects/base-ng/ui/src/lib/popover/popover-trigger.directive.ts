@@ -11,10 +11,11 @@ import {
   Directive,
   ElementRef,
   inject,
-  input,
+  Input,
   numberAttribute,
   OnDestroy,
   OnInit,
+  signal,
 } from '@angular/core';
 import { POPOVER_CONTEXT } from './popover.types';
 
@@ -58,17 +59,41 @@ export class PopoverTriggerDirective implements OnInit, OnDestroy {
   /**
    * Whether to open the popover on hover.
    */
-  readonly openOnHover = input(false, { transform: booleanAttribute });
+  private readonly _openOnHover = signal<boolean>(false);
+
+  @Input({ transform: booleanAttribute })
+  set openOnHover(value: boolean) {
+    this._openOnHover.set(value);
+  }
+  get openOnHover(): boolean {
+    return this._openOnHover();
+  }
 
   /**
    * The delay in milliseconds before the popover opens on hover.
    */
-  readonly delay = input(300, { transform: numberAttribute });
+  private readonly _delay = signal<number>(300);
+
+  @Input({ transform: numberAttribute })
+  set delay(value: number) {
+    this._delay.set(value);
+  }
+  get delay(): number {
+    return this._delay();
+  }
 
   /**
    * The delay in milliseconds before the popover closes on mouse leave.
    */
-  readonly closeDelay = input(0, { transform: numberAttribute });
+  private readonly _closeDelay = signal<number>(0);
+
+  @Input({ transform: numberAttribute })
+  set closeDelay(value: number) {
+    this._closeDelay.set(value);
+  }
+  get closeDelay(): number {
+    return this._closeDelay();
+  }
 
   private hoverOpenTimeout: ReturnType<typeof setTimeout> | null = null;
   private hoverCloseTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -98,7 +123,7 @@ export class PopoverTriggerDirective implements OnInit, OnDestroy {
     }
 
     // Only toggle on click if not in hover mode, or if already open
-    if (!this.openOnHover() || this.context.openSignal()) {
+    if (!this.openOnHover || this.context.openSignal()) {
       this.context.togglePopover('trigger-press');
     }
   }
@@ -107,13 +132,13 @@ export class PopoverTriggerDirective implements OnInit, OnDestroy {
    * Handle mouse enter events for hover mode.
    */
   protected handleMouseEnter(): void {
-    if (!this.openOnHover() || this.context.disabledSignal()) {
+    if (!this.openOnHover || this.context.disabledSignal()) {
       return;
     }
 
     this.clearTimeouts();
 
-    const delayMs = this.delay();
+    const delayMs = this.delay;
     if (delayMs > 0) {
       this.hoverOpenTimeout = setTimeout(() => {
         this.context.openPopover('hover');
@@ -127,13 +152,13 @@ export class PopoverTriggerDirective implements OnInit, OnDestroy {
    * Handle mouse leave events for hover mode.
    */
   protected handleMouseLeave(): void {
-    if (!this.openOnHover()) {
+    if (!this.openOnHover) {
       return;
     }
 
     this.clearTimeouts();
 
-    const closeDelayMs = this.closeDelay();
+    const closeDelayMs = this.closeDelay;
     if (closeDelayMs > 0) {
       this.hoverCloseTimeout = setTimeout(() => {
         this.context.closePopover('hover');
@@ -147,7 +172,7 @@ export class PopoverTriggerDirective implements OnInit, OnDestroy {
    * Handle focus events for hover mode (keyboard accessibility).
    */
   protected handleFocus(): void {
-    if (!this.openOnHover() || this.context.disabledSignal()) {
+    if (!this.openOnHover || this.context.disabledSignal()) {
       return;
     }
 
@@ -159,7 +184,7 @@ export class PopoverTriggerDirective implements OnInit, OnDestroy {
    * Handle blur events for hover mode.
    */
   protected handleBlur(): void {
-    if (!this.openOnHover()) {
+    if (!this.openOnHover) {
       return;
     }
 

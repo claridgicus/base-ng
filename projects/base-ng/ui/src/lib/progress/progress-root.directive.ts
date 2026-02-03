@@ -12,7 +12,7 @@
 import {
   computed,
   Directive,
-  input,
+  Input,
   signal,
   type Signal,
   type WritableSignal,
@@ -80,9 +80,9 @@ function getDefaultAriaValueText(formattedValue: string | null, value: number | 
   host: {
     role: 'progressbar',
     '[attr.aria-labelledby]': 'labelId()',
-    '[attr.aria-valuemax]': 'max()',
-    '[attr.aria-valuemin]': 'min()',
-    '[attr.aria-valuenow]': 'value()',
+    '[attr.aria-valuemax]': '_max()',
+    '[attr.aria-valuemin]': '_min()',
+    '[attr.aria-valuenow]': '_value()',
     '[attr.aria-valuetext]': 'ariaValueText()',
     '[attr.data-status]': 'status()',
     '[class.base-ui-progress]': 'true',
@@ -92,39 +92,85 @@ function getDefaultAriaValueText(formattedValue: string | null, value: number | 
   },
 })
 export class ProgressRootDirective {
+  // Internal signals for reactive updates
+  readonly _value = signal<number | null>(null);
+  readonly _min = signal<number>(0);
+  readonly _max = signal<number>(100);
+  readonly _format = signal<ProgressFormatOptions | undefined>(undefined);
+  readonly _locale = signal<string | undefined>(undefined);
+  readonly _getAriaValueText = signal<
+    (formattedValue: string | null, value: number | null) => string | undefined
+  >(getDefaultAriaValueText);
+
   /**
    * Current progress value. Set to null for indeterminate progress.
    */
-  readonly value = input<number | null>(null);
+  @Input()
+  set value(val: number | null) {
+    this._value.set(val);
+  }
+  get value(): number | null {
+    return this._value();
+  }
 
   /**
    * Minimum progress value.
    * @default 0
    */
-  readonly min = input<number>(0);
+  @Input()
+  set min(val: number) {
+    this._min.set(val);
+  }
+  get min(): number {
+    return this._min();
+  }
 
   /**
    * Maximum progress value.
    * @default 100
    */
-  readonly max = input<number>(100);
+  @Input()
+  set max(val: number) {
+    this._max.set(val);
+  }
+  get max(): number {
+    return this._max();
+  }
 
   /**
    * Intl.NumberFormat options for formatting the progress value.
    */
-  readonly format = input<ProgressFormatOptions | undefined>(undefined);
+  @Input()
+  set format(val: ProgressFormatOptions | undefined) {
+    this._format.set(val);
+  }
+  get format(): ProgressFormatOptions | undefined {
+    return this._format();
+  }
 
   /**
    * BCP 47 locale for number formatting.
    */
-  readonly locale = input<string | undefined>(undefined);
+  @Input()
+  set locale(val: string | undefined) {
+    this._locale.set(val);
+  }
+  get locale(): string | undefined {
+    return this._locale();
+  }
 
   /**
    * Custom function to generate aria-valuetext.
    */
-  readonly getAriaValueText = input<
-    (formattedValue: string | null, value: number | null) => string | undefined
-  >(getDefaultAriaValueText);
+  @Input()
+  set getAriaValueText(
+    val: (formattedValue: string | null, value: number | null) => string | undefined
+  ) {
+    this._getAriaValueText.set(val);
+  }
+  get getAriaValueText(): (formattedValue: string | null, value: number | null) => string | undefined {
+    return this._getAriaValueText();
+  }
 
   // Internal state
   private readonly _labelId: WritableSignal<string | undefined> = signal(undefined);
@@ -138,8 +184,8 @@ export class ProgressRootDirective {
    * Current progress status.
    */
   readonly status: Signal<ProgressStatus> = computed(() => {
-    const val = this.value();
-    const maxVal = this.max();
+    const val = this._value();
+    const maxVal = this._max();
 
     if (val === null || !Number.isFinite(val)) {
       return 'indeterminate';
@@ -158,24 +204,24 @@ export class ProgressRootDirective {
    * Formatted value for display.
    */
   readonly formattedValue: Signal<string | null> = computed(() => {
-    return formatNumberValue(this.value(), this.locale(), this.format());
+    return formatNumberValue(this._value(), this._locale(), this._format());
   });
 
   /**
    * Aria value text for screen readers.
    */
   readonly ariaValueText: Signal<string | undefined> = computed(() => {
-    const fn = this.getAriaValueText();
-    return fn(this.formattedValue(), this.value());
+    const fn = this._getAriaValueText();
+    return fn(this.formattedValue(), this._value());
   });
 
   /**
    * Progress percentage (0-100).
    */
   readonly percentage: Signal<number | null> = computed(() => {
-    const val = this.value();
-    const minVal = this.min();
-    const maxVal = this.max();
+    const val = this._value();
+    const minVal = this._min();
+    const maxVal = this._max();
 
     if (val === null || !Number.isFinite(val)) {
       return null;
@@ -194,9 +240,9 @@ export class ProgressRootDirective {
    */
   readonly context: ProgressContext = {
     formattedValue: this.formattedValue,
-    max: computed(() => this.max()),
-    min: computed(() => this.min()),
-    value: computed(() => this.value()),
+    max: this._max,
+    min: this._min,
+    value: this._value,
     status: this.status,
     state: this.state,
     setLabelId: (id: string | undefined) => {

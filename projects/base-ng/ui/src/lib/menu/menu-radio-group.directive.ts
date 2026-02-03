@@ -5,7 +5,7 @@
  * Groups related radio items.
  */
 
-import { Directive, inject, input, model, output, signal, booleanAttribute, effect } from '@angular/core';
+import { Directive, inject, Input, Output, EventEmitter, signal, booleanAttribute, effect } from '@angular/core';
 import { MENU_RADIO_GROUP_CONTEXT, type MenuRadioGroupContext } from './menu.types';
 
 export interface MenuRadioGroupChangeEvent {
@@ -31,9 +31,9 @@ export interface MenuRadioGroupChangeEvent {
   exportAs: 'menuRadioGroup',
   host: {
     role: 'group',
-    '[attr.aria-disabled]': 'disabled()',
+    '[attr.aria-disabled]': '_disabled()',
     '[class.base-ui-menu-radio-group]': 'true',
-    '[class.base-ui-menu-radio-group-disabled]': 'disabled()',
+    '[class.base-ui-menu-radio-group-disabled]': '_disabled()',
   },
   providers: [
     {
@@ -46,21 +46,51 @@ export interface MenuRadioGroupChangeEvent {
   ],
 })
 export class MenuRadioGroupDirective {
+  /** Internal signal for value */
+  private readonly _value = signal<unknown>(undefined);
+
   /** Current value (two-way binding) */
-  readonly value = model<unknown>(undefined);
+  @Input()
+  get value(): unknown {
+    return this._value();
+  }
+  set value(val: unknown) {
+    this._value.set(val);
+  }
+
+  /** Emitted when value changes (for two-way binding) */
+  @Output() readonly valueChange = new EventEmitter<unknown>();
+
+  /** Internal signal for default value */
+  private readonly _defaultValue = signal<unknown>(undefined);
 
   /** Default value when uncontrolled */
-  readonly defaultValue = input<unknown>();
+  @Input()
+  get defaultValue(): unknown {
+    return this._defaultValue();
+  }
+  set defaultValue(val: unknown) {
+    this._defaultValue.set(val);
+  }
+
+  /** Internal signal for disabled state */
+  readonly _disabled = signal<boolean>(false);
 
   /** Whether the group is disabled */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get disabled(): boolean {
+    return this._disabled();
+  }
+  set disabled(val: boolean) {
+    this._disabled.set(val);
+  }
 
   /** Emitted when value changes with event details.
    * Use (valueChanged) instead of (valueChange) for the full event object.
    */
-  readonly valueChanged = output<MenuRadioGroupChangeEvent>();
+  @Output() readonly valueChanged = new EventEmitter<MenuRadioGroupChangeEvent>();
 
-  /** Internal value signal */
+  /** Internal value signal for context */
   private readonly valueSignal = signal<unknown>(undefined);
 
   /**
@@ -72,29 +102,35 @@ export class MenuRadioGroupDirective {
     setValue: (value, reason) => {
       this.valueSignal.set(value);
       this.context.value = value;
-      this.value.set(value);
+      this._value.set(value);
+      this.valueChange.emit(value);
       this.valueChanged.emit({ value, reason });
     },
     disabled: false,
   };
 
   constructor() {
-    // Sync model value to internal signal
+    // Sync internal signal to value signal
     effect(() => {
-      const modelValue = this.value();
-      if (modelValue !== undefined && this.valueSignal() !== modelValue) {
-        this.valueSignal.set(modelValue);
-        this.context.value = modelValue;
+      const val = this._value();
+      if (val !== undefined && this.valueSignal() !== val) {
+        this.valueSignal.set(val);
+        this.context.value = val;
       }
     });
 
-    // Initialize from defaultValue if model is undefined
+    // Sync disabled state to context
     effect(() => {
-      const defaultVal = this.defaultValue();
-      if (this.value() === undefined && defaultVal !== undefined) {
+      this.context.disabled = this._disabled();
+    });
+
+    // Initialize from defaultValue if value is undefined
+    effect(() => {
+      const defaultVal = this._defaultValue();
+      if (this._value() === undefined && defaultVal !== undefined) {
         this.valueSignal.set(defaultVal);
         this.context.value = defaultVal;
-        this.value.set(defaultVal);
+        this._value.set(defaultVal);
       }
     });
   }

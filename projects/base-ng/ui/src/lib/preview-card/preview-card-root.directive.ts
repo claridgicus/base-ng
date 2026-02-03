@@ -9,11 +9,11 @@ import {
   booleanAttribute,
   Directive,
   effect,
+  EventEmitter,
   inject,
-  input,
-  model,
+  Input,
   numberAttribute,
-  output,
+  Output,
   signal,
   DestroyRef,
 } from '@angular/core';
@@ -66,42 +66,96 @@ export class PreviewCardRootDirective<T = unknown> {
   /**
    * The controlled open state of the preview card.
    */
-  readonly open = model<boolean>(false);
+  private readonly _open = signal<boolean>(false);
+  @Input()
+  get open(): boolean {
+    return this._open();
+  }
+  set open(value: boolean) {
+    this._open.set(value);
+  }
+
+  /**
+   * Output for two-way binding support
+   */
+  @Output() readonly openChange = new EventEmitter<boolean>();
 
   /**
    * The default open state when uncontrolled.
    */
-  readonly defaultOpen = input(false, { transform: booleanAttribute });
+  private readonly _defaultOpen = signal<boolean>(false);
+  @Input({ transform: booleanAttribute })
+  get defaultOpen(): boolean {
+    return this._defaultOpen();
+  }
+  set defaultOpen(value: boolean) {
+    this._defaultOpen.set(value);
+  }
 
   /**
    * Whether the preview card is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  private readonly _disabled = signal<boolean>(false);
+  @Input({ transform: booleanAttribute })
+  get disabled(): boolean {
+    return this._disabled();
+  }
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
 
   /**
    * Delay before opening in milliseconds.
    */
-  readonly delay = input(600, { transform: numberAttribute });
+  private readonly _delay = signal<number>(600);
+  @Input({ transform: numberAttribute })
+  get delay(): number {
+    return this._delay();
+  }
+  set delay(value: number) {
+    this._delay.set(value);
+  }
 
   /**
    * Delay before closing in milliseconds.
    */
-  readonly closeDelay = input(300, { transform: numberAttribute });
+  private readonly _closeDelay = signal<number>(300);
+  @Input({ transform: numberAttribute })
+  get closeDelay(): number {
+    return this._closeDelay();
+  }
+  set closeDelay(value: number) {
+    this._closeDelay.set(value);
+  }
 
   /**
    * Whether to close on outside click.
    */
-  readonly closeOnOutsideClick = input(true, { transform: booleanAttribute });
+  private readonly _closeOnOutsideClick = signal<boolean>(true);
+  @Input({ transform: booleanAttribute })
+  get closeOnOutsideClick(): boolean {
+    return this._closeOnOutsideClick();
+  }
+  set closeOnOutsideClick(value: boolean) {
+    this._closeOnOutsideClick.set(value);
+  }
 
   /**
    * Whether to close on escape key.
    */
-  readonly closeOnEscape = input(true, { transform: booleanAttribute });
+  private readonly _closeOnEscape = signal<boolean>(true);
+  @Input({ transform: booleanAttribute })
+  get closeOnEscape(): boolean {
+    return this._closeOnEscape();
+  }
+  set closeOnEscape(value: boolean) {
+    this._closeOnEscape.set(value);
+  }
 
   /**
    * Emits when the open state changes with detailed event info.
    */
-  readonly openChanged = output<PreviewCardOpenChangeEventDetails>();
+  @Output() readonly openChanged = new EventEmitter<PreviewCardOpenChangeEventDetails>();
 
   /** Internal open state */
   private readonly internalOpen = signal(false);
@@ -119,8 +173,8 @@ export class PreviewCardRootDirective<T = unknown> {
   readonly context: PreviewCardContext<T> = {
     open: this.internalOpen(),
     openSignal: this.internalOpen,
-    disabled: this.disabled(),
-    disabledSignal: this.disabled,
+    disabled: this._disabled(),
+    disabledSignal: this._disabled,
     openPreviewCard: (reason?: PreviewCardOpenChangeReason) => this.setOpen(true, reason),
     closePreviewCard: (reason?: PreviewCardOpenChangeReason) => this.setOpen(false, reason),
     setOpen: (open: boolean, reason?: PreviewCardOpenChangeReason) =>
@@ -131,10 +185,10 @@ export class PreviewCardRootDirective<T = unknown> {
     popupElement: this.popupElement(),
     setPopupElement: (element: HTMLElement | null) =>
       this.popupElement.set(element),
-    delay: this.delay(),
-    delaySignal: this.delay,
-    closeDelay: this.closeDelay(),
-    closeDelaySignal: this.closeDelay,
+    delay: this._delay(),
+    delaySignal: this._delay,
+    closeDelay: this._closeDelay(),
+    closeDelaySignal: this._closeDelay,
     payload: this.payload(),
     payloadSignal: this.payload,
     setPayload: (payload: T | null) => this.payload.set(payload),
@@ -149,14 +203,14 @@ export class PreviewCardRootDirective<T = unknown> {
   constructor() {
     // Initialize with default open
     effect(() => {
-      if (this.defaultOpen() && !this.internalOpen()) {
+      if (this._defaultOpen() && !this.internalOpen()) {
         this.internalOpen.set(true);
       }
     });
 
     // Sync model to internal state
     effect(() => {
-      this.internalOpen.set(this.open());
+      this.internalOpen.set(this._open());
     });
 
     // Set up outside click and escape handlers
@@ -192,7 +246,7 @@ export class PreviewCardRootDirective<T = unknown> {
    * Set the open state with a reason.
    */
   setOpen(open: boolean, reason: PreviewCardOpenChangeReason = 'imperative'): void {
-    if (this.disabled()) {
+    if (this._disabled()) {
       return;
     }
 
@@ -201,7 +255,8 @@ export class PreviewCardRootDirective<T = unknown> {
     }
 
     this.internalOpen.set(open);
-    this.open.set(open);
+    this._open.set(open);
+    this.openChange.emit(open);
 
     this.openChanged.emit({
       open,
@@ -217,7 +272,7 @@ export class PreviewCardRootDirective<T = unknown> {
 
     // Outside click handler
     this.clickListener = (event: MouseEvent) => {
-      if (!this.closeOnOutsideClick()) return;
+      if (!this._closeOnOutsideClick()) return;
 
       const target = event.target as HTMLElement;
       const trigger = this.triggerElement();
@@ -233,7 +288,7 @@ export class PreviewCardRootDirective<T = unknown> {
 
     // Escape key handler
     this.keydownListener = (event: KeyboardEvent) => {
-      if (!this.closeOnEscape()) return;
+      if (!this._closeOnEscape()) return;
 
       if (event.key === 'Escape') {
         this.setOpen(false, 'escape-key');

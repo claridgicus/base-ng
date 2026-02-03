@@ -14,10 +14,11 @@ import {
   booleanAttribute,
   Directive,
   effect,
-  input,
+  EventEmitter,
+  Input,
   model,
   numberAttribute,
-  output,
+  Output,
   signal,
 } from '@angular/core';
 import {
@@ -70,27 +71,55 @@ export class TooltipRootDirective {
   /**
    * The default open state when uncontrolled.
    */
-  readonly defaultOpen = input(false, { transform: booleanAttribute });
+  private readonly _defaultOpen = signal(false);
+  @Input({ transform: booleanAttribute })
+  get defaultOpen(): boolean {
+    return this._defaultOpen();
+  }
+  set defaultOpen(value: boolean) {
+    this._defaultOpen.set(value);
+  }
 
   /**
    * Whether the tooltip is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  private readonly _disabled = signal(false);
+  @Input({ transform: booleanAttribute })
+  get disabled(): boolean {
+    return this._disabled();
+  }
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
 
   /**
    * Delay before opening the tooltip (ms).
    */
-  readonly delay = input(600, { transform: numberAttribute });
+  private readonly _delay = signal(600);
+  @Input({ transform: numberAttribute })
+  get delay(): number {
+    return this._delay();
+  }
+  set delay(value: number) {
+    this._delay.set(value);
+  }
 
   /**
    * Delay before closing the tooltip (ms).
    */
-  readonly closeDelay = input(0, { transform: numberAttribute });
+  private readonly _closeDelay = signal(0);
+  @Input({ transform: numberAttribute })
+  get closeDelay(): number {
+    return this._closeDelay();
+  }
+  set closeDelay(value: number) {
+    this._closeDelay.set(value);
+  }
 
   /**
    * Emits when the open state changes with detailed event info.
    */
-  readonly openChanged = output<TooltipOpenChangeEventDetails>();
+  @Output() readonly openChanged = new EventEmitter<TooltipOpenChangeEventDetails>();
 
   /** Internal open state */
   private readonly internalOpen = signal(false);
@@ -105,12 +134,12 @@ export class TooltipRootDirective {
   readonly context: TooltipContext = {
     open: this.internalOpen(),
     openSignal: this.internalOpen,
-    disabled: this.disabled(),
-    disabledSignal: this.disabled,
-    delay: this.delay(),
-    delaySignal: this.delay,
-    closeDelay: this.closeDelay(),
-    closeDelaySignal: this.closeDelay,
+    disabled: this._disabled(),
+    disabledSignal: this._disabled,
+    delay: this._delay(),
+    delaySignal: this._delay,
+    closeDelay: this._closeDelay(),
+    closeDelaySignal: this._closeDelay,
     openTooltip: (reason?: TooltipOpenChangeReason) => this.setOpen(true, reason),
     closeTooltip: (reason?: TooltipOpenChangeReason) => this.setOpen(false, reason),
     toggleTooltip: (reason?: TooltipOpenChangeReason) =>
@@ -131,7 +160,7 @@ export class TooltipRootDirective {
   constructor() {
     // Initialize with default open
     effect(() => {
-      if (this.defaultOpen() && !this.internalOpen()) {
+      if (this._defaultOpen() && !this.internalOpen()) {
         this.internalOpen.set(true);
       }
     });
@@ -143,7 +172,7 @@ export class TooltipRootDirective {
 
     // Close tooltip when disabled becomes true
     effect(() => {
-      if (this.disabled() && this.internalOpen()) {
+      if (this._disabled() && this.internalOpen()) {
         this.setOpen(false, 'imperative');
       }
     });
@@ -168,7 +197,7 @@ export class TooltipRootDirective {
    */
   setOpen(open: boolean, reason: TooltipOpenChangeReason = 'imperative'): void {
     // Only prevent OPENING when disabled - closing should always be allowed
-    if (this.disabled() && open) {
+    if (this._disabled() && open) {
       return;
     }
 

@@ -5,8 +5,9 @@
 
 import {
   Directive,
+  Input,
   inject,
-  input,
+  signal,
   booleanAttribute,
   TemplateRef,
   ViewContainerRef,
@@ -44,16 +45,32 @@ export class SelectPortalDirective implements OnDestroy {
   private readonly viewContainerRef = inject(ViewContainerRef);
   private readonly document = inject(DOCUMENT);
 
+  // Internal signals for inputs
+  private readonly keepMountedSignal = signal(false);
+  private readonly containerSignal = signal<HTMLElement | null>(null);
+
   /**
    * Whether to keep the portal content mounted when closed.
    */
-  readonly keepMounted = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get keepMounted(): boolean {
+    return this.keepMountedSignal();
+  }
+  set keepMounted(value: boolean) {
+    this.keepMountedSignal.set(value);
+  }
 
   /**
    * Custom container element for the portal.
    * Defaults to document.body.
    */
-  readonly container = input<HTMLElement | null>(null);
+  @Input()
+  get container(): HTMLElement | null {
+    return this.containerSignal();
+  }
+  set container(value: HTMLElement | null) {
+    this.containerSignal.set(value);
+  }
 
   private viewRef: EmbeddedViewRef<void> | null = null;
   private portalElement: HTMLElement | null = null;
@@ -61,7 +78,7 @@ export class SelectPortalDirective implements OnDestroy {
   constructor() {
     effect(() => {
       const isOpen = this.rootContext.openSignal();
-      const keepMounted = this.keepMounted();
+      const keepMounted = this.keepMountedSignal();
 
       if (isOpen || keepMounted) {
         this.attach();
@@ -79,7 +96,7 @@ export class SelectPortalDirective implements OnDestroy {
     this.viewRef.detectChanges();
 
     // Get the container
-    const containerElement = this.container() || this.document.body;
+    const containerElement = this.containerSignal() || this.document.body;
 
     // Create a wrapper element for the portal
     this.portalElement = this.document.createElement('div');

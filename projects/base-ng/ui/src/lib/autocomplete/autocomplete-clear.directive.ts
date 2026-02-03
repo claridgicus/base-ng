@@ -3,7 +3,7 @@
  * @source https://github.com/mui/base-ui/blob/master/packages/react/src/combobox/clear/ComboboxClear.tsx
  */
 
-import { Directive, computed, inject, input, booleanAttribute } from '@angular/core';
+import { Directive, computed, inject, Input, booleanAttribute, signal } from '@angular/core';
 import { AUTOCOMPLETE_ROOT_CONTEXT } from './autocomplete.types';
 
 /**
@@ -40,14 +40,23 @@ import { AUTOCOMPLETE_ROOT_CONTEXT } from './autocomplete.types';
 export class AutocompleteClearDirective {
   protected readonly rootContext = inject(AUTOCOMPLETE_ROOT_CONTEXT);
 
+  // Internal signal for disabled input
+  private readonly _disabled = signal(false);
+
   /**
    * Whether the clear button is disabled independently.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get disabled(): boolean {
+    return this._disabled();
+  }
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
 
   /** Whether the clear button is disabled */
   readonly isDisabled = computed(() => {
-    return this.rootContext.disabledSignal() || this.disabled();
+    return this.rootContext.disabledSignal() || this._disabled();
   });
 
   /** Whether there is a value to clear */

@@ -8,7 +8,8 @@ import {
   ElementRef,
   computed,
   inject,
-  input,
+  Input,
+  signal,
   HostListener,
 } from '@angular/core';
 import { TOAST_PROVIDER_CONTEXT } from './toast.types';
@@ -33,7 +34,7 @@ import { TOAST_PROVIDER_CONTEXT } from './toast.types';
   host: {
     role: 'region',
     '[attr.aria-live]': '"polite"',
-    '[attr.aria-label]': 'ariaLabel()',
+    '[attr.aria-label]': '_ariaLabel()',
     '[attr.data-hovering]': 'providerContext.hoveringSignal() ? "" : null',
     '[attr.data-focused]': 'providerContext.focusedSignal() ? "" : null',
     '[tabindex]': '-1',
@@ -48,8 +49,12 @@ export class ToastViewportDirective {
   protected readonly providerContext = inject(TOAST_PROVIDER_CONTEXT);
   private readonly elementRef = inject(ElementRef<HTMLElement>);
 
-  /** Aria label for the viewport */
-  readonly ariaLabel = input('Notifications');
+  /** Aria label for the viewport (internal signal) */
+  readonly _ariaLabel = signal<string>('Notifications');
+
+  @Input()
+  set ariaLabel(value: string) { this._ariaLabel.set(value); }
+  get ariaLabel(): string { return this._ariaLabel(); }
 
   /** Number of toasts */
   readonly toastCount = computed(() => {

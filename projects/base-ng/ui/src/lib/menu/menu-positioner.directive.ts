@@ -12,7 +12,8 @@ import {
   effect,
   ElementRef,
   inject,
-  input,
+  Input,
+  signal,
   numberAttribute,
   OnDestroy,
 } from '@angular/core';
@@ -61,30 +62,66 @@ export class MenuPositionerDirective implements OnDestroy {
   protected readonly floatingService = inject(FloatingService);
   private readonly elementRef = inject(ElementRef<HTMLElement>);
 
+  /** Internal signal for side */
+  private readonly _side = signal<MenuSide>('bottom');
+
   /**
    * The side of the trigger where the menu should appear.
    */
-  readonly side = input<MenuSide>('bottom');
+  @Input()
+  get side(): MenuSide {
+    return this._side();
+  }
+  set side(value: MenuSide) {
+    this._side.set(value);
+  }
+
+  /** Internal signal for align */
+  private readonly _align = signal<MenuAlign>('start');
 
   /**
    * The alignment of the menu relative to the trigger.
    */
-  readonly align = input<MenuAlign>('start');
+  @Input()
+  get align(): MenuAlign {
+    return this._align();
+  }
+  set align(value: MenuAlign) {
+    this._align.set(value);
+  }
+
+  /** Internal signal for sideOffset */
+  private readonly _sideOffset = signal<number>(4);
 
   /**
    * Offset from the trigger along the side axis.
    */
-  readonly sideOffset = input(4, { transform: numberAttribute });
+  @Input({ transform: numberAttribute })
+  get sideOffset(): number {
+    return this._sideOffset();
+  }
+  set sideOffset(value: number) {
+    this._sideOffset.set(value);
+  }
+
+  /** Internal signal for alignOffset */
+  private readonly _alignOffset = signal<number>(0);
 
   /**
    * Offset from the trigger along the align axis.
    */
-  readonly alignOffset = input(0, { transform: numberAttribute });
+  @Input({ transform: numberAttribute })
+  get alignOffset(): number {
+    return this._alignOffset();
+  }
+  set alignOffset(value: number) {
+    this._alignOffset.set(value);
+  }
 
   /** Computed placement for floating UI */
   readonly placementSignal = computed<FloatingPlacement>(() => {
-    const side = this.side();
-    const alignment = this.align();
+    const side = this._side();
+    const alignment = this._align();
     if (alignment && alignment !== 'center') {
       return `${side}-${alignment}` as FloatingPlacement;
     }
@@ -139,8 +176,8 @@ export class MenuPositionerDirective implements OnDestroy {
     // Watch for placement changes
     effect(() => {
       const placement = this.placementSignal();
-      const sideOffset = this.sideOffset();
-      const alignOffset = this.alignOffset();
+      const sideOffset = this._sideOffset();
+      const alignOffset = this._alignOffset();
 
       this.floatingService.configure({
         placement,
@@ -168,7 +205,7 @@ export class MenuPositionerDirective implements OnDestroy {
     this.floatingService.configure({
       placement: this.placementSignal(),
       middleware: [
-        offset({ mainAxis: this.sideOffset(), crossAxis: this.alignOffset() }),
+        offset({ mainAxis: this._sideOffset(), crossAxis: this._alignOffset() }),
         flip(),
         shift({ padding: 8 }),
       ],

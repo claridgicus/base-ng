@@ -9,9 +9,9 @@ import {
   Directive,
   effect,
   inject,
-  input,
-  model,
-  output,
+  Input,
+  Output,
+  EventEmitter,
   signal,
   DOCUMENT,
   OnDestroy,
@@ -64,14 +64,35 @@ export class MenuRootDirective implements OnDestroy {
   private readonly document = inject(DOCUMENT);
   private readonly rootId = `base-ui-menu-${menuIdCounter++}`;
 
-  /** Two-way binding for open state */
-  readonly open = model<boolean>(false);
+  /** Internal signal for open state */
+  private readonly _open = signal<boolean>(false);
 
-  /** Default open state when uncontrolled */
-  readonly defaultOpen = input<boolean>(false);
+  /** Two-way binding for open state */
+  @Input()
+  get open(): boolean {
+    return this._open();
+  }
+  set open(value: boolean) {
+    this._open.set(value);
+  }
 
   /** Emitted when open state changes */
-  readonly openChanged = output<MenuOpenChangeEventDetails>();
+  @Output() readonly openChange = new EventEmitter<boolean>();
+
+  /** Internal signal for default open state */
+  private readonly _defaultOpen = signal<boolean>(false);
+
+  /** Default open state when uncontrolled */
+  @Input()
+  get defaultOpen(): boolean {
+    return this._defaultOpen();
+  }
+  set defaultOpen(value: boolean) {
+    this._defaultOpen.set(value);
+  }
+
+  /** Emitted when open state changes */
+  @Output() readonly openChanged = new EventEmitter<MenuOpenChangeEventDetails>();
 
   /** Internal open state signal */
   readonly openSignal = signal(false);
@@ -171,20 +192,23 @@ export class MenuRootDirective implements OnDestroy {
   };
 
   constructor() {
-    // Sync model to internal signal
+    // Sync internal signal to openSignal
     effect(() => {
-      const modelValue = this.open();
-      if (this.openSignal() !== modelValue) {
-        this.openSignal.set(modelValue);
-        this.context.open = modelValue;
+      const value = this._open();
+      if (this.openSignal() !== value) {
+        this.openSignal.set(value);
+        this.context.open = value;
       }
     });
 
     // Initialize from defaultOpen
-    if (this.defaultOpen()) {
-      this.openSignal.set(true);
-      this.context.open = true;
-    }
+    effect(() => {
+      const defaultValue = this._defaultOpen();
+      if (defaultValue && this.openSignal() === false) {
+        this.openSignal.set(true);
+        this.context.open = true;
+      }
+    });
 
     // Handle open/close side effects
     effect(() => {
@@ -211,7 +235,8 @@ export class MenuRootDirective implements OnDestroy {
 
     this.openSignal.set(open);
     this.context.open = open;
-    this.open.set(open);
+    this._open.set(open);
+    this.openChange.emit(open);
     this.openChanged.emit({ open, reason });
   }
 

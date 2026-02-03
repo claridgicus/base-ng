@@ -10,12 +10,12 @@ import {
   computed,
   Directive,
   ElementRef,
+  EventEmitter,
   forwardRef,
   HostListener,
   inject,
-  input,
-  model,
-  output,
+  Input,
+  Output,
   signal,
   type Signal,
 } from '@angular/core';
@@ -49,40 +49,49 @@ import { InputChangeEventDetails, InputState } from './input.types';
     },
   ],
   host: {
-    '[attr.data-disabled]': 'disabled() ? "" : null',
+    '[attr.data-disabled]': '_disabled() ? "" : null',
     '[attr.data-focused]': 'focused() ? "" : null',
     '[attr.data-filled]': 'filled() ? "" : null',
-    '[attr.data-invalid]': 'invalid() ? "" : null',
-    '[attr.aria-invalid]': 'invalid() || null',
-    '[disabled]': 'disabled()',
+    '[attr.data-invalid]': '_invalid() ? "" : null',
+    '[attr.aria-invalid]': '_invalid() || null',
+    '[disabled]': '_disabled()',
     '[class.base-ui-input]': 'true',
-    '[class.base-ui-input-disabled]': 'disabled()',
+    '[class.base-ui-input-disabled]': '_disabled()',
     '[class.base-ui-input-focused]': 'focused()',
     '[class.base-ui-input-filled]': 'filled()',
-    '[class.base-ui-input-invalid]': 'invalid()',
+    '[class.base-ui-input-invalid]': '_invalid()',
   },
 })
 export class InputDirective implements ControlValueAccessor {
   private readonly elementRef = inject(ElementRef<HTMLInputElement | HTMLTextAreaElement>);
 
+  // Internal signals
+  private readonly _value = signal<string>('');
+  readonly _disabled = signal<boolean>(false);
+  readonly _invalid = signal<boolean>(false);
+  private readonly _focused = signal(false);
+
   /**
    * Current input value.
    * Supports two-way binding with [(value)].
    */
-  readonly value = model<string>('');
+  @Input()
+  set value(val: string) { this._value.set(val); }
+  get value(): string { return this._value(); }
 
   /**
    * Whether the input is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  set disabled(val: boolean) { this._disabled.set(val); }
+  get disabled(): boolean { return this._disabled(); }
 
   /**
    * Whether the input is in an invalid state.
    */
-  readonly invalid = input(false, { transform: booleanAttribute });
-
-  // Internal state
-  private readonly _focused = signal(false);
+  @Input({ transform: booleanAttribute })
+  set invalid(val: boolean) { this._invalid.set(val); }
+  get invalid(): boolean { return this._invalid(); }
 
   /**
    * Whether the input is currently focused.
@@ -93,7 +102,7 @@ export class InputDirective implements ControlValueAccessor {
    * Whether the input has a value.
    */
   readonly filled: Signal<boolean> = computed(() => {
-    const val = this.value();
+    const val = this._value();
     return val !== null && val !== undefined && val !== '';
   });
 
@@ -101,21 +110,21 @@ export class InputDirective implements ControlValueAccessor {
    * Current state object.
    */
   readonly state: Signal<InputState> = computed(() => ({
-    disabled: this.disabled(),
+    disabled: this._disabled(),
     focused: this.focused(),
     filled: this.filled(),
-    invalid: this.invalid(),
+    invalid: this._invalid(),
   }));
 
   /**
    * Emitted when the value changes.
    */
-  readonly valueChange = output<string>();
+  @Output() readonly valueChange = new EventEmitter<string>();
 
   /**
    * Emitted with detailed event information when value changes.
    */
-  readonly valueChangeDetails = output<InputChangeEventDetails>();
+  @Output() readonly valueChangeDetails = new EventEmitter<InputChangeEventDetails>();
 
   // ControlValueAccessor callbacks
   private onChange: (value: string) => void = () => {};
@@ -129,7 +138,7 @@ export class InputDirective implements ControlValueAccessor {
     const target = event.target as HTMLInputElement | HTMLTextAreaElement;
     const newValue = target.value;
 
-    this.value.set(newValue);
+    this._value.set(newValue);
     this.valueChange.emit(newValue);
     this.valueChangeDetails.emit({ value: newValue, event });
     this.onChange(newValue);
@@ -155,7 +164,7 @@ export class InputDirective implements ControlValueAccessor {
   // ControlValueAccessor implementation
   writeValue(value: string): void {
     const newValue = value ?? '';
-    this.value.set(newValue);
+    this._value.set(newValue);
     this.elementRef.nativeElement.value = newValue;
   }
 

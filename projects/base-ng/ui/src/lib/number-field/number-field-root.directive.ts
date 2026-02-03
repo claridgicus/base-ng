@@ -9,11 +9,11 @@ import {
   booleanAttribute,
   Directive,
   effect,
+  EventEmitter,
   forwardRef,
-  input,
-  model,
+  Input,
   numberAttribute,
-  output,
+  Output,
   signal,
   type Signal,
   computed,
@@ -103,23 +103,23 @@ function roundToStep(value: number, step: number, min: number = 0): number {
   ],
   host: {
     role: 'group',
-    '[attr.data-disabled]': 'disabled() ? "" : null',
-    '[attr.data-readonly]': 'readOnly() ? "" : null',
+    '[attr.data-disabled]': '_disabled() ? "" : null',
+    '[attr.data-readonly]': '_readOnly() ? "" : null',
     '[attr.data-focused]': 'focused() ? "" : null',
     '[class.base-ui-number-field]': 'true',
-    '[class.base-ui-number-field-disabled]': 'disabled()',
-    '[class.base-ui-number-field-readonly]': 'readOnly()',
+    '[class.base-ui-number-field-disabled]': '_disabled()',
+    '[class.base-ui-number-field-readonly]': '_readOnly()',
     '[class.base-ui-number-field-focused]': 'focused()',
   },
 })
 export class NumberFieldRootDirective implements ControlValueAccessor {
   /**
-   * Current numeric value.
+   * Current numeric value - internal signal for tracking.
    */
-  readonly value = model<number | null>(null);
+  private readonly _value = signal<number | null>(null);
 
   /**
-   * Internal value signal.
+   * Internal value signal exposed to context.
    */
   readonly internalValue = signal<number | null>(null);
 
@@ -129,49 +129,143 @@ export class NumberFieldRootDirective implements ControlValueAccessor {
   readonly inputValue = signal<string>('');
 
   /**
-   * Minimum value.
+   * Minimum value - internal signal.
    */
-  readonly min = input<number | undefined>(undefined);
+  private readonly _min = signal<number | undefined>(undefined);
 
   /**
-   * Maximum value.
+   * Maximum value - internal signal.
    */
-  readonly max = input<number | undefined>(undefined);
+  private readonly _max = signal<number | undefined>(undefined);
 
   /**
-   * Step increment.
+   * Step increment - internal signal.
    */
-  readonly step = input(1, { transform: numberAttribute });
+  private readonly _step = signal<number>(1);
 
   /**
-   * Large step for Page Up/Down and Shift+Arrow.
+   * Large step for Page Up/Down and Shift+Arrow - internal signal.
    */
-  readonly largeStep = input(10, { transform: numberAttribute });
+  private readonly _largeStep = signal<number>(10);
 
   /**
-   * Whether the field is disabled.
+   * Whether the field is disabled - internal signal.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  readonly _disabled = signal<boolean>(false);
 
   /**
-   * Whether the field is read-only.
+   * Whether the field is read-only - internal signal.
    */
-  readonly readOnly = input(false, { transform: booleanAttribute });
+  readonly _readOnly = signal<boolean>(false);
 
   /**
-   * Whether the field is required.
+   * Whether the field is required - internal signal.
    */
-  readonly required = input(false, { transform: booleanAttribute });
-
-  /**
-   * Event emitted when value changes.
-   */
-  readonly valueChanged = output<NumberFieldChangeEventDetails>();
+  private readonly _required = signal<boolean>(false);
 
   /**
    * Whether the input is focused.
    */
   readonly focused = signal(false);
+
+  /**
+   * Current numeric value.
+   */
+  @Input()
+  set value(val: number | null) {
+    this._value.set(val);
+    this.internalValue.set(val);
+  }
+  get value(): number | null {
+    return this._value();
+  }
+
+  /**
+   * Minimum value.
+   */
+  @Input()
+  set min(val: number | undefined) {
+    this._min.set(val);
+  }
+  get min(): Signal<number | undefined> {
+    return this._min;
+  }
+
+  /**
+   * Maximum value.
+   */
+  @Input()
+  set max(val: number | undefined) {
+    this._max.set(val);
+  }
+  get max(): Signal<number | undefined> {
+    return this._max;
+  }
+
+  /**
+   * Step increment.
+   */
+  @Input({ transform: numberAttribute })
+  set step(val: number) {
+    this._step.set(val);
+  }
+  get step(): Signal<number> {
+    return this._step;
+  }
+
+  /**
+   * Large step for Page Up/Down and Shift+Arrow.
+   */
+  @Input({ transform: numberAttribute })
+  set largeStep(val: number) {
+    this._largeStep.set(val);
+  }
+  get largeStep(): Signal<number> {
+    return this._largeStep;
+  }
+
+  /**
+   * Whether the field is disabled.
+   */
+  @Input({ transform: booleanAttribute })
+  set disabled(val: boolean) {
+    this._disabled.set(val);
+  }
+  get disabled(): Signal<boolean> {
+    return this._disabled;
+  }
+
+  /**
+   * Whether the field is read-only.
+   */
+  @Input({ transform: booleanAttribute })
+  set readOnly(val: boolean) {
+    this._readOnly.set(val);
+  }
+  get readOnly(): Signal<boolean> {
+    return this._readOnly;
+  }
+
+  /**
+   * Whether the field is required.
+   */
+  @Input({ transform: booleanAttribute })
+  set required(val: boolean) {
+    this._required.set(val);
+  }
+  get required(): Signal<boolean> {
+    return this._required;
+  }
+
+  /**
+   * Event emitted when value changes.
+   */
+  @Output() readonly valueChange = new EventEmitter<number | null>();
+
+  /**
+   * Event emitted when value changes with details.
+   */
+  @Output() readonly valueChanged = new EventEmitter<NumberFieldChangeEventDetails>();
 
   // ControlValueAccessor
   private onChange: (value: number | null) => void = () => {};
@@ -180,7 +274,7 @@ export class NumberFieldRootDirective implements ControlValueAccessor {
   constructor() {
     // Sync model value to internal value
     effect(() => {
-      const val = this.value();
+      const val = this._value();
       this.internalValue.set(val);
       if (val !== null) {
         this.inputValue.set(String(val));
@@ -194,17 +288,18 @@ export class NumberFieldRootDirective implements ControlValueAccessor {
    * Set the numeric value.
    */
   setValue(newValue: number | null, reason: 'input' | 'increment' | 'decrement' | 'commit' = 'input'): void {
-    if (this.disabled() || this.readOnly()) return;
+    if (this._disabled() || this._readOnly()) return;
 
     let clamped = newValue;
     if (clamped !== null) {
-      clamped = clamp(clamped, this.min(), this.max());
+      clamped = clamp(clamped, this._min(), this._max());
     }
 
     this.internalValue.set(clamped);
-    this.value.set(clamped);
+    this._value.set(clamped);
     this.inputValue.set(clamped !== null ? String(clamped) : '');
     this.onChange(clamped);
+    this.valueChange.emit(clamped);
     this.valueChanged.emit({ value: clamped, reason });
   }
 
@@ -219,11 +314,11 @@ export class NumberFieldRootDirective implements ControlValueAccessor {
    * Increment the value.
    */
   increment(amount?: number): void {
-    if (this.disabled() || this.readOnly() || !this.canIncrement()) return;
+    if (this._disabled() || this._readOnly() || !this.canIncrement()) return;
 
-    const step = amount ?? this.step();
-    const current = this.internalValue() ?? this.min() ?? 0;
-    const newValue = roundToStep(current + step, this.step(), this.min() ?? 0);
+    const step = amount ?? this._step();
+    const current = this.internalValue() ?? this._min() ?? 0;
+    const newValue = roundToStep(current + step, this._step(), this._min() ?? 0);
     this.setValue(newValue, 'increment');
   }
 
@@ -231,11 +326,11 @@ export class NumberFieldRootDirective implements ControlValueAccessor {
    * Decrement the value.
    */
   decrement(amount?: number): void {
-    if (this.disabled() || this.readOnly() || !this.canDecrement()) return;
+    if (this._disabled() || this._readOnly() || !this.canDecrement()) return;
 
-    const step = amount ?? this.step();
-    const current = this.internalValue() ?? this.max() ?? 0;
-    const newValue = roundToStep(current - step, this.step(), this.min() ?? 0);
+    const step = amount ?? this._step();
+    const current = this.internalValue() ?? this._max() ?? 0;
+    const newValue = roundToStep(current - step, this._step(), this._min() ?? 0);
     this.setValue(newValue, 'decrement');
   }
 
@@ -270,7 +365,7 @@ export class NumberFieldRootDirective implements ControlValueAccessor {
    * Check if increment is allowed.
    */
   canIncrement(): boolean {
-    const max = this.max();
+    const max = this._max();
     if (max === undefined) return true;
     const current = this.internalValue();
     if (current === null) return true;
@@ -281,7 +376,7 @@ export class NumberFieldRootDirective implements ControlValueAccessor {
    * Check if decrement is allowed.
    */
   canDecrement(): boolean {
-    const min = this.min();
+    const min = this._min();
     if (min === undefined) return true;
     const current = this.internalValue();
     if (current === null) return true;
@@ -290,7 +385,7 @@ export class NumberFieldRootDirective implements ControlValueAccessor {
 
   // ControlValueAccessor methods
   writeValue(value: number | null): void {
-    this.value.set(value);
+    this._value.set(value);
     this.internalValue.set(value);
     this.inputValue.set(value !== null ? String(value) : '');
   }

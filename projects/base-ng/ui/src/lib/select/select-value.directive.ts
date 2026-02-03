@@ -5,9 +5,10 @@
 
 import {
   Directive,
+  Input,
   computed,
   inject,
-  input,
+  signal,
   contentChild,
   TemplateRef,
 } from '@angular/core';
@@ -38,10 +39,19 @@ import { SELECT_ROOT_CONTEXT } from './select.types';
 export class SelectValueDirective<T = unknown> {
   protected readonly rootContext = inject(SELECT_ROOT_CONTEXT);
 
+  // Internal signal for input
+  private readonly placeholderSignal = signal<string>('');
+
   /**
    * Placeholder text when no value is selected.
    */
-  readonly placeholder = input<string>('');
+  @Input()
+  get placeholder(): string {
+    return this.placeholderSignal();
+  }
+  set placeholder(value: string) {
+    this.placeholderSignal.set(value);
+  }
 
   /**
    * Custom template for rendering the value.
@@ -58,7 +68,7 @@ export class SelectValueDirective<T = unknown> {
   /** The display text for the value */
   readonly displayText = computed(() => {
     const value = this.rootContext.valueSignal();
-    const placeholder = this.placeholder();
+    const placeholder = this.placeholderSignal();
 
     if (!this.rootContext.hasSelectedValue()) {
       return placeholder;

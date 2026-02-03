@@ -9,8 +9,9 @@ import {
   Directive,
   effect,
   inject,
-  model,
-  output,
+  Input,
+  Output,
+  EventEmitter,
   signal,
   DOCUMENT,
   OnDestroy,
@@ -64,13 +65,25 @@ export class ContextMenuRootDirective implements OnDestroy {
   private readonly document = inject(DOCUMENT);
   private readonly rootId = `base-ui-context-menu-${contextMenuIdCounter++}`;
 
+  /** Internal open state signal */
+  private readonly _open = signal<boolean>(false);
+
   /** Two-way binding for open state */
-  readonly open = model<boolean>(false);
+  @Input()
+  set open(value: boolean) {
+    this._open.set(value);
+  }
+  get open(): boolean {
+    return this._open();
+  }
 
   /** Emitted when open state changes */
-  readonly openChanged = output<ContextMenuOpenChangeEventDetails>();
+  @Output() readonly openChange = new EventEmitter<boolean>();
 
-  /** Internal open state signal */
+  /** Emitted when open state changes with details */
+  @Output() readonly openChanged = new EventEmitter<ContextMenuOpenChangeEventDetails>();
+
+  /** Internal open state signal (public for context) */
   readonly openSignal = signal(false);
 
   /** Anchor X position */
@@ -156,12 +169,12 @@ export class ContextMenuRootDirective implements OnDestroy {
   };
 
   constructor() {
-    // Sync model to internal signal
+    // Sync @Input to internal signal
     effect(() => {
-      const modelValue = this.open();
-      if (this.openSignal() !== modelValue) {
-        this.openSignal.set(modelValue);
-        this.context.open = modelValue;
+      const inputValue = this._open();
+      if (this.openSignal() !== inputValue) {
+        this.openSignal.set(inputValue);
+        this.context.open = inputValue;
       }
     });
 
@@ -199,7 +212,8 @@ export class ContextMenuRootDirective implements OnDestroy {
 
     this.openSignal.set(open);
     this.context.open = open;
-    this.open.set(open);
+    this._open.set(open);
+    this.openChange.emit(open);
     this.openChanged.emit({ open, reason });
   }
 

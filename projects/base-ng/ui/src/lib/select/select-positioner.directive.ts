@@ -5,11 +5,12 @@
 
 import {
   Directive,
+  Input,
   ElementRef,
   computed,
   effect,
   inject,
-  input,
+  signal,
   afterNextRender,
   booleanAttribute,
   numberAttribute,
@@ -73,40 +74,84 @@ export class SelectPositionerDirective implements OnDestroy {
   protected readonly floatingService = inject(FloatingService);
   private readonly elementRef = inject(ElementRef<HTMLElement>);
 
+  // Internal signals for inputs
+  private readonly sideSignalInternal = signal<SelectSide>('bottom');
+  private readonly alignSignalInternal = signal<SelectAlign>('start');
+  private readonly sideOffsetSignal = signal(4);
+  private readonly alignOffsetSignal = signal(0);
+  private readonly keepMountedSignal = signal(false);
+  private readonly alignItemWithTriggerSignal = signal(true);
+
   /**
    * The preferred side to position the popup.
    */
-  readonly side = input<SelectSide>('bottom');
+  @Input()
+  get side(): SelectSide {
+    return this.sideSignalInternal();
+  }
+  set side(value: SelectSide) {
+    this.sideSignalInternal.set(value);
+  }
 
   /**
    * The preferred alignment of the popup.
    */
-  readonly align = input<SelectAlign>('start');
+  @Input()
+  get align(): SelectAlign {
+    return this.alignSignalInternal();
+  }
+  set align(value: SelectAlign) {
+    this.alignSignalInternal.set(value);
+  }
 
   /**
    * Offset from the trigger along the main axis.
    */
-  readonly sideOffset = input(4, { transform: numberAttribute });
+  @Input({ transform: numberAttribute })
+  get sideOffset(): number {
+    return this.sideOffsetSignal();
+  }
+  set sideOffset(value: number) {
+    this.sideOffsetSignal.set(value);
+  }
 
   /**
    * Offset from the trigger along the cross axis.
    */
-  readonly alignOffset = input(0, { transform: numberAttribute });
+  @Input({ transform: numberAttribute })
+  get alignOffset(): number {
+    return this.alignOffsetSignal();
+  }
+  set alignOffset(value: number) {
+    this.alignOffsetSignal.set(value);
+  }
 
   /**
    * Whether to keep the popup mounted when closed.
    */
-  readonly keepMounted = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get keepMounted(): boolean {
+    return this.keepMountedSignal();
+  }
+  set keepMounted(value: boolean) {
+    this.keepMountedSignal.set(value);
+  }
 
   /**
    * Whether to align items with the trigger.
    */
-  readonly alignItemWithTrigger = input(true, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get alignItemWithTrigger(): boolean {
+    return this.alignItemWithTriggerSignal();
+  }
+  set alignItemWithTrigger(value: boolean) {
+    this.alignItemWithTriggerSignal.set(value);
+  }
 
   /** Computed placement for floating-ui */
   readonly placementSignal = computed<FloatingPlacement>(() => {
-    const side = this.side();
-    const alignment = this.align();
+    const side = this.sideSignalInternal();
+    const alignment = this.alignSignalInternal();
     if (alignment && alignment !== 'center') {
       return `${side}-${alignment}` as FloatingPlacement;
     }
@@ -135,7 +180,7 @@ export class SelectPositionerDirective implements OnDestroy {
 
   /** Whether the positioner is visible */
   readonly isVisible = computed(() => {
-    return this.rootContext.openSignal() || this.keepMounted();
+    return this.rootContext.openSignal() || this.keepMountedSignal();
   });
 
   /** Min-width style */
@@ -154,7 +199,7 @@ export class SelectPositionerDirective implements OnDestroy {
     const self = this;
     this.positionerContext = {
       get alignItemWithTriggerActive() {
-        return self.alignItemWithTrigger() && self.rootContext.openMethodSignal() === 'mouse';
+        return self.alignItemWithTriggerSignal() && self.rootContext.openMethodSignal() === 'mouse';
       },
       get side() {
         return self.sideSignal();
@@ -192,8 +237,8 @@ export class SelectPositionerDirective implements OnDestroy {
     // Watch for placement/offset changes
     effect(() => {
       const placement = this.placementSignal();
-      const sideOffset = this.sideOffset();
-      const alignOffset = this.alignOffset();
+      const sideOffset = this.sideOffsetSignal();
+      const alignOffset = this.alignOffsetSignal();
 
       this.floatingService.configure({
         placement,
@@ -229,7 +274,7 @@ export class SelectPositionerDirective implements OnDestroy {
     this.floatingService.configure({
       placement: this.placementSignal(),
       middleware: [
-        offset({ mainAxis: this.sideOffset(), crossAxis: this.alignOffset() }),
+        offset({ mainAxis: this.sideOffsetSignal(), crossAxis: this.alignOffsetSignal() }),
         flip({ padding: 8 }),
         shift({ padding: 8 }),
         size({

@@ -5,9 +5,10 @@
 
 import {
   Directive,
+  Input,
   computed,
   inject,
-  input,
+  signal,
   booleanAttribute,
 } from '@angular/core';
 import { COMBOBOX_ROOT_CONTEXT } from './combobox.types';
@@ -28,13 +29,23 @@ import { COMBOBOX_ROOT_CONTEXT } from './combobox.types';
 })
 export class ComboboxEmptyDirective {
   protected readonly rootContext = inject(COMBOBOX_ROOT_CONTEXT);
-  readonly keepMounted = input(false, { transform: booleanAttribute });
+
+  // Private signal for internal state management
+  private readonly _keepMounted = signal(false);
+
+  @Input({ transform: booleanAttribute })
+  get keepMounted(): boolean {
+    return this._keepMounted();
+  }
+  set keepMounted(value: boolean) {
+    this._keepMounted.set(value);
+  }
 
   readonly isEmpty = computed(() => {
     return this.rootContext.getFilteredItems().length === 0;
   });
 
   readonly isVisible = computed(() => {
-    return this.isEmpty() || this.keepMounted();
+    return this.isEmpty() || this._keepMounted();
   });
 }

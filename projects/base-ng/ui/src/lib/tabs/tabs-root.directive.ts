@@ -10,9 +10,9 @@ import {
   computed,
   Directive,
   effect,
-  input,
-  model,
-  output,
+  EventEmitter,
+  Input,
+  Output,
   signal,
 } from '@angular/core';
 import {
@@ -48,12 +48,12 @@ let tabsIdCounter = 0;
   exportAs: 'tabsRoot',
   host: {
     '[id]': 'rootId',
-    '[attr.data-orientation]': 'orientation()',
-    '[attr.data-disabled]': 'disabled() ? "" : null',
+    '[attr.data-orientation]': '_orientation()',
+    '[attr.data-disabled]': '_disabled() ? "" : null',
     '[class.base-ui-tabs]': 'true',
-    '[class.base-ui-tabs-horizontal]': 'orientation() === "horizontal"',
-    '[class.base-ui-tabs-vertical]': 'orientation() === "vertical"',
-    '[class.base-ui-tabs-disabled]': 'disabled()',
+    '[class.base-ui-tabs-horizontal]': '_orientation() === "horizontal"',
+    '[class.base-ui-tabs-vertical]': '_orientation() === "vertical"',
+    '[class.base-ui-tabs-disabled]': '_disabled()',
   },
   providers: [
     {
@@ -70,27 +70,64 @@ export class TabsRootDirective {
   /**
    * The controlled value of the selected tab.
    */
-  readonly value = model<TabValue | undefined>(undefined);
+  readonly _value = signal<TabValue | undefined>(undefined);
+
+  @Input()
+  set value(val: TabValue | undefined) {
+    this._value.set(val);
+  }
+  get value(): TabValue | undefined {
+    return this._value();
+  }
 
   /**
    * The default value when uncontrolled.
    */
-  readonly defaultValue = input<TabValue | undefined>(undefined);
+  readonly _defaultValue = signal<TabValue | undefined>(undefined);
+
+  @Input()
+  set defaultValue(val: TabValue | undefined) {
+    this._defaultValue.set(val);
+  }
+  get defaultValue(): TabValue | undefined {
+    return this._defaultValue();
+  }
 
   /**
    * Orientation of the tabs.
    */
-  readonly orientation = input<TabsOrientation>('horizontal');
+  readonly _orientation = signal<TabsOrientation>('horizontal');
+
+  @Input()
+  set orientation(val: TabsOrientation) {
+    this._orientation.set(val);
+  }
+  get orientation(): TabsOrientation {
+    return this._orientation();
+  }
 
   /**
    * Whether the tabs are disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  readonly _disabled = signal<boolean>(false);
+
+  @Input({ transform: booleanAttribute })
+  set disabled(val: boolean) {
+    this._disabled.set(val);
+  }
+  get disabled(): boolean {
+    return this._disabled();
+  }
 
   /**
-   * Emits when the selected tab changes.
+   * Emits when the selected tab changes (for two-way binding).
    */
-  readonly valueChanged = output<TabsChangeEventDetails>();
+  @Output() readonly valueChange = new EventEmitter<TabValue | undefined>();
+
+  /**
+   * Emits when the selected tab changes (with details).
+   */
+  @Output() readonly valueChanged = new EventEmitter<TabsChangeEventDetails>();
 
   /** Internal value signal */
   private readonly internalValue = signal<TabValue | undefined>(undefined);
@@ -103,7 +140,7 @@ export class TabsRootDirective {
 
   /** Computed value - uses model if set, otherwise internal */
   readonly computedValue = computed(() => {
-    const modelValue = this.value();
+    const modelValue = this._value();
     return modelValue !== undefined ? modelValue : this.internalValue();
   });
 
@@ -111,10 +148,10 @@ export class TabsRootDirective {
   readonly context: TabsContext = {
     value: this.computedValue(),
     valueSignal: this.computedValue,
-    orientation: this.orientation(),
-    orientationSignal: this.orientation,
-    disabled: this.disabled(),
-    disabledSignal: this.disabled,
+    orientation: this._orientation(),
+    orientationSignal: this._orientation,
+    disabled: this._disabled(),
+    disabledSignal: this._disabled,
     tabActivationDirection: this.activationDirection(),
     activationDirectionSignal: this.activationDirection,
     selectTab: (value: TabValue) => this.selectTab(value),
@@ -128,7 +165,7 @@ export class TabsRootDirective {
   constructor() {
     // Initialize with default value
     effect(() => {
-      const defaultVal = this.defaultValue();
+      const defaultVal = this._defaultValue();
       if (defaultVal !== undefined && this.internalValue() === undefined) {
         this.internalValue.set(defaultVal);
       }
@@ -136,7 +173,7 @@ export class TabsRootDirective {
 
     // Sync model to internal
     effect(() => {
-      const modelVal = this.value();
+      const modelVal = this._value();
       if (modelVal !== undefined) {
         this.internalValue.set(modelVal);
       }
@@ -183,7 +220,7 @@ export class TabsRootDirective {
    * Select a tab by value.
    */
   selectTab(newValue: TabValue): void {
-    if (this.disabled()) {
+    if (this._disabled()) {
       return;
     }
 
@@ -198,13 +235,13 @@ export class TabsRootDirective {
       // For simplicity, use left/right for horizontal, up/down for vertical
       // In a real implementation, this would be based on DOM position
       if (typeof currentValue === 'number' && typeof newValue === 'number') {
-        if (this.orientation() === 'horizontal') {
+        if (this._orientation() === 'horizontal') {
           direction = newValue > currentValue ? 'right' : 'left';
         } else {
           direction = newValue > currentValue ? 'down' : 'up';
         }
       } else if (typeof currentValue === 'string' && typeof newValue === 'string') {
-        if (this.orientation() === 'horizontal') {
+        if (this._orientation() === 'horizontal') {
           direction = newValue > currentValue ? 'right' : 'left';
         } else {
           direction = newValue > currentValue ? 'down' : 'up';
@@ -214,8 +251,12 @@ export class TabsRootDirective {
 
     this.activationDirection.set(direction);
     this.internalValue.set(newValue);
-    this.value.set(newValue);
+    this._value.set(newValue);
 
+    // Emit for two-way binding
+    this.valueChange.emit(newValue);
+
+    // Emit with details
     this.valueChanged.emit({
       value: newValue,
       previousValue: currentValue,

@@ -5,10 +5,11 @@
 
 import {
   Directive,
+  Input,
+  Output,
+  EventEmitter,
   computed,
   effect,
-  input,
-  output,
   signal,
   booleanAttribute,
   Signal,
@@ -60,63 +61,121 @@ let selectIdCounter = 0;
   host: {
     '[class.base-ui-select-root]': 'true',
     '[class.base-ui-select-root-open]': 'isOpen()',
-    '[class.base-ui-select-root-disabled]': 'disabled()',
+    '[class.base-ui-select-root-disabled]': 'disabledSignal()',
     '[attr.data-open]': 'isOpen() ? "" : null',
-    '[attr.data-disabled]': 'disabled() ? "" : null',
+    '[attr.data-disabled]': 'disabledSignal() ? "" : null',
   },
 })
 export class SelectRootDirective<T = unknown> {
   private readonly rootId = `base-ui-select-${++selectIdCounter}`;
 
+  // Internal signals for inputs
+  private readonly openSignal = signal(false);
+  private readonly defaultOpenSignal = signal(false);
+  private readonly valueSignal = signal<T | T[] | null>(null);
+  private readonly defaultValueSignal = signal<T | T[] | null>(null);
+  readonly disabledSignal = signal(false);
+  private readonly readOnlySignal = signal(false);
+  private readonly requiredSignal = signal(false);
+  private readonly multipleSignal = signal(false);
+
   /**
    * Whether the select is open.
    */
-  readonly open = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get open(): boolean {
+    return this.openSignal();
+  }
+  set open(value: boolean) {
+    this.openSignal.set(value);
+  }
 
   /**
    * The default open state (uncontrolled).
    */
-  readonly defaultOpen = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get defaultOpen(): boolean {
+    return this.defaultOpenSignal();
+  }
+  set defaultOpen(value: boolean) {
+    this.defaultOpenSignal.set(value);
+  }
 
   /**
    * The selected value.
    */
-  readonly value = input<T | T[] | null>(null);
+  @Input()
+  get value(): T | T[] | null {
+    return this.valueSignal();
+  }
+  set value(value: T | T[] | null) {
+    this.valueSignal.set(value);
+  }
 
   /**
    * The default value (uncontrolled).
    */
-  readonly defaultValue = input<T | T[] | null>(null);
+  @Input()
+  get defaultValue(): T | T[] | null {
+    return this.defaultValueSignal();
+  }
+  set defaultValue(value: T | T[] | null) {
+    this.defaultValueSignal.set(value);
+  }
 
   /**
    * Whether the select is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get disabled(): boolean {
+    return this.disabledSignal();
+  }
+  set disabled(value: boolean) {
+    this.disabledSignal.set(value);
+  }
 
   /**
    * Whether the select is read-only.
    */
-  readonly readOnly = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get readOnly(): boolean {
+    return this.readOnlySignal();
+  }
+  set readOnly(value: boolean) {
+    this.readOnlySignal.set(value);
+  }
 
   /**
    * Whether the select is required.
    */
-  readonly required = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get required(): boolean {
+    return this.requiredSignal();
+  }
+  set required(value: boolean) {
+    this.requiredSignal.set(value);
+  }
 
   /**
    * Whether multiple selection is allowed.
    */
-  readonly multiple = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get multiple(): boolean {
+    return this.multipleSignal();
+  }
+  set multiple(value: boolean) {
+    this.multipleSignal.set(value);
+  }
 
   /**
    * Event emitted when the open state changes.
    */
-  readonly openChange = output<boolean>();
+  @Output() readonly openChange = new EventEmitter<boolean>();
 
   /**
    * Event emitted when the value changes.
    */
-  readonly valueChange = output<T | T[] | null>();
+  @Output() readonly valueChange = new EventEmitter<T | T[] | null>();
 
   // Internal state signals
   private readonly openInternal = signal(false);
@@ -129,13 +188,13 @@ export class SelectRootDirective<T = unknown> {
 
   /** Whether the select is open */
   readonly isOpen = computed(() => {
-    const openInput = this.open();
+    const openInput = this.openSignal();
     return openInput || this.openInternal();
   });
 
   /** The current selected value */
   readonly currentValue = computed(() => {
-    const valueInput = this.value();
+    const valueInput = this.valueSignal();
     if (valueInput !== null) {
       return valueInput;
     }
@@ -148,8 +207,8 @@ export class SelectRootDirective<T = unknown> {
   constructor() {
     // Initialize from defaults
     effect(() => {
-      const defaultOpen = this.defaultOpen();
-      const defaultValue = this.defaultValue();
+      const defaultOpen = this.defaultOpenSignal();
+      const defaultValue = this.defaultValueSignal();
 
       untracked(() => {
         if (defaultOpen) {
@@ -171,23 +230,23 @@ export class SelectRootDirective<T = unknown> {
         return self.currentValue();
       },
       get disabled() {
-        return self.disabled();
+        return self.disabledSignal();
       },
       get readOnly() {
-        return self.readOnly();
+        return self.readOnlySignal();
       },
       get required() {
-        return self.required();
+        return self.requiredSignal();
       },
       get multiple() {
-        return self.multiple();
+        return self.multipleSignal();
       },
       openSignal: this.isOpen,
       valueSignal: this.currentValue,
-      disabledSignal: computed(() => this.disabled()) as Signal<boolean>,
-      readOnlySignal: computed(() => this.readOnly()) as Signal<boolean>,
-      requiredSignal: computed(() => this.required()) as Signal<boolean>,
-      multipleSignal: computed(() => this.multiple()) as Signal<boolean>,
+      disabledSignal: this.disabledSignal.asReadonly() as Signal<boolean>,
+      readOnlySignal: this.readOnlySignal.asReadonly() as Signal<boolean>,
+      requiredSignal: this.requiredSignal.asReadonly() as Signal<boolean>,
+      multipleSignal: this.multipleSignal.asReadonly() as Signal<boolean>,
       openMethodSignal: this.openMethodInternal.asReadonly(),
       rootId: this.rootId,
       setOpen: this.setOpen.bind(this),
@@ -212,7 +271,7 @@ export class SelectRootDirective<T = unknown> {
    * Set the open state.
    */
   setOpen(open: boolean, method: SelectOpenMethod = null): void {
-    if (this.disabled() || this.readOnly()) {
+    if (this.disabledSignal() || this.readOnlySignal()) {
       return;
     }
 
@@ -229,7 +288,7 @@ export class SelectRootDirective<T = unknown> {
    * Set the value.
    */
   setValue(value: T | T[] | null): void {
-    if (this.disabled() || this.readOnly()) {
+    if (this.disabledSignal() || this.readOnlySignal()) {
       return;
     }
 
@@ -241,7 +300,7 @@ export class SelectRootDirective<T = unknown> {
    * Toggle a value for multiple selection.
    */
   toggleValue(value: T): void {
-    if (!this.multiple()) {
+    if (!this.multipleSignal()) {
       this.setValue(value);
       return;
     }

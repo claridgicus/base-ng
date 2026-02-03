@@ -10,9 +10,10 @@ import {
   Directive,
   ElementRef,
   inject,
-  input,
-  output,
-  model,
+  Input,
+  Output,
+  EventEmitter,
+  signal,
   booleanAttribute,
   OnInit,
   OnDestroy,
@@ -43,16 +44,16 @@ export interface MenuCheckboxItemChangeEvent {
   host: {
     role: 'menuitemcheckbox',
     '[id]': 'itemId',
-    '[attr.aria-checked]': 'checked()',
-    '[attr.aria-disabled]': 'disabled()',
+    '[attr.aria-checked]': '_checked()',
+    '[attr.aria-disabled]': '_disabled()',
     '[attr.data-highlighted]': 'isHighlighted() ? "" : null',
-    '[attr.data-disabled]': 'disabled() ? "" : null',
-    '[attr.data-state]': 'checked() ? "checked" : "unchecked"',
+    '[attr.data-disabled]': '_disabled() ? "" : null',
+    '[attr.data-state]': '_checked() ? "checked" : "unchecked"',
     '[attr.tabindex]': 'isHighlighted() ? "0" : "-1"',
     '[class.base-ui-menu-checkbox-item]': 'true',
-    '[class.base-ui-menu-checkbox-item-checked]': 'checked()',
+    '[class.base-ui-menu-checkbox-item-checked]': '_checked()',
     '[class.base-ui-menu-checkbox-item-highlighted]': 'isHighlighted()',
-    '[class.base-ui-menu-checkbox-item-disabled]': 'disabled()',
+    '[class.base-ui-menu-checkbox-item-disabled]': '_disabled()',
     '(click)': 'handleClick($event)',
     '(mouseenter)': 'handleMouseEnter()',
     '(keydown)': 'handleKeydown($event)',
@@ -65,36 +66,86 @@ export class MenuCheckboxItemDirective implements OnInit, OnDestroy {
   /** Unique ID for this item */
   readonly itemId = `base-ui-menu-checkbox-item-${checkboxItemIdCounter++}`;
 
+  /** Internal signal for checked state */
+  readonly _checked = signal<boolean>(false);
+
   /**
    * Whether the item is checked (two-way binding).
    */
-  readonly checked = model<boolean>(false);
+  @Input()
+  get checked(): boolean {
+    return this._checked();
+  }
+  set checked(value: boolean) {
+    this._checked.set(value);
+  }
+
+  /**
+   * Emitted when checked state changes (for two-way binding).
+   */
+  @Output() readonly checkedChange = new EventEmitter<boolean>();
+
+  /** Internal signal for default checked state */
+  private readonly _defaultChecked = signal<boolean>(false);
 
   /**
    * Default checked state when uncontrolled.
    */
-  readonly defaultChecked = input<boolean>(false);
+  @Input()
+  get defaultChecked(): boolean {
+    return this._defaultChecked();
+  }
+  set defaultChecked(value: boolean) {
+    this._defaultChecked.set(value);
+  }
+
+  /** Internal signal for disabled state */
+  readonly _disabled = signal<boolean>(false);
 
   /**
    * Whether the item is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get disabled(): boolean {
+    return this._disabled();
+  }
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
+
+  /** Internal signal for closeOnClick */
+  private readonly _closeOnClick = signal<boolean>(false);
 
   /**
    * Whether clicking the item closes the menu.
    */
-  readonly closeOnClick = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get closeOnClick(): boolean {
+    return this._closeOnClick();
+  }
+  set closeOnClick(value: boolean) {
+    this._closeOnClick.set(value);
+  }
+
+  /** Internal signal for label */
+  private readonly _label = signal<string | undefined>(undefined);
 
   /**
    * Label for keyboard navigation (typeahead).
    */
-  readonly label = input<string>();
+  @Input()
+  get label(): string | undefined {
+    return this._label();
+  }
+  set label(value: string | undefined) {
+    this._label.set(value);
+  }
 
   /**
    * Emitted when checked state changes with event details.
    * Use (checkedChanged) instead of (checkedChange) for the full event object.
    */
-  readonly checkedChanged = output<MenuCheckboxItemChangeEvent>();
+  @Output() readonly checkedChanged = new EventEmitter<MenuCheckboxItemChangeEvent>();
 
   /**
    * Whether this item is currently highlighted.
@@ -115,8 +166,8 @@ export class MenuCheckboxItemDirective implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.context.registerItem(this.itemId, this.elementRef.nativeElement);
     // Initialize from defaultChecked
-    if (this.defaultChecked() && !this.checked()) {
-      this.checked.set(true);
+    if (this._defaultChecked() && !this._checked()) {
+      this._checked.set(true);
     }
   }
 
@@ -128,16 +179,17 @@ export class MenuCheckboxItemDirective implements OnInit, OnDestroy {
    * Handle click events.
    */
   protected handleClick(event: MouseEvent): void {
-    if (this.disabled()) {
+    if (this._disabled()) {
       event.preventDefault();
       return;
     }
 
-    const newChecked = !this.checked();
-    this.checked.set(newChecked);
+    const newChecked = !this._checked();
+    this._checked.set(newChecked);
+    this.checkedChange.emit(newChecked);
     this.checkedChanged.emit({ checked: newChecked, event });
 
-    if (this.closeOnClick()) {
+    if (this._closeOnClick()) {
       this.context.closeMenu('item-press');
     }
   }
@@ -146,7 +198,7 @@ export class MenuCheckboxItemDirective implements OnInit, OnDestroy {
    * Handle mouse enter for highlighting.
    */
   protected handleMouseEnter(): void {
-    if (this.disabled()) return;
+    if (this._disabled()) return;
     this.context.setActiveItemId(this.itemId);
   }
 
@@ -154,15 +206,16 @@ export class MenuCheckboxItemDirective implements OnInit, OnDestroy {
    * Handle keydown events.
    */
   protected handleKeydown(event: KeyboardEvent): void {
-    if (this.disabled()) return;
+    if (this._disabled()) return;
 
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      const newChecked = !this.checked();
-      this.checked.set(newChecked);
+      const newChecked = !this._checked();
+      this._checked.set(newChecked);
+      this.checkedChange.emit(newChecked);
       this.checkedChanged.emit({ checked: newChecked, event });
 
-      if (this.closeOnClick()) {
+      if (this._closeOnClick()) {
         this.context.closeMenu('item-press');
       }
     }

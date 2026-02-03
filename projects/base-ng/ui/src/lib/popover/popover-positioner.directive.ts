@@ -12,7 +12,7 @@ import {
   effect,
   ElementRef,
   inject,
-  input,
+  Input,
   numberAttribute,
   OnDestroy,
   signal,
@@ -71,27 +71,55 @@ export class PopoverPositionerDirective implements OnDestroy {
   /**
    * The preferred side of the trigger to position the popover.
    */
-  readonly side = input<Side>('bottom');
+  private readonly _side = signal<Side>('bottom');
+  @Input()
+  get side(): Side {
+    return this._side();
+  }
+  set side(value: Side) {
+    this._side.set(value);
+  }
 
   /**
    * The preferred alignment of the popover.
    */
-  readonly align = input<Alignment | null>(null);
+  private readonly _align = signal<Alignment | null>(null);
+  @Input()
+  get align(): Alignment | null {
+    return this._align();
+  }
+  set align(value: Alignment | null) {
+    this._align.set(value);
+  }
 
   /**
    * The offset from the trigger.
    */
-  readonly sideOffset = input(8, { transform: numberAttribute });
+  private readonly _sideOffset = signal(8);
+  @Input({ transform: numberAttribute })
+  get sideOffset(): number {
+    return this._sideOffset();
+  }
+  set sideOffset(value: number) {
+    this._sideOffset.set(value);
+  }
 
   /**
    * The alignment offset.
    */
-  readonly alignOffset = input(0, { transform: numberAttribute });
+  private readonly _alignOffset = signal(0);
+  @Input({ transform: numberAttribute })
+  get alignOffset(): number {
+    return this._alignOffset();
+  }
+  set alignOffset(value: number) {
+    this._alignOffset.set(value);
+  }
 
   /** Computed placement */
   readonly placementSignal = computed<FloatingPlacement>(() => {
-    const side = this.side();
-    const alignment = this.align();
+    const side = this._side();
+    const alignment = this._align();
     if (alignment) {
       return `${side}-${alignment}` as FloatingPlacement;
     }
@@ -162,8 +190,8 @@ export class PopoverPositionerDirective implements OnDestroy {
     // Watch for placement changes
     effect(() => {
       const placement = this.placementSignal();
-      const sideOffset = this.sideOffset();
-      const alignOffset = this.alignOffset();
+      const sideOffset = this._sideOffset();
+      const alignOffset = this._alignOffset();
 
       this.floatingService.configure({
         placement,
@@ -191,7 +219,7 @@ export class PopoverPositionerDirective implements OnDestroy {
     this.floatingService.configure({
       placement: this.placementSignal(),
       middleware: [
-        offset({ mainAxis: this.sideOffset(), crossAxis: this.alignOffset() }),
+        offset({ mainAxis: this._sideOffset(), crossAxis: this._alignOffset() }),
         flip(),
         shift({ padding: 8 }),
       ],

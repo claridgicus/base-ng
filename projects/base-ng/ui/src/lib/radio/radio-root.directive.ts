@@ -16,8 +16,9 @@ import {
   effect,
   ElementRef,
   inject,
-  input,
+  Input,
   Signal,
+  signal,
 } from '@angular/core';
 import { RADIO_CONTEXT, RadioContext } from './radio.types';
 import { RADIO_GROUP_CONTEXT } from '../radio-group/radio-group.types';
@@ -48,11 +49,11 @@ import { RADIO_GROUP_CONTEXT } from '../radio-group/radio-group.types';
     {
       provide: RADIO_CONTEXT,
       useFactory: (directive: RadioRootDirective): RadioContext => ({
-        checked: directive.checked(),
-        disabled: directive.effectiveDisabled(),
-        readOnly: directive.effectiveReadOnly(),
-        required: directive.effectiveRequired(),
-        checkedSignal: directive.checked,
+        checked: directive._checked(),
+        disabled: directive._effectiveDisabled(),
+        readOnly: directive._effectiveReadOnly(),
+        required: directive._effectiveRequired(),
+        checkedSignal: directive._checked,
       }),
       deps: [RadioRootDirective],
     },
@@ -60,21 +61,21 @@ import { RADIO_GROUP_CONTEXT } from '../radio-group/radio-group.types';
   host: {
     type: 'button',
     role: 'radio',
-    '[attr.aria-checked]': 'checked()',
-    '[attr.aria-disabled]': 'effectiveDisabled() ? "true" : null',
-    '[attr.aria-readonly]': 'effectiveReadOnly() ? "true" : null',
-    '[attr.aria-required]': 'effectiveRequired() ? "true" : null',
-    '[attr.data-checked]': 'checked() ? "" : null',
-    '[attr.data-unchecked]': '!checked() ? "" : null',
-    '[attr.data-disabled]': 'effectiveDisabled() ? "" : null',
-    '[attr.data-readonly]': 'effectiveReadOnly() ? "" : null',
-    '[attr.data-required]': 'effectiveRequired() ? "" : null',
-    '[attr.disabled]': 'effectiveDisabled() ? "" : null',
+    '[attr.aria-checked]': '_checked()',
+    '[attr.aria-disabled]': '_effectiveDisabled() ? "true" : null',
+    '[attr.aria-readonly]': '_effectiveReadOnly() ? "true" : null',
+    '[attr.aria-required]': '_effectiveRequired() ? "true" : null',
+    '[attr.data-checked]': '_checked() ? "" : null',
+    '[attr.data-unchecked]': '!_checked() ? "" : null',
+    '[attr.data-disabled]': '_effectiveDisabled() ? "" : null',
+    '[attr.data-readonly]': '_effectiveReadOnly() ? "" : null',
+    '[attr.data-required]': '_effectiveRequired() ? "" : null',
+    '[attr.disabled]': '_effectiveDisabled() ? "" : null',
     '[attr.name]': 'groupContext?.name() ?? null',
     '[class.base-ui-radio]': 'true',
-    '[class.base-ui-radio-checked]': 'checked()',
-    '[class.base-ui-radio-unchecked]': '!checked()',
-    '[class.base-ui-radio-disabled]': 'effectiveDisabled()',
+    '[class.base-ui-radio-checked]': '_checked()',
+    '[class.base-ui-radio-unchecked]': '!_checked()',
+    '[class.base-ui-radio-disabled]': '_effectiveDisabled()',
     '(click)': 'handleClick($event)',
     '(keydown)': 'handleKeydown($event)',
   },
@@ -83,32 +84,62 @@ export class RadioRootDirective {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
   protected readonly groupContext = inject(RADIO_GROUP_CONTEXT, { optional: true });
 
+  // Internal signals
+  protected readonly _value = signal<string | undefined>(undefined);
+  protected readonly _disabled = signal(false);
+  protected readonly _readOnly = signal(false);
+  protected readonly _required = signal(false);
+
   /**
    * Value of this radio button.
    */
-  readonly value = input.required<string>();
+  @Input({ required: true })
+  set value(value: string) {
+    this._value.set(value);
+  }
+  get value(): string {
+    return this._value()!;
+  }
 
   /**
    * Whether the radio is disabled (local override).
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
+  get disabled(): boolean {
+    return this._disabled();
+  }
 
   /**
    * Whether the radio is read-only (local override).
    */
-  readonly readOnly = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  set readOnly(value: boolean) {
+    this._readOnly.set(value);
+  }
+  get readOnly(): boolean {
+    return this._readOnly();
+  }
 
   /**
    * Whether the radio is required (local override).
    */
-  readonly required = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  set required(value: boolean) {
+    this._required.set(value);
+  }
+  get required(): boolean {
+    return this._required();
+  }
 
   /**
    * Whether this radio is checked.
    */
-  readonly checked: Signal<boolean> = computed(() => {
+  protected readonly _checked: Signal<boolean> = computed(() => {
     if (this.groupContext) {
-      return this.groupContext.value() === this.value();
+      return this.groupContext.value() === this._value();
     }
     return false;
   });
@@ -116,29 +147,29 @@ export class RadioRootDirective {
   /**
    * Effective disabled state (from group or local).
    */
-  readonly effectiveDisabled: Signal<boolean> = computed(() => {
-    return this.disabled() || (this.groupContext?.disabled() ?? false);
+  protected readonly _effectiveDisabled: Signal<boolean> = computed(() => {
+    return this._disabled() || (this.groupContext?.disabled() ?? false);
   });
 
   /**
    * Effective read-only state (from group or local).
    */
-  readonly effectiveReadOnly: Signal<boolean> = computed(() => {
-    return this.readOnly() || (this.groupContext?.readOnly() ?? false);
+  protected readonly _effectiveReadOnly: Signal<boolean> = computed(() => {
+    return this._readOnly() || (this.groupContext?.readOnly() ?? false);
   });
 
   /**
    * Effective required state (from group or local).
    */
-  readonly effectiveRequired: Signal<boolean> = computed(() => {
-    return this.required() || (this.groupContext?.required() ?? false);
+  protected readonly _effectiveRequired: Signal<boolean> = computed(() => {
+    return this._required() || (this.groupContext?.required() ?? false);
   });
 
   /**
    * Handle click event.
    */
   protected handleClick(event: MouseEvent): void {
-    if (this.effectiveDisabled() || this.effectiveReadOnly()) {
+    if (this._effectiveDisabled() || this._effectiveReadOnly()) {
       event.preventDefault();
       return;
     }
@@ -152,7 +183,7 @@ export class RadioRootDirective {
   protected handleKeydown(event: KeyboardEvent): void {
     if (event.key === ' ') {
       event.preventDefault();
-      if (this.effectiveDisabled() || this.effectiveReadOnly()) {
+      if (this._effectiveDisabled() || this._effectiveReadOnly()) {
         return;
       }
       this.select();
@@ -168,7 +199,7 @@ export class RadioRootDirective {
    */
   private select(): void {
     if (this.groupContext) {
-      this.groupContext.setValue(this.value());
+      this.groupContext.setValue(this._value()!);
     }
   }
 

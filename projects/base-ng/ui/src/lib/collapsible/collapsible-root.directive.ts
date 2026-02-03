@@ -12,9 +12,9 @@
 import {
   booleanAttribute,
   Directive,
-  input,
-  model,
-  output,
+  EventEmitter,
+  Input,
+  Output,
   signal,
 } from '@angular/core';
 import {
@@ -47,10 +47,10 @@ let nextId = 0;
     {
       provide: COLLAPSIBLE_CONTEXT,
       useFactory: (directive: CollapsibleRootDirective): CollapsibleContext => ({
-        open: directive.open(),
-        disabled: directive.disabled(),
-        openSignal: directive.open,
-        disabledSignal: directive.disabled,
+        open: directive._open(),
+        disabled: directive._disabled(),
+        openSignal: directive._open,
+        disabledSignal: directive._disabled,
         toggle: directive.toggle.bind(directive),
         setOpen: directive.setOpen.bind(directive),
         panelId: directive.panelId,
@@ -59,13 +59,13 @@ let nextId = 0;
     },
   ],
   host: {
-    '[attr.data-open]': 'open() ? "" : null',
-    '[attr.data-closed]': '!open() ? "" : null',
-    '[attr.data-disabled]': 'disabled() ? "" : null',
+    '[attr.data-open]': '_open() ? "" : null',
+    '[attr.data-closed]': '!_open() ? "" : null',
+    '[attr.data-disabled]': '_disabled() ? "" : null',
     '[class.base-ui-collapsible]': 'true',
-    '[class.base-ui-collapsible-open]': 'open()',
-    '[class.base-ui-collapsible-closed]': '!open()',
-    '[class.base-ui-collapsible-disabled]': 'disabled()',
+    '[class.base-ui-collapsible-open]': '_open()',
+    '[class.base-ui-collapsible-closed]': '!_open()',
+    '[class.base-ui-collapsible-disabled]': '_disabled()',
   },
 })
 export class CollapsibleRootDirective {
@@ -75,36 +75,64 @@ export class CollapsibleRootDirective {
   readonly panelId = `base-ui-collapsible-panel-${nextId++}`;
 
   /**
+   * Internal signal for open state.
+   */
+  readonly _open = signal(false);
+
+  /**
    * Whether the collapsible is open.
    */
-  readonly open = model(false);
+  @Input()
+  get open(): boolean {
+    return this._open();
+  }
+  set open(value: boolean) {
+    this._open.set(value);
+  }
+
+  /**
+   * Event emitter for two-way binding of open state.
+   */
+  @Output() readonly openChange = new EventEmitter<boolean>();
+
+  /**
+   * Internal signal for disabled state.
+   */
+  readonly _disabled = signal(false);
 
   /**
    * Whether the collapsible is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get disabled(): boolean {
+    return this._disabled();
+  }
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
 
   /**
    * Event emitted when open state changes.
    */
-  readonly openChanged = output<CollapsibleChangeEventDetails>();
+  @Output() readonly openChanged = new EventEmitter<CollapsibleChangeEventDetails>();
 
   /**
    * Toggle the open state.
    */
   toggle(reason: 'trigger-press' | 'programmatic' = 'programmatic'): void {
-    if (this.disabled()) return;
-    this.setOpen(!this.open(), reason);
+    if (this._disabled()) return;
+    this.setOpen(!this._open(), reason);
   }
 
   /**
    * Set the open state.
    */
   setOpen(open: boolean, reason: 'trigger-press' | 'programmatic' = 'programmatic'): void {
-    if (this.disabled()) return;
-    if (this.open() === open) return;
+    if (this._disabled()) return;
+    if (this._open() === open) return;
 
-    this.open.set(open);
+    this._open.set(open);
+    this.openChange.emit(open);
     this.openChanged.emit({ open, reason });
   }
 }

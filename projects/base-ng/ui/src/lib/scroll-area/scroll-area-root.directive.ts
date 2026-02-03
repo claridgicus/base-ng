@@ -6,9 +6,9 @@
 import {
   Directive,
   ElementRef,
+  Input,
   computed,
   inject,
-  input,
   signal,
   numberAttribute,
 } from '@angular/core';
@@ -69,7 +69,11 @@ export class ScrollAreaRootDirective {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
 
   /** Threshold for detecting overflow edges */
-  readonly overflowEdgeThreshold = input(0, { transform: numberAttribute });
+  private readonly _overflowEdgeThreshold = signal<number>(0);
+
+  @Input({ transform: numberAttribute })
+  set overflowEdgeThreshold(value: number) { this._overflowEdgeThreshold.set(value); }
+  get overflowEdgeThreshold(): number { return this._overflowEdgeThreshold(); }
 
   // Internal state
   private readonly scrollingInternal = signal(false);
@@ -210,7 +214,7 @@ export class ScrollAreaRootDirective {
     }, SCROLL_TIMEOUT);
 
     // Update overflow state
-    const threshold = this.overflowEdgeThreshold();
+    const threshold = this._overflowEdgeThreshold();
     this.overflowInternal.set({
       top: scrollTop > threshold,
       bottom: scrollTop < scrollHeight - clientHeight - threshold,

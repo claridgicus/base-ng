@@ -152,6 +152,7 @@
               }
             ],
             "styles": [
+              "projects/base-ng/docs/src/tailwind.css",
               "projects/base-ng/docs/src/styles.scss"
             ],
             "server": "projects/base-ng/docs/src/main.server.ts",

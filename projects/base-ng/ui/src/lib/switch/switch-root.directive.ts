@@ -10,12 +10,13 @@ import {
   computed,
   Directive,
   ElementRef,
+  EventEmitter,
   forwardRef,
   HostListener,
   inject,
-  input,
-  model,
-  output,
+  Input,
+  Output,
+  signal,
   type Signal,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -61,66 +62,117 @@ import {
   host: {
     role: 'switch',
     type: 'button',
-    '[attr.aria-checked]': 'checked()',
-    '[attr.aria-readonly]': 'readOnly() || null',
-    '[attr.aria-required]': 'required() || null',
-    '[attr.aria-disabled]': 'disabled() || null',
-    '[attr.data-checked]': 'checked() ? "" : null',
-    '[attr.data-unchecked]': '!checked() ? "" : null',
-    '[attr.data-disabled]': 'disabled() ? "" : null',
-    '[attr.data-readonly]': 'readOnly() ? "" : null',
-    '[attr.data-required]': 'required() ? "" : null',
-    '[attr.disabled]': 'disabled() ? "" : null',
+    '[attr.aria-checked]': '_checked()',
+    '[attr.aria-readonly]': '_readOnly() || null',
+    '[attr.aria-required]': '_required() || null',
+    '[attr.aria-disabled]': '_disabled() || null',
+    '[attr.data-checked]': '_checked() ? "" : null',
+    '[attr.data-unchecked]': '!_checked() ? "" : null',
+    '[attr.data-disabled]': '_disabled() ? "" : null',
+    '[attr.data-readonly]': '_readOnly() ? "" : null',
+    '[attr.data-required]': '_required() ? "" : null',
+    '[attr.disabled]': '_disabled() ? "" : null',
     '[class.base-ui-switch]': 'true',
-    '[class.base-ui-switch-checked]': 'checked()',
-    '[class.base-ui-switch-unchecked]': '!checked()',
-    '[class.base-ui-switch-disabled]': 'disabled()',
-    '[class.base-ui-switch-readonly]': 'readOnly()',
+    '[class.base-ui-switch-checked]': '_checked()',
+    '[class.base-ui-switch-unchecked]': '!_checked()',
+    '[class.base-ui-switch-disabled]': '_disabled()',
+    '[class.base-ui-switch-readonly]': '_readOnly()',
   },
 })
 export class SwitchRootDirective implements ControlValueAccessor {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
 
+  // Internal signals for reactive updates
+  readonly _checked = signal(false);
+  readonly _disabled = signal(false);
+  readonly _readOnly = signal(false);
+  readonly _required = signal(false);
+  readonly _name = signal<string | undefined>(undefined);
+  readonly _value = signal('on');
+  readonly _uncheckedValue = signal<string | undefined>(undefined);
+
   /**
    * Whether the switch is checked.
    * Supports two-way binding with [(checked)].
    */
-  readonly checked = model<boolean>(false);
+  @Input({ transform: booleanAttribute })
+  set checked(value: boolean) {
+    this._checked.set(value);
+  }
+  get checked(): boolean {
+    return this._checked();
+  }
 
   /**
    * Whether the switch is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
+  get disabled(): boolean {
+    return this._disabled();
+  }
 
   /**
    * Whether the switch is read-only.
    */
-  readonly readOnly = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  set readOnly(value: boolean) {
+    this._readOnly.set(value);
+  }
+  get readOnly(): boolean {
+    return this._readOnly();
+  }
 
   /**
    * Whether the switch is required.
    */
-  readonly required = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  set required(value: boolean) {
+    this._required.set(value);
+  }
+  get required(): boolean {
+    return this._required();
+  }
 
   /**
    * Name attribute for form submission.
    */
-  readonly name = input<string | undefined>(undefined);
+  @Input()
+  set name(value: string | undefined) {
+    this._name.set(value);
+  }
+  get name(): string | undefined {
+    return this._name();
+  }
 
   /**
    * Value when switch is checked (for form submission).
    */
-  readonly value = input<string>('on');
+  @Input()
+  set value(value: string) {
+    this._value.set(value);
+  }
+  get value(): string {
+    return this._value();
+  }
 
   /**
    * Value when switch is unchecked (for form submission).
    */
-  readonly uncheckedValue = input<string | undefined>(undefined);
+  @Input()
+  set uncheckedValue(value: string | undefined) {
+    this._uncheckedValue.set(value);
+  }
+  get uncheckedValue(): string | undefined {
+    return this._uncheckedValue();
+  }
 
   /**
    * Emitted when checked state changes.
    */
-  readonly checkedChange = output<boolean>();
+  @Output() checkedChange = new EventEmitter<boolean>();
 
   // ControlValueAccessor callbacks
   private onChange: (value: boolean) => void = () => {};
@@ -130,20 +182,20 @@ export class SwitchRootDirective implements ControlValueAccessor {
    * Combined state object.
    */
   readonly state: Signal<SwitchState> = computed(() => ({
-    checked: this.checked(),
-    disabled: this.disabled(),
-    readOnly: this.readOnly(),
-    required: this.required(),
+    checked: this._checked(),
+    disabled: this._disabled(),
+    readOnly: this._readOnly(),
+    required: this._required(),
   }));
 
   /**
    * Context provided to child components.
    */
   readonly context: SwitchContext = {
-    checked: computed(() => this.checked()),
-    disabled: computed(() => this.disabled()),
-    readOnly: computed(() => this.readOnly()),
-    required: computed(() => this.required()),
+    checked: this._checked,
+    disabled: this._disabled,
+    readOnly: this._readOnly,
+    required: this._required,
     state: this.state,
   };
 
@@ -152,12 +204,12 @@ export class SwitchRootDirective implements ControlValueAccessor {
    */
   @HostListener('click')
   onClick(): void {
-    if (this.disabled() || this.readOnly()) {
+    if (this._disabled() || this._readOnly()) {
       return;
     }
 
-    const newValue = !this.checked();
-    this.checked.set(newValue);
+    const newValue = !this._checked();
+    this._checked.set(newValue);
     this.checkedChange.emit(newValue);
     this.onChange(newValue);
     this.onTouched();
@@ -168,7 +220,7 @@ export class SwitchRootDirective implements ControlValueAccessor {
    */
   @HostListener('keydown', ['$event'])
   onKeyDown(event: KeyboardEvent): void {
-    if (this.disabled() || this.readOnly()) {
+    if (this._disabled() || this._readOnly()) {
       return;
     }
 
@@ -181,7 +233,7 @@ export class SwitchRootDirective implements ControlValueAccessor {
 
   // ControlValueAccessor implementation
   writeValue(value: boolean): void {
-    this.checked.set(!!value);
+    this._checked.set(!!value);
   }
 
   registerOnChange(fn: (value: boolean) => void): void {
@@ -201,7 +253,7 @@ export class SwitchRootDirective implements ControlValueAccessor {
    * Toggle the switch state programmatically.
    */
   toggle(): void {
-    if (!this.disabled() && !this.readOnly()) {
+    if (!this._disabled() && !this._readOnly()) {
       this.onClick();
     }
   }

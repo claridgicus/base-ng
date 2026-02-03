@@ -6,7 +6,8 @@
 import {
   Directive,
   inject,
-  input,
+  Input,
+  signal,
   booleanAttribute,
 } from '@angular/core';
 import {
@@ -32,19 +33,24 @@ import {
   exportAs: 'navigationMenuLink',
   host: {
     role: 'menuitem',
-    '[attr.data-active]': 'active() ? "" : null',
+    '[attr.data-active]': '_active() ? "" : null',
     '[class.base-ui-navigation-menu-link]': 'true',
-    '[class.base-ui-navigation-menu-link-active]': 'active()',
+    '[class.base-ui-navigation-menu-link-active]': '_active()',
     '(click)': 'handleClick($event)',
   },
 })
 export class NavigationMenuLinkDirective {
   private readonly rootContext = inject(NAVIGATION_MENU_ROOT_CONTEXT);
 
+  // Internal signal for input
+  readonly _active = signal<boolean>(false);
+
   /**
    * Whether this link is currently active (for highlighting the current page).
    */
-  readonly active = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  set active(value: boolean) { this._active.set(value); }
+  get active(): boolean { return this._active(); }
 
   /**
    * Handle click events to close the menu.

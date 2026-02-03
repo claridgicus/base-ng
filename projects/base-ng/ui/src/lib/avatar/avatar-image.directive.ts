@@ -9,10 +9,10 @@ import {
   AfterViewInit,
   Directive,
   ElementRef,
+  EventEmitter,
   inject,
-  input,
   OnDestroy,
-  output,
+  Output,
 } from '@angular/core';
 import { AVATAR_CONTEXT, ImageLoadingStatus } from './avatar.types';
 
@@ -47,7 +47,8 @@ export class AvatarImageDirective implements AfterViewInit, OnDestroy {
   /**
    * Emitted when loading status changes.
    */
-  readonly loadingStatusChange = output<ImageLoadingStatus>();
+  @Output()
+  readonly loadingStatusChange = new EventEmitter<ImageLoadingStatus>();
 
   ngAfterViewInit(): void {
     const img = this.elementRef.nativeElement;

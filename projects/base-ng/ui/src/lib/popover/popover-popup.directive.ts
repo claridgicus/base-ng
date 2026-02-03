@@ -12,9 +12,10 @@ import {
   effect,
   ElementRef,
   inject,
-  input,
+  Input,
   OnDestroy,
   OnInit,
+  signal,
 } from '@angular/core';
 import { POPOVER_CONTEXT, POPOVER_POSITIONER_CONTEXT } from './popover.types';
 
@@ -61,13 +62,27 @@ export class PopoverPopupDirective implements OnInit, OnDestroy {
    * Element to focus when the popover opens.
    * Can be an HTMLElement or a selector string.
    */
-  readonly initialFocus = input<HTMLElement | string | null>(null);
+  private readonly _initialFocus = signal<HTMLElement | string | null>(null);
+  @Input()
+  get initialFocus(): HTMLElement | string | null {
+    return this._initialFocus();
+  }
+  set initialFocus(value: HTMLElement | string | null) {
+    this._initialFocus.set(value);
+  }
 
   /**
    * Element to focus when the popover closes.
    * Defaults to the trigger element.
    */
-  readonly finalFocus = input<HTMLElement | string | null>(null);
+  private readonly _finalFocus = signal<HTMLElement | string | null>(null);
+  @Input()
+  get finalFocus(): HTMLElement | string | null {
+    return this._finalFocus();
+  }
+  set finalFocus(value: HTMLElement | string | null) {
+    this._finalFocus.set(value);
+  }
 
   private previouslyFocusedElement: HTMLElement | null = null;
 
@@ -120,7 +135,7 @@ export class PopoverPopupDirective implements OnInit, OnDestroy {
 
     // Focus the initial focus element after a microtask
     queueMicrotask(() => {
-      const initialFocusTarget = this.resolveElement(this.initialFocus());
+      const initialFocusTarget = this.resolveElement(this._initialFocus());
 
       if (initialFocusTarget) {
         initialFocusTarget.focus();
@@ -140,7 +155,7 @@ export class PopoverPopupDirective implements OnInit, OnDestroy {
    * Handle focus when popover closes.
    */
   handleFocusOnClose(): void {
-    const finalFocusTarget = this.resolveElement(this.finalFocus());
+    const finalFocusTarget = this.resolveElement(this._finalFocus());
 
     if (finalFocusTarget) {
       finalFocusTarget.focus();

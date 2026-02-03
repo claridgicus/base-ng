@@ -10,7 +10,8 @@ import {
   computed,
   Directive,
   inject,
-  input,
+  Input,
+  signal,
   type Signal,
 } from '@angular/core';
 import {
@@ -43,7 +44,7 @@ let nextId = 0;
     {
       provide: ACCORDION_ITEM_CONTEXT,
       useFactory: (directive: AccordionItemDirective): AccordionItemContext => ({
-        value: directive.value(),
+        value: directive._value(),
         open: directive.isOpen(),
         disabled: directive.effectiveDisabled(),
         openSignal: directive.isOpen,
@@ -81,27 +82,49 @@ export class AccordionItemDirective {
   readonly triggerId = `base-ui-accordion-trigger-${this.id}`;
 
   /**
+   * Internal signal for item value/identifier.
+   */
+  readonly _value = signal<string>('');
+
+  /**
    * Item value/identifier.
    */
-  readonly value = input.required<string>();
+  @Input({ required: true })
+  set value(v: string) {
+    this._value.set(v);
+  }
+  get value(): string {
+    return this._value();
+  }
+
+  /**
+   * Internal signal for disabled state.
+   */
+  readonly _disabled = signal<boolean>(false);
 
   /**
    * Whether this item is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  set disabled(v: boolean) {
+    this._disabled.set(v);
+  }
+  get disabled(): boolean {
+    return this._disabled();
+  }
 
   /**
    * Whether this item is open/expanded.
    */
   readonly isOpen: Signal<boolean> = computed(() => {
-    return this.accordionContext.isExpanded(this.value());
+    return this.accordionContext.isExpanded(this._value());
   });
 
   /**
    * Effective disabled state (from accordion or item).
    */
   readonly effectiveDisabled: Signal<boolean> = computed(() => {
-    return this.disabled() || this.accordionContext.disabledSignal();
+    return this._disabled() || this.accordionContext.disabledSignal();
   });
 
   /**
@@ -109,6 +132,6 @@ export class AccordionItemDirective {
    */
   toggle(): void {
     if (this.effectiveDisabled()) return;
-    this.accordionContext.toggle(this.value());
+    this.accordionContext.toggle(this._value());
   }
 }

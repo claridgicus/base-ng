@@ -5,10 +5,11 @@
 
 import {
   Directive,
+  Input,
+  Output,
+  EventEmitter,
   computed,
   effect,
-  input,
-  output,
   signal,
   booleanAttribute,
   Signal,
@@ -59,78 +60,150 @@ let comboboxIdCounter = 0;
   host: {
     '[class.base-ui-combobox-root]': 'true',
     '[class.base-ui-combobox-root-open]': 'isOpen()',
-    '[class.base-ui-combobox-root-disabled]': 'disabled()',
+    '[class.base-ui-combobox-root-disabled]': '_disabled()',
     '[attr.data-open]': 'isOpen() ? "" : null',
-    '[attr.data-disabled]': 'disabled() ? "" : null',
+    '[attr.data-disabled]': '_disabled() ? "" : null',
   },
 })
 export class ComboboxRootDirective<T = unknown> {
   private readonly rootId = `base-ui-combobox-${++comboboxIdCounter}`;
 
+  // Private signals for internal state management
+  private readonly _open = signal(false);
+  private readonly _defaultOpen = signal(false);
+  private readonly _value = signal<T | T[] | null>(null);
+  private readonly _defaultValue = signal<T | T[] | null>(null);
+  readonly _disabled = signal(false);
+  readonly _readOnly = signal(false);
+  private readonly _required = signal(false);
+  private readonly _multiple = signal(false);
+  private readonly _filterOptions = signal<ComboboxFilterOptions>({});
+  private readonly _autoHighlight = signal(true);
+
   /**
    * Whether the combobox is open.
    */
-  readonly open = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get open(): boolean {
+    return this._open();
+  }
+  set open(value: boolean) {
+    this._open.set(value);
+  }
 
   /**
    * The default open state (uncontrolled).
    */
-  readonly defaultOpen = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get defaultOpen(): boolean {
+    return this._defaultOpen();
+  }
+  set defaultOpen(value: boolean) {
+    this._defaultOpen.set(value);
+  }
 
   /**
    * The selected value.
    */
-  readonly value = input<T | T[] | null>(null);
+  @Input()
+  get value(): T | T[] | null {
+    return this._value();
+  }
+  set value(val: T | T[] | null) {
+    this._value.set(val);
+  }
 
   /**
    * The default value (uncontrolled).
    */
-  readonly defaultValue = input<T | T[] | null>(null);
+  @Input()
+  get defaultValue(): T | T[] | null {
+    return this._defaultValue();
+  }
+  set defaultValue(val: T | T[] | null) {
+    this._defaultValue.set(val);
+  }
 
   /**
    * Whether the combobox is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get disabled(): boolean {
+    return this._disabled();
+  }
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
 
   /**
    * Whether the combobox is read-only.
    */
-  readonly readOnly = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get readOnly(): boolean {
+    return this._readOnly();
+  }
+  set readOnly(value: boolean) {
+    this._readOnly.set(value);
+  }
 
   /**
    * Whether the combobox is required.
    */
-  readonly required = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get required(): boolean {
+    return this._required();
+  }
+  set required(value: boolean) {
+    this._required.set(value);
+  }
 
   /**
    * Whether multiple selection is allowed.
    */
-  readonly multiple = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get multiple(): boolean {
+    return this._multiple();
+  }
+  set multiple(value: boolean) {
+    this._multiple.set(value);
+  }
 
   /**
    * Filter options.
    */
-  readonly filterOptions = input<ComboboxFilterOptions>({});
+  @Input()
+  get filterOptions(): ComboboxFilterOptions {
+    return this._filterOptions();
+  }
+  set filterOptions(value: ComboboxFilterOptions) {
+    this._filterOptions.set(value);
+  }
 
   /**
    * Whether to auto-highlight the first item when filtering.
    */
-  readonly autoHighlight = input(true, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get autoHighlight(): boolean {
+    return this._autoHighlight();
+  }
+  set autoHighlight(value: boolean) {
+    this._autoHighlight.set(value);
+  }
 
   /**
    * Event emitted when the open state changes.
    */
-  readonly openChange = output<boolean>();
+  @Output() readonly openChange = new EventEmitter<boolean>();
 
   /**
    * Event emitted when the value changes.
    */
-  readonly valueChange = output<T | T[] | null>();
+  @Output() readonly valueChange = new EventEmitter<T | T[] | null>();
 
   /**
    * Event emitted when the input value changes.
    */
-  readonly inputValueChange = output<string>();
+  @Output() readonly inputValueChange = new EventEmitter<string>();
 
   // Internal state signals
   private readonly openInternal = signal(false);
@@ -145,13 +218,13 @@ export class ComboboxRootDirective<T = unknown> {
 
   /** Whether the combobox is open */
   readonly isOpen = computed(() => {
-    const openInput = this.open();
+    const openInput = this._open();
     return openInput || this.openInternal();
   });
 
   /** The current selected value */
   readonly currentValue = computed(() => {
-    const valueInput = this.value();
+    const valueInput = this._value();
     if (valueInput !== null) {
       return valueInput;
     }
@@ -165,7 +238,7 @@ export class ComboboxRootDirective<T = unknown> {
   readonly filteredItems = computed(() => {
     const allItems = this.items();
     const inputValue = this.inputValueInternal();
-    const options = this.filterOptions();
+    const options = this._filterOptions();
 
     return defaultComboboxFilter(
       allItems,
@@ -181,8 +254,8 @@ export class ComboboxRootDirective<T = unknown> {
   constructor() {
     // Initialize from defaults
     effect(() => {
-      const defaultOpen = this.defaultOpen();
-      const defaultValue = this.defaultValue();
+      const defaultOpen = this._defaultOpen();
+      const defaultValue = this._defaultValue();
 
       untracked(() => {
         if (defaultOpen) {
@@ -197,7 +270,7 @@ export class ComboboxRootDirective<T = unknown> {
     // Auto-highlight first item when filtering
     effect(() => {
       const filtered = this.filteredItems();
-      const autoHighlight = this.autoHighlight();
+      const autoHighlight = this._autoHighlight();
       const isOpen = this.isOpen();
 
       if (autoHighlight && isOpen && filtered.length > 0) {
@@ -223,24 +296,24 @@ export class ComboboxRootDirective<T = unknown> {
         return self.inputValueInternal();
       },
       get disabled() {
-        return self.disabled();
+        return self._disabled();
       },
       get readOnly() {
-        return self.readOnly();
+        return self._readOnly();
       },
       get required() {
-        return self.required();
+        return self._required();
       },
       get multiple() {
-        return self.multiple();
+        return self._multiple();
       },
       openSignal: this.isOpen,
       valueSignal: this.currentValue,
       inputValueSignal: this.inputValueInternal.asReadonly(),
-      disabledSignal: computed(() => this.disabled()) as Signal<boolean>,
-      readOnlySignal: computed(() => this.readOnly()) as Signal<boolean>,
-      requiredSignal: computed(() => this.required()) as Signal<boolean>,
-      multipleSignal: computed(() => this.multiple()) as Signal<boolean>,
+      disabledSignal: this._disabled.asReadonly() as Signal<boolean>,
+      readOnlySignal: this._readOnly.asReadonly() as Signal<boolean>,
+      requiredSignal: this._required.asReadonly() as Signal<boolean>,
+      multipleSignal: this._multiple.asReadonly() as Signal<boolean>,
       openMethodSignal: this.openMethodInternal.asReadonly(),
       rootId: this.rootId,
       setOpen: this.setOpen.bind(this),
@@ -270,7 +343,7 @@ export class ComboboxRootDirective<T = unknown> {
    * Set the open state.
    */
   setOpen(open: boolean, method: ComboboxOpenMethod = null): void {
-    if (this.disabled() || this.readOnly()) {
+    if (this._disabled() || this._readOnly()) {
       return;
     }
 
@@ -287,7 +360,7 @@ export class ComboboxRootDirective<T = unknown> {
    * Set the value.
    */
   setValue(value: T | T[] | null): void {
-    if (this.disabled() || this.readOnly()) {
+    if (this._disabled() || this._readOnly()) {
       return;
     }
 
@@ -295,7 +368,7 @@ export class ComboboxRootDirective<T = unknown> {
     this.valueChange.emit(value);
 
     // Update input value to match selected item in single mode
-    if (!this.multiple() && value !== null) {
+    if (!this._multiple() && value !== null) {
       const items = this.items();
       const selectedItem = items.find((item) =>
         this.valueEquality(item.value, value as T)
@@ -318,7 +391,7 @@ export class ComboboxRootDirective<T = unknown> {
    * Toggle a value for multiple selection.
    */
   toggleValue(value: T): void {
-    if (!this.multiple()) {
+    if (!this._multiple()) {
       this.setValue(value);
       return;
     }
@@ -338,7 +411,7 @@ export class ComboboxRootDirective<T = unknown> {
    * Clear value and input.
    */
   clear(): void {
-    this.setValue(this.multiple() ? [] : null);
+    this.setValue(this._multiple() ? [] : null);
     this.setInputValue('');
     this.highlightedValueInternal.set(null);
   }

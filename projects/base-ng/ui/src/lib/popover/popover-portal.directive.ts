@@ -15,8 +15,9 @@ import {
   EmbeddedViewRef,
   inject,
   Injector,
-  input,
+  Input,
   OnDestroy,
+  signal,
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
@@ -54,20 +55,34 @@ export class PopoverPortalDirective implements OnDestroy {
    * The container element to render the portal content into.
    * Defaults to document.body.
    */
-  readonly container = input<HTMLElement | null>(null);
+  private readonly _container = signal<HTMLElement | null>(null);
+  @Input()
+  get container(): HTMLElement | null {
+    return this._container();
+  }
+  set container(value: HTMLElement | null) {
+    this._container.set(value);
+  }
 
   /**
    * Whether to keep the portal content mounted when closed.
    * Useful for preserving state.
    */
-  readonly keepMounted = input(false, { transform: booleanAttribute });
+  private readonly _keepMounted = signal(false);
+  @Input({ transform: booleanAttribute })
+  get keepMounted(): boolean {
+    return this._keepMounted();
+  }
+  set keepMounted(value: boolean) {
+    this._keepMounted.set(value);
+  }
 
   private embeddedView: EmbeddedViewRef<unknown> | null = null;
 
   constructor() {
     effect(() => {
       const isOpen = this.context.openSignal();
-      const keepMounted = this.keepMounted();
+      const keepMounted = this._keepMounted();
 
       if (isOpen || keepMounted) {
         this.mountPortal();
@@ -92,7 +107,7 @@ export class PopoverPortalDirective implements OnDestroy {
     this.embeddedView = this.viewContainerRef.createEmbeddedView(this.templateRef);
     this.embeddedView.detectChanges();
 
-    const container = this.container() || this.document.body;
+    const container = this._container() || this.document.body;
 
     for (const node of this.embeddedView.rootNodes) {
       container.appendChild(node);

@@ -5,9 +5,10 @@
 
 import {
   Directive,
+  Input,
   computed,
   inject,
-  input,
+  signal,
   booleanAttribute,
 } from '@angular/core';
 import {
@@ -35,11 +36,11 @@ import {
   exportAs: 'toolbarButton',
   host: {
     type: 'button',
-    '[attr.disabled]': 'isDisabled() && !focusableWhenDisabled() ? "" : null',
+    '[attr.disabled]': 'isDisabled() && !_focusableWhenDisabled() ? "" : null',
     '[attr.aria-disabled]': 'isDisabled() ? "true" : null',
     '[attr.data-disabled]': 'isDisabled() ? "" : null',
     '[attr.data-orientation]': 'rootContext.orientationSignal()',
-    '[attr.tabindex]': 'isDisabled() && !focusableWhenDisabled() ? -1 : 0',
+    '[attr.tabindex]': 'isDisabled() && !_focusableWhenDisabled() ? -1 : 0',
     '[class.base-ui-toolbar-button]': 'true',
     '[class.base-ui-toolbar-button-disabled]': 'isDisabled()',
   },
@@ -48,22 +49,40 @@ export class ToolbarButtonDirective {
   protected readonly rootContext = inject(TOOLBAR_ROOT_CONTEXT);
   private readonly groupContext = inject(TOOLBAR_GROUP_CONTEXT, { optional: true });
 
+  /** Internal signal for disabled state */
+  private readonly _disabled = signal<boolean>(false);
+
+  /** Internal signal for focusableWhenDisabled state */
+  readonly _focusableWhenDisabled = signal<boolean>(true);
+
   /**
    * Whether the button is disabled.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
+  get disabled(): boolean {
+    return this._disabled();
+  }
 
   /**
    * Whether the button remains focusable when disabled.
    */
-  readonly focusableWhenDisabled = input(true, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  set focusableWhenDisabled(value: boolean) {
+    this._focusableWhenDisabled.set(value);
+  }
+  get focusableWhenDisabled(): boolean {
+    return this._focusableWhenDisabled();
+  }
 
   /** Whether this button is disabled (combines all disabled states) */
   readonly isDisabled = computed(() => {
     return (
       this.rootContext.disabledSignal() ||
       this.groupContext?.disabledSignal() ||
-      this.disabled()
+      this._disabled()
     );
   });
 }

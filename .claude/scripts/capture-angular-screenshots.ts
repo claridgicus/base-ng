@@ -87,9 +87,44 @@ async function findTrigger(playground: Locator): Promise<Locator> {
   return playground.locator('button').first();
 }
 
+// Fixed capture dimensions for consistent comparison (must match React script)
+const CAPTURE_WIDTH = 400;
+const CAPTURE_HEIGHT = 300;
+
+async function captureComponentArea(
+  page: Page,
+  trigger: Locator,
+  outputPath: string
+): Promise<void> {
+  // Get trigger position
+  const box = await trigger.boundingBox();
+  if (!box) {
+    throw new Error('Could not get trigger bounding box');
+  }
+
+  // Calculate centered clip area around trigger
+  const centerX = box.x + box.width / 2;
+  const centerY = box.y + box.height / 2;
+
+  const clipX = Math.max(0, centerX - CAPTURE_WIDTH / 2);
+  const clipY = Math.max(0, centerY - CAPTURE_HEIGHT / 2);
+
+  // Capture fixed-size area centered on trigger
+  await page.screenshot({
+    path: outputPath,
+    clip: {
+      x: clipX,
+      y: clipY,
+      width: CAPTURE_WIDTH,
+      height: CAPTURE_HEIGHT
+    }
+  });
+}
+
 async function captureAngularScreenshots(): Promise<void> {
   console.log(`\nCapturing Angular screenshots for: ${component}`);
   console.log('='.repeat(50));
+  console.log(`Using fixed capture size: ${CAPTURE_WIDTH}x${CAPTURE_HEIGHT}`);
 
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({
@@ -131,10 +166,7 @@ async function captureAngularScreenshots(): Promise<void> {
 
     // 1. DEFAULT STATE - Component at rest
     console.log('  - default');
-    await playground.screenshot({
-      path: path.join(outputDir, `${component}-default.png`),
-      animations: 'disabled'
-    });
+    await captureComponentArea(page, trigger, path.join(outputDir, `${component}-default.png`));
     results.push({ state: 'default', path: `${component}-default.png`, success: true });
 
     // 2. HOVER STATE - Mouse over trigger
@@ -142,9 +174,7 @@ async function captureAngularScreenshots(): Promise<void> {
     await trigger.hover();
     // Tooltips often have a delay (400-600ms) before appearing
     await waitForAnimations(page, 800);
-    await playground.screenshot({
-      path: path.join(outputDir, `${component}-hover.png`)
-    });
+    await captureComponentArea(page, trigger, path.join(outputDir, `${component}-hover.png`));
     results.push({ state: 'hover', path: `${component}-hover.png`, success: true });
 
     // 3. ACTIVE/OPEN STATE - Click to open
@@ -153,9 +183,7 @@ async function captureAngularScreenshots(): Promise<void> {
     await waitForAnimations(page, 200);
     await trigger.click();
     await waitForAnimations(page, 500);
-    await playground.screenshot({
-      path: path.join(outputDir, `${component}-active.png`)
-    });
+    await captureComponentArea(page, trigger, path.join(outputDir, `${component}-active.png`));
     results.push({ state: 'active', path: `${component}-active.png`, success: true });
 
     // 4. FOCUSED STATE - Tab to focus
@@ -163,9 +191,7 @@ async function captureAngularScreenshots(): Promise<void> {
     await page.keyboard.press('Escape');
     await waitForAnimations(page, 200);
     await trigger.focus();
-    await playground.screenshot({
-      path: path.join(outputDir, `${component}-focused.png`)
-    });
+    await captureComponentArea(page, trigger, path.join(outputDir, `${component}-focused.png`));
     results.push({ state: 'focused', path: `${component}-focused.png`, success: true });
 
     // 5. Extract demo content for reference

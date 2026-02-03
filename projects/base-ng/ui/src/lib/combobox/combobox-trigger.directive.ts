@@ -5,10 +5,11 @@
 
 import {
   Directive,
+  Input,
   ElementRef,
   computed,
   inject,
-  input,
+  signal,
   booleanAttribute,
   afterNextRender,
 } from '@angular/core';
@@ -53,10 +54,19 @@ export class ComboboxTriggerDirective {
   protected readonly rootContext = inject(COMBOBOX_ROOT_CONTEXT);
   private readonly elementRef = inject(ElementRef<HTMLButtonElement>);
 
+  // Private signal for internal state management
+  private readonly _disabled = signal(false);
+
   /**
    * Whether the trigger is disabled independently.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get disabled(): boolean {
+    return this._disabled();
+  }
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
 
   /** Trigger element ID */
   readonly triggerId = `${this.rootContext.rootId}-trigger`;
@@ -66,7 +76,7 @@ export class ComboboxTriggerDirective {
 
   /** Whether the trigger is disabled */
   readonly isDisabled = computed(() => {
-    return this.rootContext.disabledSignal() || this.disabled();
+    return this.rootContext.disabledSignal() || this._disabled();
   });
 
   constructor() {

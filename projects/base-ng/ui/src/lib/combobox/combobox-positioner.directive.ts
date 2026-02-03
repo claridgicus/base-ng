@@ -5,11 +5,12 @@
 
 import {
   Directive,
+  Input,
   ElementRef,
   computed,
   effect,
   inject,
-  input,
+  signal,
   afterNextRender,
   booleanAttribute,
   numberAttribute,
@@ -64,16 +65,57 @@ export class ComboboxPositionerDirective implements OnDestroy {
   protected readonly floatingService = inject(FloatingService);
   private readonly elementRef = inject(ElementRef<HTMLElement>);
 
-  readonly side = input<ComboboxSide>('bottom');
-  readonly align = input<ComboboxAlign>('start');
-  readonly sideOffset = input(4, { transform: numberAttribute });
-  readonly alignOffset = input(0, { transform: numberAttribute });
-  readonly keepMounted = input(false, { transform: booleanAttribute });
+  // Private signals for internal state management
+  private readonly _side = signal<ComboboxSide>('bottom');
+  private readonly _align = signal<ComboboxAlign>('start');
+  private readonly _sideOffset = signal(4);
+  private readonly _alignOffset = signal(0);
+  private readonly _keepMounted = signal(false);
+
+  @Input()
+  get side(): ComboboxSide {
+    return this._side();
+  }
+  set side(value: ComboboxSide) {
+    this._side.set(value);
+  }
+
+  @Input()
+  get align(): ComboboxAlign {
+    return this._align();
+  }
+  set align(value: ComboboxAlign) {
+    this._align.set(value);
+  }
+
+  @Input({ transform: numberAttribute })
+  get sideOffset(): number {
+    return this._sideOffset();
+  }
+  set sideOffset(value: number) {
+    this._sideOffset.set(value);
+  }
+
+  @Input({ transform: numberAttribute })
+  get alignOffset(): number {
+    return this._alignOffset();
+  }
+  set alignOffset(value: number) {
+    this._alignOffset.set(value);
+  }
+
+  @Input({ transform: booleanAttribute })
+  get keepMounted(): boolean {
+    return this._keepMounted();
+  }
+  set keepMounted(value: boolean) {
+    this._keepMounted.set(value);
+  }
 
   /** Computed placement for floating-ui */
   readonly placementSignal = computed<FloatingPlacement>(() => {
-    const side = this.side();
-    const alignment = this.align();
+    const side = this._side();
+    const alignment = this._align();
     if (alignment && alignment !== 'center') {
       return `${side}-${alignment}` as FloatingPlacement;
     }
@@ -101,7 +143,7 @@ export class ComboboxPositionerDirective implements OnDestroy {
   });
 
   readonly isVisible = computed(() => {
-    return this.rootContext.openSignal() || this.keepMounted();
+    return this.rootContext.openSignal() || this._keepMounted();
   });
 
   readonly minWidthStyle = computed(() => {
@@ -157,8 +199,8 @@ export class ComboboxPositionerDirective implements OnDestroy {
     // Watch for placement/offset changes
     effect(() => {
       const placement = this.placementSignal();
-      const sideOffset = this.sideOffset();
-      const alignOffset = this.alignOffset();
+      const sideOffset = this._sideOffset();
+      const alignOffset = this._alignOffset();
 
       this.floatingService.configure({
         placement,
@@ -193,7 +235,7 @@ export class ComboboxPositionerDirective implements OnDestroy {
     this.floatingService.configure({
       placement: this.placementSignal(),
       middleware: [
-        offset({ mainAxis: this.sideOffset(), crossAxis: this.alignOffset() }),
+        offset({ mainAxis: this._sideOffset(), crossAxis: this._alignOffset() }),
         flip({ padding: 8 }),
         shift({ padding: 8 }),
         size({

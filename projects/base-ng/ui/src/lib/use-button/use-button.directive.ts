@@ -9,10 +9,12 @@ import {
   computed,
   Directive,
   ElementRef,
+  EventEmitter,
   HostListener,
   inject,
-  input,
-  output,
+  Input,
+  Output,
+  signal,
   type Signal,
 } from '@angular/core';
 
@@ -82,58 +84,113 @@ export interface ButtonProps {
     '[attr.role]': 'role()',
     '[attr.aria-disabled]': 'ariaDisabled()',
     '[class.base-ui-button]': 'true',
-    '[class.base-ui-button-disabled]': 'disabled()',
+    '[class.base-ui-button-disabled]': '_disabled()',
   },
 })
 export class UseButtonDirective {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
 
   /**
+   * Internal signal for disabled state.
+   */
+  readonly _disabled = signal<boolean>(false);
+
+  /**
    * Whether the button is disabled.
    */
-  readonly disabled = input<boolean>(false);
+  @Input()
+  get disabled(): boolean {
+    return this._disabled();
+  }
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
+
+  /**
+   * Internal signal for focusableWhenDisabled state.
+   */
+  private readonly _focusableWhenDisabled = signal<boolean>(false);
 
   /**
    * Whether the button can be focused when disabled.
    */
-  readonly focusableWhenDisabled = input<boolean>(false);
+  @Input()
+  get focusableWhenDisabled(): boolean {
+    return this._focusableWhenDisabled();
+  }
+  set focusableWhenDisabled(value: boolean) {
+    this._focusableWhenDisabled.set(value);
+  }
+
+  /**
+   * Internal signal for tabIndex.
+   */
+  private readonly _tabIndex = signal<number | undefined>(undefined);
 
   /**
    * Custom tabindex for the button.
    */
-  readonly tabIndex = input<number | undefined>(undefined);
+  @Input()
+  get tabIndex(): number | undefined {
+    return this._tabIndex();
+  }
+  set tabIndex(value: number | undefined) {
+    this._tabIndex.set(value);
+  }
+
+  /**
+   * Internal signal for native state.
+   */
+  private readonly _native = signal<boolean>(true);
 
   /**
    * Whether the element is a native button.
    */
-  readonly native = input<boolean>(true);
+  @Input()
+  get native(): boolean {
+    return this._native();
+  }
+  set native(value: boolean) {
+    this._native.set(value);
+  }
+
+  /**
+   * Internal signal for button type.
+   */
+  private readonly _type = signal<'button' | 'submit' | 'reset'>('button');
 
   /**
    * Button type attribute (for native buttons only).
    */
-  readonly type = input<'button' | 'submit' | 'reset'>('button');
+  @Input()
+  get type(): 'button' | 'submit' | 'reset' {
+    return this._type();
+  }
+  set type(value: 'button' | 'submit' | 'reset') {
+    this._type.set(value);
+  }
 
   /**
    * Emitted when the button is clicked (keyboard or mouse).
    */
-  readonly buttonClick = output<MouseEvent | KeyboardEvent>();
+  @Output() readonly buttonClick = new EventEmitter<MouseEvent | KeyboardEvent>();
 
   /**
    * Emitted when the button is pressed down.
    */
-  readonly buttonPress = output<MouseEvent | KeyboardEvent>();
+  @Output() readonly buttonPress = new EventEmitter<MouseEvent | KeyboardEvent>();
 
   /**
    * Emitted when the button is released.
    */
-  readonly buttonRelease = output<MouseEvent | KeyboardEvent>();
+  @Output() readonly buttonRelease = new EventEmitter<MouseEvent | KeyboardEvent>();
 
   /**
    * Computed button type attribute.
    */
   readonly buttonType: Signal<'button' | 'submit' | 'reset' | null> = computed(() => {
-    if (this.native()) {
-      return this.type();
+    if (this._native()) {
+      return this._type();
     }
     return null;
   });
@@ -142,7 +199,7 @@ export class UseButtonDirective {
    * Native disabled attribute (only for native buttons when not focusableWhenDisabled).
    */
   readonly nativeDisabled: Signal<boolean | null> = computed(() => {
-    if (this.native() && this.disabled() && !this.focusableWhenDisabled()) {
+    if (this._native() && this._disabled() && !this._focusableWhenDisabled()) {
       return true;
     }
     return null;
@@ -152,18 +209,18 @@ export class UseButtonDirective {
    * Computed tabindex.
    */
   readonly effectiveTabIndex: Signal<number | null> = computed(() => {
-    const customTabIndex = this.tabIndex();
+    const customTabIndex = this._tabIndex();
     if (customTabIndex !== undefined) {
       return customTabIndex;
     }
 
     // Disabled and not focusable = -1
-    if (this.disabled() && !this.focusableWhenDisabled()) {
+    if (this._disabled() && !this._focusableWhenDisabled()) {
       return -1;
     }
 
     // Non-native elements need tabindex 0 to be focusable
-    if (!this.native()) {
+    if (!this._native()) {
       return 0;
     }
 
@@ -174,7 +231,7 @@ export class UseButtonDirective {
    * Role attribute for non-native buttons.
    */
   readonly role: Signal<string | null> = computed(() => {
-    if (!this.native()) {
+    if (!this._native()) {
       return 'button';
     }
     return null;
@@ -184,11 +241,11 @@ export class UseButtonDirective {
    * aria-disabled attribute for accessibility.
    */
   readonly ariaDisabled: Signal<'true' | 'false' | null> = computed(() => {
-    if (this.disabled()) {
+    if (this._disabled()) {
       return 'true';
     }
     // Only set false explicitly for non-native elements
-    if (!this.native()) {
+    if (!this._native()) {
       return 'false';
     }
     return null;
@@ -199,7 +256,7 @@ export class UseButtonDirective {
    */
   @HostListener('click', ['$event'])
   onClick(event: MouseEvent): void {
-    if (this.disabled()) {
+    if (this._disabled()) {
       event.preventDefault();
       event.stopPropagation();
       return;
@@ -212,7 +269,7 @@ export class UseButtonDirective {
    */
   @HostListener('keydown', ['$event'])
   onKeyDown(event: KeyboardEvent): void {
-    if (this.disabled()) {
+    if (this._disabled()) {
       // Prevent default for Space and Enter when disabled
       if (event.key === ' ' || event.key === 'Enter') {
         event.preventDefault();
@@ -221,7 +278,7 @@ export class UseButtonDirective {
     }
 
     // For non-native elements, handle Enter and Space
-    if (!this.native()) {
+    if (!this._native()) {
       if (event.key === 'Enter') {
         event.preventDefault();
         this.buttonPress.emit(event);
@@ -240,11 +297,11 @@ export class UseButtonDirective {
    */
   @HostListener('keyup', ['$event'])
   onKeyUp(event: KeyboardEvent): void {
-    if (this.disabled()) {
+    if (this._disabled()) {
       return;
     }
 
-    if (!this.native() && event.key === ' ') {
+    if (!this._native() && event.key === ' ') {
       event.preventDefault();
       this.buttonClick.emit(event);
       this.buttonRelease.emit(event);
@@ -256,7 +313,7 @@ export class UseButtonDirective {
    */
   @HostListener('pointerdown', ['$event'])
   onPointerDown(event: PointerEvent): void {
-    if (this.disabled()) {
+    if (this._disabled()) {
       event.preventDefault();
       return;
     }
@@ -268,7 +325,7 @@ export class UseButtonDirective {
    */
   @HostListener('pointerup', ['$event'])
   onPointerUp(event: PointerEvent): void {
-    if (this.disabled()) {
+    if (this._disabled()) {
       return;
     }
     this.buttonRelease.emit(event);
@@ -295,9 +352,9 @@ export class UseButtonDirective {
   getButtonProps(): ButtonProps {
     const props: ButtonProps = {};
 
-    if (this.native()) {
-      props.type = this.type();
-      if (this.disabled() && !this.focusableWhenDisabled()) {
+    if (this._native()) {
+      props.type = this._type();
+      if (this._disabled() && !this._focusableWhenDisabled()) {
         props.disabled = true;
       }
     } else {
@@ -309,7 +366,7 @@ export class UseButtonDirective {
       props.tabIndex = tabIndex;
     }
 
-    if (this.disabled()) {
+    if (this._disabled()) {
       props['aria-disabled'] = true;
     }
 

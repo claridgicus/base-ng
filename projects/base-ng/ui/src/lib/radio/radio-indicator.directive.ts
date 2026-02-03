@@ -14,7 +14,8 @@ import {
   computed,
   Directive,
   inject,
-  input,
+  Input,
+  signal,
   type Signal,
 } from '@angular/core';
 import { RADIO_CONTEXT } from './radio.types';
@@ -40,23 +41,32 @@ import { RADIO_CONTEXT } from './radio.types';
     '[attr.data-unchecked]': '!context.checkedSignal() ? "" : null',
     '[attr.data-disabled]': 'context.disabled ? "" : null',
     '[attr.data-readonly]': 'context.readOnly ? "" : null',
-    '[style.display]': 'shouldShow() ? null : "none"',
+    '[style.display]': '_shouldShow() ? null : "none"',
     '[class.base-ui-radio-indicator]': 'true',
   },
 })
 export class RadioIndicatorDirective {
   protected readonly context = inject(RADIO_CONTEXT);
 
+  // Internal signal
+  protected readonly _keepMounted = signal(false);
+
   /**
    * Whether to keep the indicator mounted when hidden.
    */
-  readonly keepMounted = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  set keepMounted(value: boolean) {
+    this._keepMounted.set(value);
+  }
+  get keepMounted(): boolean {
+    return this._keepMounted();
+  }
 
   /**
    * Whether the indicator should be displayed.
    */
-  readonly shouldShow: Signal<boolean> = computed(() => {
-    if (this.keepMounted()) {
+  protected readonly _shouldShow: Signal<boolean> = computed(() => {
+    if (this._keepMounted()) {
       return true;
     }
     return this.context.checkedSignal();

@@ -3,7 +3,7 @@
  * @source https://github.com/mui/base-ui/blob/master/packages/react/src/combobox/empty/ComboboxEmpty.tsx
  */
 
-import { Directive, computed, inject, input, booleanAttribute } from '@angular/core';
+import { Directive, computed, inject, Input, booleanAttribute, signal } from '@angular/core';
 import { AUTOCOMPLETE_ROOT_CONTEXT } from './autocomplete.types';
 
 /**
@@ -33,10 +33,19 @@ import { AUTOCOMPLETE_ROOT_CONTEXT } from './autocomplete.types';
 export class AutocompleteEmptyDirective {
   protected readonly rootContext = inject(AUTOCOMPLETE_ROOT_CONTEXT);
 
+  // Internal signal for keepMounted input
+  private readonly _keepMounted = signal(false);
+
   /**
    * Whether to keep the empty state mounted when items exist.
    */
-  readonly keepMounted = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get keepMounted(): boolean {
+    return this._keepMounted();
+  }
+  set keepMounted(value: boolean) {
+    this._keepMounted.set(value);
+  }
 
   /** Whether there are no filtered items */
   readonly isEmpty = computed(() => {
@@ -46,6 +55,6 @@ export class AutocompleteEmptyDirective {
 
   /** Whether to show the empty state */
   readonly shouldShow = computed(() => {
-    return this.keepMounted() || this.isEmpty();
+    return this._keepMounted() || this.isEmpty();
   });
 }

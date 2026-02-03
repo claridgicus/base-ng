@@ -14,9 +14,10 @@ import {
   Directive,
   ElementRef,
   inject,
-  input,
+  Input,
   OnDestroy,
   OnInit,
+  signal,
   type Signal,
 } from '@angular/core';
 import { FIELD_CONTEXT, FieldValidityData } from './field.types';
@@ -62,11 +63,20 @@ export class FieldErrorDirective implements OnInit, OnDestroy {
   protected readonly context = inject(FIELD_CONTEXT);
   private readonly elementRef = inject(ElementRef<HTMLElement>);
 
+  // Internal signal for reactive updates
+  readonly _match = signal<ValidityStateKey | boolean | undefined>(undefined);
+
   /**
    * Match a specific validity state to show this error.
    * If not provided, shows when field is invalid.
    */
-  readonly match = input<ValidityStateKey | boolean | undefined>(undefined);
+  @Input()
+  set match(value: ValidityStateKey | boolean | undefined) {
+    this._match.set(value);
+  }
+  get match(): ValidityStateKey | boolean | undefined {
+    return this._match();
+  }
 
   /**
    * Error ID.
@@ -78,7 +88,7 @@ export class FieldErrorDirective implements OnInit, OnDestroy {
    */
   readonly shouldShow: Signal<boolean> = computed(() => {
     const validity = this.context.validityData();
-    const matchValue = this.match();
+    const matchValue = this._match();
 
     // If no validity data, don't show
     if (!validity) {

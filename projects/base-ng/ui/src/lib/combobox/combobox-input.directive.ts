@@ -5,10 +5,11 @@
 
 import {
   Directive,
+  Input,
   ElementRef,
   computed,
   inject,
-  input,
+  signal,
   booleanAttribute,
   afterNextRender,
   effect,
@@ -60,10 +61,19 @@ export class ComboboxInputDirective {
   protected readonly rootContext = inject(COMBOBOX_ROOT_CONTEXT);
   private readonly elementRef = inject(ElementRef<HTMLInputElement>);
 
+  // Private signal for internal state management
+  private readonly _disabled = signal(false);
+
   /**
    * Whether the input is disabled independently.
    */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get disabled(): boolean {
+    return this._disabled();
+  }
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
 
   /** Input element ID */
   readonly inputId = `${this.rootContext.rootId}-input`;
@@ -73,7 +83,7 @@ export class ComboboxInputDirective {
 
   /** Whether the input is disabled */
   readonly isDisabled = computed(() => {
-    return this.rootContext.disabledSignal() || this.disabled();
+    return this.rootContext.disabledSignal() || this._disabled();
   });
 
   constructor() {

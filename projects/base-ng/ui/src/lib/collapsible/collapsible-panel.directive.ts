@@ -15,7 +15,8 @@ import {
   Directive,
   HostListener,
   inject,
-  input,
+  Input,
+  signal,
   type Signal,
 } from '@angular/core';
 import { COLLAPSIBLE_CONTEXT } from './collapsible.types';
@@ -54,16 +55,38 @@ export class CollapsiblePanelDirective {
   protected readonly context = inject(COLLAPSIBLE_CONTEXT);
 
   /**
+   * Internal signal for keepMounted.
+   */
+  readonly _keepMounted = signal(false);
+
+  /**
    * Whether to keep the panel mounted when closed.
    */
-  readonly keepMounted = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get keepMounted(): boolean {
+    return this._keepMounted();
+  }
+  set keepMounted(value: boolean) {
+    this._keepMounted.set(value);
+  }
+
+  /**
+   * Internal signal for hiddenUntilFound.
+   */
+  readonly _hiddenUntilFound = signal(false);
 
   /**
    * Whether to use hidden="until-found" for browser search support.
    * When true, the panel remains in the DOM and can be found via browser search (Ctrl+F).
    * This automatically implies keepMounted behavior.
    */
-  readonly hiddenUntilFound = input(false, { transform: booleanAttribute });
+  @Input({ transform: booleanAttribute })
+  get hiddenUntilFound(): boolean {
+    return this._hiddenUntilFound();
+  }
+  set hiddenUntilFound(value: boolean) {
+    this._hiddenUntilFound.set(value);
+  }
 
   /**
    * Computed hidden attribute value.
@@ -73,10 +96,10 @@ export class CollapsiblePanelDirective {
     if (this.context.openSignal()) {
       return null;
     }
-    if (this.hiddenUntilFound()) {
+    if (this._hiddenUntilFound()) {
       return 'until-found';
     }
-    if (this.keepMounted()) {
+    if (this._keepMounted()) {
       return null; // Keep mounted but use display:none instead
     }
     return '';
@@ -86,7 +109,7 @@ export class CollapsiblePanelDirective {
    * Whether the panel should be visible (controls display:none).
    */
   readonly shouldShow: Signal<boolean> = computed(() => {
-    if (this.hiddenUntilFound()) {
+    if (this._hiddenUntilFound()) {
       // hiddenUntilFound uses hidden attribute, not display
       return true;
     }
@@ -99,7 +122,7 @@ export class CollapsiblePanelDirective {
    */
   @HostListener('beforematch')
   onBeforeMatch(): void {
-    if (this.hiddenUntilFound()) {
+    if (this._hiddenUntilFound()) {
       this.context.setOpen(true, 'programmatic');
     }
   }
