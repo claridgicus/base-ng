@@ -140,7 +140,7 @@
 | #   | Task                                               | Status | Source Reference              |
 | --- | -------------------------------------------------- | ------ | ----------------------------- |
 | 61  | Document Select component                          | [x]    | `components/select`           |
-| 62  | Document Combobox component                        | [ ]    | `components/combobox`         |
+| 62  | Document Combobox component                        | [x]    | `components/combobox`         |
 | 63  | Document Autocomplete component                    | [ ]    | `components/autocomplete`     |
 | 64  | Document Scroll Area component                     | [ ]    | `components/scroll-area`      |
 
@@ -225,9 +225,9 @@ Each component page should include:
 ## Progress Summary
 
 - **Total Tasks:** 75
-- **Completed:** 49
+- **Completed:** 50
 - **In Progress:** 0
-- **Remaining:** 26
+- **Remaining:** 25
 
 ---
 
