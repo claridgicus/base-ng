@@ -2,14 +2,27 @@ import { Component } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  AvatarRootDirective,
+  AvatarImageDirective,
+  AvatarFallbackDirective,
+} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-avatar',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    AvatarRootDirective,
+    AvatarImageDirective,
+    AvatarFallbackDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,14 +34,36 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <docs-demo [code]="basicDemoCode" language="html">
+          <div class="demo-row">
+            <span baseUiAvatarRoot class="demo-avatar">
+              <img
+                baseUiAvatarImage
+                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop"
+                alt="John Doe"
+              />
+              <span baseUiAvatarFallback class="demo-avatar-fallback">JD</span>
+            </span>
+            <span baseUiAvatarRoot class="demo-avatar">
+              <img
+                baseUiAvatarImage
+                src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop"
+                alt="Jane Smith"
+              />
+              <span baseUiAvatarFallback class="demo-avatar-fallback">JS</span>
+            </span>
+            <span baseUiAvatarRoot class="demo-avatar">
+              <span baseUiAvatarFallback class="demo-avatar-fallback">AB</span>
+            </span>
+          </div>
+        </docs-demo>
+      </section>
 
-        <p class="docs-paragraph">
-          Import the Avatar directives from the package:
-        </p>
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -45,43 +80,58 @@ import {
       <section class="docs-section">
         <h2 class="docs-section-title">Examples</h2>
 
-        <h3 class="docs-section-subtitle">Basic usage</h3>
-        <p class="docs-paragraph">
-          Create an avatar with an image and fallback initials.
-        </p>
-        <docs-code-block [code]="basicDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">Fallback only</h3>
-        <p class="docs-paragraph">
-          Use only the fallback for avatars without images.
-        </p>
-        <docs-code-block [code]="fallbackOnlyDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">With delay</h3>
-        <p class="docs-paragraph">
-          Use the <code>delay</code> input to prevent a flash of fallback content
-          when the image loads quickly.
-        </p>
-        <docs-code-block [code]="delayDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">User list</h3>
-        <p class="docs-paragraph">
-          Display a list of users with avatars and fallback initials.
-        </p>
-        <docs-code-block [code]="userListDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">Loading status</h3>
-        <p class="docs-paragraph">
-          Listen to image loading status changes using the
-          <code>loadingStatusChange</code> output.
-        </p>
-        <docs-code-block [code]="statusDemoCode" language="html" />
-
         <h3 class="docs-section-subtitle">Avatar sizes</h3>
         <p class="docs-paragraph">
-          Create different avatar sizes using CSS classes.
+          Create different avatar sizes using CSS classes:
         </p>
-        <docs-code-block [code]="sizesDemoCode" language="html" />
+        <docs-demo [code]="sizesDemoCode" language="html">
+          <div class="demo-row">
+            <span baseUiAvatarRoot class="demo-avatar demo-avatar-sm">
+              <img
+                baseUiAvatarImage
+                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop"
+                alt="Small"
+              />
+              <span baseUiAvatarFallback class="demo-avatar-fallback">SM</span>
+            </span>
+            <span baseUiAvatarRoot class="demo-avatar">
+              <img
+                baseUiAvatarImage
+                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop"
+                alt="Medium"
+              />
+              <span baseUiAvatarFallback class="demo-avatar-fallback">MD</span>
+            </span>
+            <span baseUiAvatarRoot class="demo-avatar demo-avatar-lg">
+              <img
+                baseUiAvatarImage
+                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop"
+                alt="Large"
+              />
+              <span baseUiAvatarFallback class="demo-avatar-fallback">LG</span>
+            </span>
+          </div>
+        </docs-demo>
+
+        <h3 class="docs-section-subtitle">Fallback with broken image</h3>
+        <p class="docs-paragraph">
+          The fallback content is shown when the image fails to load:
+        </p>
+        <docs-demo [code]="fallbackOnlyDemoCode" language="html">
+          <div class="demo-row">
+            <span baseUiAvatarRoot class="demo-avatar">
+              <img
+                baseUiAvatarImage
+                src="/invalid-image.jpg"
+                alt="User"
+              />
+              <span baseUiAvatarFallback class="demo-avatar-fallback">👤</span>
+            </span>
+            <span baseUiAvatarRoot class="demo-avatar">
+              <span baseUiAvatarFallback class="demo-avatar-fallback">AB</span>
+            </span>
+          </div>
+        </docs-demo>
       </section>
 
       <!-- Styling -->
@@ -168,13 +218,67 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .demo-avatar {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: var(--docs-bg-secondary);
+    }
+
+    .demo-avatar-sm {
+      width: 32px;
+      height: 32px;
+      font-size: 0.75rem;
+    }
+
+    .demo-avatar-lg {
+      width: 64px;
+      height: 64px;
+      font-size: 1.25rem;
+    }
+
+    .demo-avatar img[baseUiAvatarImage] {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .demo-avatar img[data-image-loading-status="loading"],
+    .demo-avatar img[data-image-loading-status="error"] {
+      display: none;
+    }
+
+    .demo-avatar-fallback {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--docs-text-secondary);
+      background: var(--docs-border);
+    }
+  `,
 })
 export class AvatarDocsComponent {
   protected readonly importCode = `import {
