@@ -1,28 +1,59 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
-  --docs-bg: #ffffff;
+  // Layout breakpoints
+  --breakpoint-show-side-nav: 64rem;   // 1024px
+  --breakpoint-show-quick-nav: 84rem;  // 1344px
+  --breakpoint-max-layout-width: 89rem; // 1424px
+
+  // Sizing
+  --sidebar-width: 17.5rem;  // 280px
+  --header-height: 3rem;     // 48px
+
+  // Colors
+  --color-background: #ffffff;
+  --color-content: #ffffff;
+  --color-foreground: #0a0a0a;
+  --color-gray: #666666;
+  --color-gray-50: rgba(0, 0, 0, 0.04);
+  --color-gray-200: #e5e5e5;
+  --color-gridline: #e5e5e5;
+  --color-selection: rgba(0, 102, 255, 0.15);
+  --color-blue: #0066ff;
+
+  // Legacy aliases
+  --docs-bg: var(--color-background);
   --docs-bg-secondary: #f5f5f5;
-  --docs-bg-hover: rgba(0, 0, 0, 0.04);
-  --docs-text: #0a0a0a;
-  --docs-text-secondary: #666666;
-  --docs-accent: #0066ff;
+  --docs-bg-hover: var(--color-gray-50);
+  --docs-text: var(--color-foreground);
+  --docs-text-secondary: var(--color-gray);
+  --docs-accent: var(--color-blue);
   --docs-accent-hover: #0052cc;
-  --docs-border: #e5e5e5;
+  --docs-border: var(--color-gray-200);
   --docs-code-bg: #f5f5f5;
   --docs-muted: #8c8c8c;
-  --docs-header-height: 60px;
+  --docs-header-height: var(--header-height);
 }
 
 .dark {
-  --docs-bg: #0a0a0a;
+  --color-background: #0a0a0a;
+  --color-content: #0a0a0a;
+  --color-foreground: #fafafa;
+  --color-gray: #999999;
+  --color-gray-50: rgba(255, 255, 255, 0.06);
+  --color-gray-200: #262626;
+  --color-gridline: #262626;
+  --color-selection: rgba(59, 130, 246, 0.25);
+  --color-blue: #3b82f6;
+
+  --docs-bg: var(--color-background);
   --docs-bg-secondary: #141414;
-  --docs-bg-hover: rgba(255, 255, 255, 0.06);
-  --docs-text: #fafafa;
-  --docs-text-secondary: #999999;
-  --docs-accent: #3b82f6;
+  --docs-bg-hover: var(--color-gray-50);
+  --docs-text: var(--color-foreground);
+  --docs-text-secondary: var(--color-gray);
+  --docs-accent: var(--color-blue);
   --docs-accent-hover: #60a5fa;
-  --docs-border: #262626;
+  --docs-border: var(--color-gray-200);
   --docs-code-bg: #141414;
   --docs-muted: #666666;
 }

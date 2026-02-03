@@ -102,9 +102,9 @@ import { SearchComponent } from '../search/search.component';
       position: sticky;
       top: 0;
       z-index: 50;
-      height: var(--docs-header-height);
-      border-bottom: 1px solid var(--docs-border);
-      background-color: var(--docs-bg);
+      height: var(--header-height);
+      border-bottom: 1px solid var(--color-gridline);
+      background-color: var(--color-background);
       backdrop-filter: blur(8px);
     }
 
