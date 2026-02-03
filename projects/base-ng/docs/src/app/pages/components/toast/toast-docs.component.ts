@@ -1,15 +1,35 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  ToastManagerService,
+  ToastProviderDirective,
+  ToastViewportDirective,
+  ToastRootDirective,
+  ToastTitleDirective,
+  ToastDescriptionDirective,
+  ToastCloseDirective,
+} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-toast',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    ToastProviderDirective,
+    ToastViewportDirective,
+    ToastRootDirective,
+    ToastTitleDirective,
+    ToastDescriptionDirective,
+    ToastCloseDirective,
+  ],
   template: `
     <div class="docs-page">
       <header class="docs-header">
@@ -21,13 +41,55 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2>Installation</h2>
-        <docs-package-selector
-          packageName="@base-ng/ui"
-          importName="ToastProviderDirective, ToastViewportDirective, ToastRootDirective, ToastTitleDirective, ToastDescriptionDirective, ToastCloseDirective, ToastActionDirective, ToastManagerService"
-        />
+        <h2>Live Demo</h2>
+        <docs-demo [code]="basicExampleCode">
+          <div baseUiToastProvider #toastProvider="toastProvider" class="demo-toast-container">
+            <div class="demo-toast-buttons">
+              <button class="demo-toast-btn" (click)="showDefaultToast()">
+                Show Toast
+              </button>
+              <button class="demo-toast-btn demo-toast-btn-success" (click)="showSuccessToast()">
+                Success
+              </button>
+              <button class="demo-toast-btn demo-toast-btn-error" (click)="showErrorToast()">
+                Error
+              </button>
+            </div>
+            <div baseUiToastViewport class="demo-toast-viewport">
+              @for (toast of toastProvider.toasts(); track toast.id) {
+                <div
+                  baseUiToastRoot
+                  [toast]="toast"
+                  class="demo-toast"
+                  [class.demo-toast-success]="toast.type === 'success'"
+                  [class.demo-toast-error]="toast.type === 'error'"
+                >
+                  <div class="demo-toast-content">
+                    <div baseUiToastTitle class="demo-toast-title">{{ toast.title }}</div>
+                    @if (toast.description) {
+                      <div baseUiToastDescription class="demo-toast-description">
+                        {{ toast.description }}
+                      </div>
+                    }
+                  </div>
+                  <button baseUiToastClose class="demo-toast-close">
+                    <svg viewBox="0 0 12 12" width="14" height="14">
+                      <path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    </svg>
+                  </button>
+                </div>
+              }
+            </div>
+          </div>
+        </docs-demo>
+      </section>
+
+      <!-- Import -->
+      <section class="docs-section">
+        <h2>Import</h2>
+        <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
       <!-- Anatomy -->
@@ -436,9 +498,154 @@ import {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-toast-container {
+      position: relative;
+      min-height: 200px;
+    }
+
+    .demo-toast-buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .demo-toast-btn {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--docs-border);
+      border-radius: 6px;
+      background: var(--docs-bg);
+      color: var(--docs-text);
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .demo-toast-btn:hover {
+      background: var(--docs-bg-hover);
+    }
+
+    .demo-toast-btn-success {
+      background: #10b981;
+      border-color: #10b981;
+      color: white;
+    }
+
+    .demo-toast-btn-success:hover {
+      background: #059669;
+    }
+
+    .demo-toast-btn-error {
+      background: #ef4444;
+      border-color: #ef4444;
+      color: white;
+    }
+
+    .demo-toast-btn-error:hover {
+      background: #dc2626;
+    }
+
+    .demo-toast-viewport {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-width: 300px;
+    }
+
+    .demo-toast {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.875rem;
+      background: var(--docs-bg);
+      border: 1px solid var(--docs-border);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      animation: toastIn 0.2s ease;
+    }
+
+    @keyframes toastIn {
+      from {
+        opacity: 0;
+        transform: translateX(100%);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .demo-toast-success {
+      border-left: 3px solid #10b981;
+    }
+
+    .demo-toast-error {
+      border-left: 3px solid #ef4444;
+    }
+
+    .demo-toast-content {
+      flex: 1;
+    }
+
+    .demo-toast-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--docs-text);
+    }
+
+    .demo-toast-description {
+      font-size: 0.8125rem;
+      color: var(--docs-text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .demo-toast-close {
+      padding: 0.25rem;
+      border: none;
+      background: transparent;
+      color: var(--docs-text-tertiary);
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.15s ease;
+    }
+
+    .demo-toast-close:hover {
+      background: var(--docs-bg-hover);
+      color: var(--docs-text);
+    }
+  `,
 })
 export class ToastDocsComponent {
+  protected readonly toastManager = inject(ToastManagerService);
+
+  protected showDefaultToast(): void {
+    this.toastManager.add({
+      title: 'Notification',
+      description: 'This is a default toast message.',
+    });
+  }
+
+  protected showSuccessToast(): void {
+    this.toastManager.add({
+      type: 'success',
+      title: 'Success!',
+      description: 'Your changes have been saved.',
+    });
+  }
+
+  protected showErrorToast(): void {
+    this.toastManager.add({
+      type: 'error',
+      title: 'Error',
+      description: 'Something went wrong. Please try again.',
+    });
+  }
+
   importCode = `import {
   ToastProviderDirective,
   ToastViewportDirective,
