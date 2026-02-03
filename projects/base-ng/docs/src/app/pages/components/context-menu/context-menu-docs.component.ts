@@ -1,15 +1,32 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  ContextMenuRootDirective,
+  ContextMenuTriggerDirective,
+  ContextMenuPopupDirective,
+  ContextMenuItemDirective,
+  ContextMenuSeparatorDirective,
+} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-context-menu',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    ContextMenuRootDirective,
+    ContextMenuTriggerDirective,
+    ContextMenuPopupDirective,
+    ContextMenuItemDirective,
+    ContextMenuSeparatorDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,14 +38,56 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <h2 class="docs-section-title">Live Demo</h2>
+        <docs-demo [code]="basicDemoCode">
+          <div baseUiContextMenuRoot [(open)]="isOpen" class="demo-context-menu">
+            <div baseUiContextMenuTrigger class="trigger-area">
+              <svg viewBox="0 0 24 24" width="24" height="24" class="trigger-icon">
+                <path d="M3 5h18v2H3V5zm0 6h18v2H3v-2zm0 6h18v2H3v-2z" fill="currentColor"/>
+              </svg>
+              <span>Right-click anywhere in this area</span>
+              <span class="hint">or long-press on touch devices</span>
+            </div>
 
-        <p class="docs-paragraph">
-          Import the Context Menu directives from the package:
-        </p>
+            <div baseUiContextMenuPopup class="context-popup">
+              <div baseUiContextMenuItem class="context-item" (itemClick)="handleAction('cut')">
+                <svg viewBox="0 0 16 16" width="14" height="14">
+                  <path d="M4 1.5a2.5 2.5 0 1 0 1.7 4.3L7.9 8l-2.2 2.2A2.5 2.5 0 1 0 4 14.5a2.5 2.5 0 0 0 1.7-4.3L8 8l5.5 5.5.7-.7-5.5-5.5L14.5 2l-.7-.7-5.5 5.5-2.2-2.2A2.5 2.5 0 0 0 4 1.5zM3 4a1 1 0 1 1 2 0 1 1 0 0 1-2 0zm0 8a1 1 0 1 1 2 0 1 1 0 0 1-2 0z" fill="currentColor"/>
+                </svg>
+                Cut
+                <span class="shortcut">Ctrl+X</span>
+              </div>
+              <div baseUiContextMenuItem class="context-item" (itemClick)="handleAction('copy')">
+                <svg viewBox="0 0 16 16" width="14" height="14">
+                  <path d="M5 3H3v10h8v-2H5V3zm0 0V1h10v10h-2V3H5z" stroke="currentColor" fill="none"/>
+                </svg>
+                Copy
+                <span class="shortcut">Ctrl+C</span>
+              </div>
+              <div baseUiContextMenuItem class="context-item" (itemClick)="handleAction('paste')">
+                <svg viewBox="0 0 16 16" width="14" height="14">
+                  <path d="M4 2v1H2v11h10V3h-2V2H4zm1 1h4v1H5V3zm-2 2h8v8H3V5z" fill="currentColor"/>
+                </svg>
+                Paste
+                <span class="shortcut">Ctrl+V</span>
+              </div>
+              <div baseUiContextMenuSeparator class="context-separator"></div>
+              <div baseUiContextMenuItem class="context-item context-item-danger" (itemClick)="handleAction('delete')">
+                <svg viewBox="0 0 16 16" width="14" height="14">
+                  <path d="M3 4h10M6 4V2h4v2M5 4v9h6V4" stroke="currentColor" fill="none"/>
+                </svg>
+                Delete
+              </div>
+            </div>
+          </div>
+        </docs-demo>
+      </section>
+
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -176,43 +235,137 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-context-menu {
+      display: block;
+    }
+
+    .trigger-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 3rem 2rem;
+      background: var(--docs-bg-hover);
+      border: 2px dashed var(--docs-border);
+      border-radius: 12px;
+      cursor: context-menu;
+      text-align: center;
+      color: var(--docs-text-secondary);
+      transition: all 0.15s ease;
+    }
+
+    .trigger-area:hover {
+      background: var(--docs-bg);
+      border-color: var(--docs-accent);
+    }
+
+    .trigger-icon {
+      opacity: 0.5;
+    }
+
+    .hint {
+      font-size: 0.75rem;
+      opacity: 0.6;
+    }
+
+    .context-popup {
+      background: var(--docs-bg);
+      border: 1px solid var(--docs-border);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      padding: 0.25rem;
+      min-width: 200px;
+      outline: none;
+      animation: contextIn 0.15s ease;
+    }
+
+    @keyframes contextIn {
+      from {
+        opacity: 0;
+        transform: scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .context-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      cursor: pointer;
+      outline: none;
+      font-size: 0.875rem;
+      color: var(--docs-text);
+      transition: background 0.1s ease;
+    }
+
+    .context-item:hover,
+    .context-item[data-highlighted] {
+      background: var(--docs-bg-hover);
+    }
+
+    .context-item svg {
+      opacity: 0.6;
+    }
+
+    .context-item-danger {
+      color: #dc2626;
+    }
+
+    .context-item-danger:hover,
+    .context-item-danger[data-highlighted] {
+      background: rgba(220, 38, 38, 0.1);
+    }
+
+    .shortcut {
+      margin-left: auto;
+      font-size: 0.75rem;
+      color: var(--docs-text-tertiary);
+    }
+
+    .context-separator {
+      height: 1px;
+      background: var(--docs-border);
+      margin: 0.25rem 0;
+    }
+  `,
 })
 export class ContextMenuDocsComponent {
+  protected readonly isOpen = signal(false);
+
+  protected handleAction(action: string): void {
+    console.log(`Action: ${action}`);
+    this.isOpen.set(false);
+  }
+
   protected readonly importCode = `import {
   ContextMenuRootDirective,
   ContextMenuTriggerDirective,
-  ContextMenuPositionerDirective,
   ContextMenuPopupDirective,
   ContextMenuItemDirective,
   ContextMenuSeparatorDirective,
-  ContextMenuGroupDirective,
-  ContextMenuGroupLabelDirective,
-  ContextMenuCheckboxItemDirective,
-  ContextMenuRadioGroupDirective,
-  ContextMenuRadioItemDirective,
-} from '@base-ng/ui/context-menu';
+} from '@base-ng/ui';
 
 @Component({
   imports: [
     ContextMenuRootDirective,
     ContextMenuTriggerDirective,
-    ContextMenuPositionerDirective,
     ContextMenuPopupDirective,
     ContextMenuItemDirective,
     ContextMenuSeparatorDirective,
-    // Optional: for advanced menus
-    ContextMenuGroupDirective,
-    ContextMenuGroupLabelDirective,
-    ContextMenuCheckboxItemDirective,
-    ContextMenuRadioGroupDirective,
-    ContextMenuRadioItemDirective,
   ],
   // ...
 })`;
