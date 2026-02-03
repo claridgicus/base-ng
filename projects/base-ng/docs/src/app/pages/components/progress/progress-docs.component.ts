@@ -1,15 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  ProgressRootDirective,
+  ProgressTrackDirective,
+  ProgressIndicatorDirective,
+  ProgressValueDirective,
+} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-progress',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    ProgressRootDirective,
+    ProgressTrackDirective,
+    ProgressIndicatorDirective,
+    ProgressValueDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -20,12 +35,28 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <docs-demo [code]="basicDemoCode" language="html">
+          <div class="demo-progress-container">
+            <div baseUiProgressRoot [value]="progress()" [max]="100" class="demo-progress">
+              <div baseUiProgressTrack class="demo-progress-track">
+                <div baseUiProgressIndicator class="demo-progress-indicator"></div>
+              </div>
+              <span baseUiProgressValue class="demo-progress-value"></span>
+            </div>
+            <div class="demo-controls">
+              <button class="demo-btn" (click)="decreaseProgress()">−</button>
+              <span class="demo-progress-label">{{ progress() }}%</span>
+              <button class="demo-btn" (click)="increaseProgress()">+</button>
+            </div>
+          </div>
+        </docs-demo>
+      </section>
 
-        <p class="docs-paragraph">Import the Progress directives:</p>
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -42,29 +73,30 @@ import {
       <section class="docs-section">
         <h2 class="docs-section-title">Examples</h2>
 
-        <h3 class="docs-section-subtitle">Basic usage</h3>
-        <p class="docs-paragraph">
-          Set the <code>value</code> input to show progress:
-        </p>
-        <docs-code-block [code]="basicDemoCode" language="html" />
-
         <h3 class="docs-section-subtitle">Indeterminate progress</h3>
         <p class="docs-paragraph">
           Set <code>value</code> to <code>null</code> for indeterminate state:
         </p>
-        <docs-code-block [code]="indeterminateDemoCode" language="html" />
+        <docs-demo [code]="indeterminateDemoCode" language="html">
+          <div baseUiProgressRoot [value]="null" class="demo-progress">
+            <div baseUiProgressTrack class="demo-progress-track">
+              <div baseUiProgressIndicator class="demo-progress-indicator demo-indeterminate"></div>
+            </div>
+          </div>
+        </docs-demo>
 
-        <h3 class="docs-section-subtitle">With value display</h3>
+        <h3 class="docs-section-subtitle">Complete state</h3>
         <p class="docs-paragraph">
-          Use the value directive to display the formatted progress:
+          The progress shows a complete status when value reaches max:
         </p>
-        <docs-code-block [code]="valueDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">Custom format</h3>
-        <p class="docs-paragraph">
-          Use Intl.NumberFormat options for custom formatting:
-        </p>
-        <docs-code-block [code]="formatDemoCode" language="html" />
+        <docs-demo [code]="completeDemoCode" language="html">
+          <div baseUiProgressRoot [value]="100" [max]="100" class="demo-progress">
+            <div baseUiProgressTrack class="demo-progress-track">
+              <div baseUiProgressIndicator class="demo-progress-indicator demo-complete"></div>
+            </div>
+            <span class="demo-status">✓ Complete</span>
+          </div>
+        </docs-demo>
       </section>
 
       <!-- Styling -->
@@ -128,15 +160,111 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-progress-container {
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .demo-progress {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .demo-progress-track {
+      position: relative;
+      width: 100%;
+      height: 8px;
+      background: var(--docs-border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .demo-progress-indicator {
+      height: 100%;
+      background: var(--docs-accent, #0066ff);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    .demo-indeterminate {
+      width: 40% !important;
+      animation: indeterminate 1.5s infinite linear;
+    }
+
+    @keyframes indeterminate {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(350%); }
+    }
+
+    .demo-complete {
+      background: #22c55e;
+    }
+
+    .demo-progress-value {
+      font-size: 0.75rem;
+      color: var(--docs-text-secondary);
+    }
+
+    .demo-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    .demo-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--docs-border);
+      border-radius: 4px;
+      background: var(--docs-bg);
+      color: var(--docs-text);
+      cursor: pointer;
+      font-size: 1.25rem;
+      font-weight: 500;
+
+      &:hover {
+        background: var(--docs-bg-secondary);
+      }
+    }
+
+    .demo-progress-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--docs-text);
+      min-width: 40px;
+      text-align: center;
+    }
+
+    .demo-status {
+      font-size: 0.875rem;
+      color: #22c55e;
+      font-weight: 500;
+    }
+  `,
 })
 export class ProgressDocsComponent {
+  protected readonly progress = signal(50);
+
+  protected increaseProgress(): void {
+    this.progress.update(v => Math.min(100, v + 10));
+  }
+
+  protected decreaseProgress(): void {
+    this.progress.update(v => Math.max(0, v - 10));
+  }
   protected readonly importCode = `import {
   ProgressRootDirective,
   ProgressTrackDirective,
@@ -168,6 +296,12 @@ export class ProgressDocsComponent {
 
   protected readonly indeterminateDemoCode = `<!-- value=null creates indeterminate state -->
 <div baseUiProgressRoot [value]="null">
+  <div baseUiProgressTrack>
+    <div baseUiProgressIndicator></div>
+  </div>
+</div>`;
+
+  protected readonly completeDemoCode = `<div baseUiProgressRoot [value]="100" [max]="100">
   <div baseUiProgressTrack>
     <div baseUiProgressIndicator></div>
   </div>
