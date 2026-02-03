@@ -5,7 +5,7 @@
  * @parity Verified against React Base UI - includes Focus Management, State Attributes, and Accessibility test categories
  */
 
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { PopoverRootDirective } from './popover-root.directive';
@@ -16,6 +16,9 @@ import { PopoverArrowDirective } from './popover-arrow.directive';
 import { PopoverCloseDirective } from './popover-close.directive';
 import { PopoverTitleDirective } from './popover-title.directive';
 import { PopoverDescriptionDirective } from './popover-description.directive';
+import { PopoverBackdropDirective } from './popover-backdrop.directive';
+import { PopoverPortalDirective } from './popover-portal.directive';
+import type { PopoverModalMode } from './popover.types';
 
 @Component({
   standalone: true,
@@ -32,26 +35,86 @@ import { PopoverDescriptionDirective } from './popover-description.directive';
   template: `
     <div baseUiPopoverRoot #popoverRoot="popoverRoot" [disabled]="isDisabled"
          [closeOnOutsideClick]="closeOnOutsideClick" [closeOnEscape]="closeOnEscape"
+         [modal]="modal"
          (openChanged)="onOpenChange($event)">
-      <button baseUiPopoverTrigger>Open Popover</button>
+      <button baseUiPopoverTrigger [openOnHover]="openOnHover" [delay]="delay" [closeDelay]="closeDelay">Open Popover</button>
       <div baseUiPopoverPositioner [side]="side" [sideOffset]="sideOffset">
-        <div baseUiPopoverPopup>
+        <div baseUiPopoverPopup [initialFocus]="initialFocus" [finalFocus]="finalFocus">
           <h2 baseUiPopoverTitle>Popover Title</h2>
           <p baseUiPopoverDescription>Popover description text.</p>
+          <input #popoverInput type="text" placeholder="Focus me" />
           <button baseUiPopoverClose>Close</button>
           <div baseUiPopoverArrow></div>
         </div>
       </div>
     </div>
+    <button #externalButton>External Button</button>
   `,
 })
 class TestPopoverComponent {
   @ViewChild('popoverRoot', { static: true }) popoverRoot!: PopoverRootDirective;
+  @ViewChild('popoverInput', { static: true }) popoverInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('externalButton', { static: true }) externalButton!: ElementRef<HTMLButtonElement>;
   isDisabled = false;
   closeOnOutsideClick = true;
   closeOnEscape = true;
+  openOnHover = false;
+  delay = 300;
+  closeDelay = 0;
+  modal: PopoverModalMode = false;
+  initialFocus: HTMLElement | string | null = null;
+  finalFocus: HTMLElement | string | null = null;
   side: 'top' | 'bottom' | 'left' | 'right' = 'bottom';
   sideOffset = 8;
+  openChangeEvents: Array<{ open: boolean; reason: string }> = [];
+
+  onOpenChange(event: { open: boolean; reason: string }): void {
+    this.openChangeEvents.push(event);
+  }
+}
+
+@Component({
+  standalone: true,
+  imports: [
+    PopoverRootDirective,
+    PopoverTriggerDirective,
+    PopoverPositionerDirective,
+    PopoverPopupDirective,
+    PopoverBackdropDirective,
+  ],
+  template: `
+    <div baseUiPopoverRoot #popoverRoot="popoverRoot" [modal]="true">
+      <button baseUiPopoverTrigger>Open Popover</button>
+      <div baseUiPopoverBackdrop></div>
+      <div baseUiPopoverPositioner>
+        <div baseUiPopoverPopup>Content</div>
+      </div>
+    </div>
+  `,
+})
+class TestPopoverWithBackdropComponent {
+  @ViewChild('popoverRoot', { static: true }) popoverRoot!: PopoverRootDirective;
+}
+
+@Component({
+  standalone: true,
+  imports: [
+    PopoverRootDirective,
+    PopoverTriggerDirective,
+    PopoverPositionerDirective,
+    PopoverPopupDirective,
+  ],
+  template: `
+    <div baseUiPopoverRoot #popoverRoot="popoverRoot" (openChanged)="onOpenChange($event)">
+      <button baseUiPopoverTrigger [openOnHover]="true" [delay]="0">Hover me</button>
+      <div baseUiPopoverPositioner>
+        <div baseUiPopoverPopup>Content</div>
+      </div>
+    </div>
+  `,
+})
+class TestPopoverWithHoverComponent {
+  @ViewChild('popoverRoot', { static: true }) popoverRoot!: PopoverRootDirective;
   openChangeEvents: Array<{ open: boolean; reason: string }> = [];
 
   onOpenChange(event: { open: boolean; reason: string }): void {
@@ -424,5 +487,178 @@ describe('Popover', () => {
 
       expect(component.popoverRoot.context.openSignal()).toBe(false);
     });
+  });
+
+
+  describe('Modal mode', () => {
+    it('should expose modal signal', () => {
+      expect(component.popoverRoot.context.modalSignal()).toBe(false);
+    });
+
+    it('should have default modal value of false', () => {
+      // Modal defaults to false
+      expect(component.popoverRoot.context.modalSignal()).toBe(false);
+    });
+  });
+
+  describe('Focus management', () => {
+    it('should focus first focusable element by default on open', async () => {
+      component.popoverRoot.context.openPopover('imperative');
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      // Wait for microtask
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const input = fixture.nativeElement.querySelector('input');
+      expect(document.activeElement).toBe(input);
+    });
+  });
+});
+
+describe('Popover with Backdrop', () => {
+  let fixture: ComponentFixture<TestPopoverWithBackdropComponent>;
+  let component: TestPopoverWithBackdropComponent;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TestPopoverWithBackdropComponent],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(TestPopoverWithBackdropComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  describe('PopoverBackdrop', () => {
+    it('should render backdrop', () => {
+      const backdrop = fixture.nativeElement.querySelector('[baseUiPopoverBackdrop]');
+      expect(backdrop).toBeTruthy();
+    });
+
+    it('should be hidden when popover is closed', () => {
+      const backdrop = fixture.nativeElement.querySelector('[baseUiPopoverBackdrop]');
+      expect(backdrop.style.display).toBe('none');
+    });
+
+    it('should be visible when popover is open', async () => {
+      component.popoverRoot.context.openPopover('imperative');
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      const backdrop = fixture.nativeElement.querySelector('[baseUiPopoverBackdrop]');
+      expect(backdrop.style.display).not.toBe('none');
+    });
+
+    it('should have correct data-state attribute', async () => {
+      const backdrop = fixture.nativeElement.querySelector('[baseUiPopoverBackdrop]');
+      expect(backdrop.getAttribute('data-state')).toBe('closed');
+
+      component.popoverRoot.context.openPopover('imperative');
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(backdrop.getAttribute('data-state')).toBe('open');
+    });
+
+    it('should close popover on backdrop click', async () => {
+      component.popoverRoot.context.openPopover('imperative');
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(component.popoverRoot.context.openSignal()).toBe(true);
+
+      const backdrop = fixture.nativeElement.querySelector('[baseUiPopoverBackdrop]');
+      backdrop.click();
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(component.popoverRoot.context.openSignal()).toBe(false);
+    });
+
+    it('should be aria-hidden', () => {
+      const backdrop = fixture.nativeElement.querySelector('[baseUiPopoverBackdrop]');
+      expect(backdrop.getAttribute('aria-hidden')).toBe('true');
+    });
+
+    it('should have base-ui-popover-backdrop class', () => {
+      const backdrop = fixture.nativeElement.querySelector('.base-ui-popover-backdrop');
+      expect(backdrop).toBeTruthy();
+    });
+  });
+});
+
+describe('Popover with Hover Trigger', () => {
+  let fixture: ComponentFixture<TestPopoverWithHoverComponent>;
+  let component: TestPopoverWithHoverComponent;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TestPopoverWithHoverComponent],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(TestPopoverWithHoverComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should open on mouseenter when openOnHover is true', async () => {
+    const trigger = fixture.nativeElement.querySelector('[baseUiPopoverTrigger]');
+    trigger.dispatchEvent(new MouseEvent('mouseenter'));
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(component.popoverRoot.context.openSignal()).toBe(true);
+  });
+
+  it('should close on mouseleave when openOnHover is true', async () => {
+    const trigger = fixture.nativeElement.querySelector('[baseUiPopoverTrigger]');
+    trigger.dispatchEvent(new MouseEvent('mouseenter'));
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(component.popoverRoot.context.openSignal()).toBe(true);
+
+    trigger.dispatchEvent(new MouseEvent('mouseleave'));
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(component.popoverRoot.context.openSignal()).toBe(false);
+  });
+
+  it('should emit hover reason on open', async () => {
+    const trigger = fixture.nativeElement.querySelector('[baseUiPopoverTrigger]');
+    trigger.dispatchEvent(new MouseEvent('mouseenter'));
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(component.openChangeEvents[component.openChangeEvents.length - 1]).toEqual({
+      open: true,
+      reason: 'hover',
+    });
+  });
+
+  it('should open on focus when openOnHover is true', async () => {
+    const trigger = fixture.nativeElement.querySelector('[baseUiPopoverTrigger]');
+    trigger.dispatchEvent(new FocusEvent('focus'));
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(component.popoverRoot.context.openSignal()).toBe(true);
+  });
+
+  it('should close on blur when openOnHover is true', async () => {
+    const trigger = fixture.nativeElement.querySelector('[baseUiPopoverTrigger]');
+    trigger.dispatchEvent(new FocusEvent('focus'));
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(component.popoverRoot.context.openSignal()).toBe(true);
+
+    trigger.dispatchEvent(new FocusEvent('blur'));
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(component.popoverRoot.context.openSignal()).toBe(false);
   });
 });

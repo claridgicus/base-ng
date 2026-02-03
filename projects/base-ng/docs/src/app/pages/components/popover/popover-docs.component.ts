@@ -139,6 +139,45 @@ import {
           Disable closing on outside click or escape key:
         </p>
         <docs-code-block [code]="preventCloseDemoCode" language="html" />
+
+        <h3 class="docs-section-subtitle">Hover trigger</h3>
+        <p class="docs-paragraph">
+          Open the popover on hover instead of click:
+        </p>
+        <docs-demo [code]="hoverDemoCode" language="html">
+          <div class="demo-container">
+            <div baseUiPopoverRoot>
+              <button baseUiPopoverTrigger [openOnHover]="true" [delay]="200" class="demo-trigger">
+                Hover me
+              </button>
+              <div baseUiPopoverPositioner side="bottom" [sideOffset]="8">
+                <div baseUiPopoverPopup class="demo-popover">
+                  <p class="demo-popover-desc">This popover opens on hover!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </docs-demo>
+
+        <h3 class="docs-section-subtitle">Modal popover</h3>
+        <p class="docs-paragraph">
+          Use <code>[modal]="true"</code> to trap focus within the popover
+          and add a backdrop:
+        </p>
+        <docs-code-block [code]="modalDemoCode" language="html" />
+
+        <h3 class="docs-section-subtitle">Focus management</h3>
+        <p class="docs-paragraph">
+          Control which element receives focus when opening/closing:
+        </p>
+        <docs-code-block [code]="focusDemoCode" language="html" />
+
+        <h3 class="docs-section-subtitle">Portal rendering</h3>
+        <p class="docs-paragraph">
+          Use <code>baseUiPopoverPortal</code> to render the popover
+          outside its parent DOM hierarchy:
+        </p>
+        <docs-code-block [code]="portalDemoCode" language="html" />
       </section>
 
       <!-- Styling -->
@@ -162,8 +201,20 @@ import {
           [props]="rootOutputProps"
         />
         <docs-props-table
+          title="PopoverTrigger Inputs"
+          [props]="triggerInputProps"
+        />
+        <docs-props-table
           title="PopoverPositioner Inputs"
           [props]="positionerInputProps"
+        />
+        <docs-props-table
+          title="PopoverPopup Inputs"
+          [props]="popupInputProps"
+        />
+        <docs-props-table
+          title="PopoverPortal Inputs"
+          [props]="portalInputProps"
         />
       </section>
 
@@ -378,6 +429,8 @@ export class PopoverDocsComponent {
   PopoverCloseDirective,
   PopoverTitleDirective,
   PopoverDescriptionDirective,
+  PopoverBackdropDirective,  // Optional
+  PopoverPortalDirective,    // Optional
 } from '@base-ng/ui';
 
 @Component({
@@ -390,6 +443,8 @@ export class PopoverDocsComponent {
     PopoverCloseDirective,
     PopoverTitleDirective,
     PopoverDescriptionDirective,
+    // PopoverBackdropDirective,  // Optional: for modal popovers
+    // PopoverPortalDirective,    // Optional: for rendering in body
   ],
   // ...
 })`;
@@ -601,6 +656,147 @@ saveNote() {
   </div>
 </div>`;
 
+  protected readonly hoverDemoCode = `<!-- Open on hover with delay -->
+<div baseUiPopoverRoot>
+  <button baseUiPopoverTrigger [openOnHover]="true" [delay]="200">
+    Hover me
+  </button>
+  <div baseUiPopoverPositioner>
+    <div baseUiPopoverPopup>
+      Opens after 200ms hover!
+    </div>
+  </div>
+</div>
+
+<!-- With close delay (for moving to popover content) -->
+<div baseUiPopoverRoot>
+  <button baseUiPopoverTrigger [openOnHover]="true" [closeDelay]="150">
+    Hover to open
+  </button>
+  <div baseUiPopoverPositioner>
+    <div baseUiPopoverPopup>
+      Stays open 150ms after mouse leaves trigger
+    </div>
+  </div>
+</div>`;
+
+  protected readonly modalDemoCode = `<!-- Modal popover with focus trap -->
+<div baseUiPopoverRoot [modal]="true">
+  <button baseUiPopoverTrigger>Open Modal Popover</button>
+
+  <!-- Optional backdrop -->
+  <div baseUiPopoverBackdrop class="backdrop"></div>
+
+  <div baseUiPopoverPositioner>
+    <div baseUiPopoverPopup>
+      <h3 baseUiPopoverTitle>Modal Popover</h3>
+      <p>Focus is trapped within this popover.</p>
+      <p>Tab cycles through focusable elements.</p>
+      <button baseUiPopoverClose>Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Focus trap only (no backdrop blocking) -->
+<div baseUiPopoverRoot [modal]="'trap-focus'">
+  <button baseUiPopoverTrigger>Focus Trap Only</button>
+  <div baseUiPopoverPositioner>
+    <div baseUiPopoverPopup>
+      <p>Focus trapped but no backdrop</p>
+      <button baseUiPopoverClose>Close</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+  }
+</style>`;
+
+  protected readonly focusDemoCode = `<!-- Focus specific element on open -->
+<div baseUiPopoverRoot>
+  <button baseUiPopoverTrigger>Edit Note</button>
+  <div baseUiPopoverPositioner>
+    <div baseUiPopoverPopup [initialFocus]="textareaRef">
+      <h3 baseUiPopoverTitle>Edit Note</h3>
+      <textarea #textareaRef placeholder="Type here..."></textarea>
+      <button baseUiPopoverClose>Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- Focus external element on close -->
+<div baseUiPopoverRoot>
+  <button baseUiPopoverTrigger>Open</button>
+  <div baseUiPopoverPositioner>
+    <div baseUiPopoverPopup [finalFocus]="submitButtonRef">
+      <p>After closing, focus moves to Submit</p>
+      <button baseUiPopoverClose>Close</button>
+    </div>
+  </div>
+</div>
+<button #submitButtonRef>Submit</button>
+
+<!-- Using CSS selector for initial focus -->
+<div baseUiPopoverRoot>
+  <button baseUiPopoverTrigger>Login</button>
+  <div baseUiPopoverPositioner>
+    <div baseUiPopoverPopup initialFocus="#username-input">
+      <input id="username-input" placeholder="Username" />
+      <input type="password" placeholder="Password" />
+      <button baseUiPopoverClose>Cancel</button>
+    </div>
+  </div>
+</div>`;
+
+  protected readonly portalDemoCode = `<!-- Render popover in document body -->
+<div baseUiPopoverRoot>
+  <button baseUiPopoverTrigger>Open Portal Popover</button>
+
+  <ng-template baseUiPopoverPortal>
+    <div baseUiPopoverPositioner>
+      <div baseUiPopoverPopup>
+        <p>Rendered in document.body!</p>
+        <p>Useful for overflow:hidden containers.</p>
+        <button baseUiPopoverClose>Close</button>
+      </div>
+    </div>
+  </ng-template>
+</div>
+
+<!-- Render in specific container -->
+<div baseUiPopoverRoot>
+  <button baseUiPopoverTrigger>Custom Container</button>
+
+  <ng-template baseUiPopoverPortal [container]="customContainer">
+    <div baseUiPopoverPositioner>
+      <div baseUiPopoverPopup>
+        Rendered in #modal-container
+      </div>
+    </div>
+  </ng-template>
+</div>
+
+<div #customContainer id="modal-container"></div>
+
+<!-- Keep mounted when closed (preserves state) -->
+<div baseUiPopoverRoot>
+  <button baseUiPopoverTrigger>Form Popover</button>
+
+  <ng-template baseUiPopoverPortal [keepMounted]="true">
+    <div baseUiPopoverPositioner>
+      <div baseUiPopoverPopup>
+        <input [(ngModel)]="formValue" />
+        <p>Form state preserved when closed!</p>
+      </div>
+    </div>
+  </ng-template>
+</div>`;
+
   protected readonly stylingCode = `/* Popover positioner */
 [baseUiPopoverPositioner] {
   z-index: 100;
@@ -732,6 +928,13 @@ saveNote() {
       default: 'true',
       description: 'Whether pressing the Escape key closes the popover.',
     },
+    {
+      name: 'modal',
+      type: "boolean | 'trap-focus'",
+      default: 'false',
+      description:
+        "Whether the popover is modal. Set to true to trap focus and block outside interactions. Set to 'trap-focus' to only trap focus without blocking.",
+    },
   ];
 
   protected readonly rootOutputProps: PropDefinition[] = [
@@ -794,6 +997,61 @@ saveNote() {
       name: 'data-align',
       type: "'start' | 'center' | 'end'",
       description: 'The actual alignment after positioning.',
+    },
+  ];
+
+  protected readonly triggerInputProps: PropDefinition[] = [
+    {
+      name: 'openOnHover',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether to open the popover on hover instead of click.',
+    },
+    {
+      name: 'delay',
+      type: 'number',
+      default: '300',
+      description: 'The delay in milliseconds before the popover opens on hover.',
+    },
+    {
+      name: 'closeDelay',
+      type: 'number',
+      default: '0',
+      description:
+        'The delay in milliseconds before the popover closes on mouse leave. Useful for allowing users to move to the popover content.',
+    },
+  ];
+
+  protected readonly popupInputProps: PropDefinition[] = [
+    {
+      name: 'initialFocus',
+      type: 'HTMLElement | string | null',
+      default: 'null',
+      description:
+        'Element to focus when the popover opens. Can be an element reference or CSS selector. Defaults to the first focusable element.',
+    },
+    {
+      name: 'finalFocus',
+      type: 'HTMLElement | string | null',
+      default: 'null',
+      description:
+        'Element to focus when the popover closes. Defaults to the trigger element.',
+    },
+  ];
+
+  protected readonly portalInputProps: PropDefinition[] = [
+    {
+      name: 'container',
+      type: 'HTMLElement | null',
+      default: 'document.body',
+      description: 'The container element to render the portal content into.',
+    },
+    {
+      name: 'keepMounted',
+      type: 'boolean',
+      default: 'false',
+      description:
+        'Whether to keep the portal content mounted when the popover is closed. Useful for preserving form state.',
     },
   ];
 }

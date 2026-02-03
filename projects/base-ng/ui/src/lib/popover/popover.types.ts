@@ -39,6 +39,11 @@ export interface PopoverOpenChangeEventDetails {
 }
 
 /**
+ * Modal mode for popovers.
+ */
+export type PopoverModalMode = boolean | 'trap-focus';
+
+/**
  * Context provided by the popover root.
  */
 export interface PopoverContext extends PopoverState {
@@ -46,6 +51,8 @@ export interface PopoverContext extends PopoverState {
   openSignal: Signal<boolean>;
   /** Signal for disabled state */
   disabledSignal: Signal<boolean>;
+  /** Signal for modal mode */
+  modalSignal: Signal<PopoverModalMode>;
   /** Open the popover */
   openPopover: (reason?: PopoverOpenChangeReason) => void;
   /** Close the popover */

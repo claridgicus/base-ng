@@ -89,6 +89,14 @@ export class PopoverRootDirective {
   readonly closeOnEscape = input(true, { transform: booleanAttribute });
 
   /**
+   * Whether the popover is modal.
+   * - `false` (default): The popover is non-modal.
+   * - `true`: The popover blocks outside interactions.
+   * - `'trap-focus'`: Focus is trapped within the popover.
+   */
+  readonly modal = input<boolean | 'trap-focus'>(false);
+
+  /**
    * Emits when the open state changes with detailed event info.
    */
   readonly openChanged = output<PopoverOpenChangeEventDetails>();
@@ -114,6 +122,7 @@ export class PopoverRootDirective {
     openSignal: this.internalOpen,
     disabled: this.disabled(),
     disabledSignal: this.disabled,
+    modalSignal: this.modal,
     openPopover: (reason?: PopoverOpenChangeReason) => this.setOpen(true, reason),
     closePopover: (reason?: PopoverOpenChangeReason) => this.setOpen(false, reason),
     togglePopover: (reason?: PopoverOpenChangeReason) =>

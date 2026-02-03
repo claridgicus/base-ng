@@ -10,6 +10,8 @@ export { PopoverArrowDirective } from './popover-arrow.directive';
 export { PopoverCloseDirective } from './popover-close.directive';
 export { PopoverTitleDirective } from './popover-title.directive';
 export { PopoverDescriptionDirective } from './popover-description.directive';
+export { PopoverBackdropDirective } from './popover-backdrop.directive';
+export { PopoverPortalDirective } from './popover-portal.directive';
 export {
   POPOVER_CONTEXT,
   POPOVER_POSITIONER_CONTEXT,
@@ -20,4 +22,5 @@ export {
   type PopoverOpenChangeEventDetails,
   type PopoverPopupState,
   type PopoverArrowState,
+  type PopoverModalMode,
 } from './popover.types';
