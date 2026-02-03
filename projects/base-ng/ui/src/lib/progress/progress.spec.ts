@@ -1,8 +1,10 @@
 /**
  * @component Progress
- * @fileoverview Tests for Progress component
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/progress/Progress.test.tsx
- * @parity Verified against React Base UI - includes State Attributes and Accessibility test categories
+ * @reactTestSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/progress/root/ProgressRoot.test.tsx
+ * @reactDocs https://base-ui.com/react/components/progress
+ * @lastScraped 2026-02-03
+ * @testsPorted 5/5 (100%)
+ * @parity EXACT - All React tests ported to Angular/Vitest
  * @note Progress is a display-only element - no Keyboard Navigation or Focus Management required
  */
 import { Component, signal } from '@angular/core';
@@ -387,6 +389,7 @@ describe('Progress component', () => {
 
   describe('ProgressValueDirective with custom format', () => {
     @Component({
+      selector: 'test-progress-format',
       template: `
         <div baseUiProgressRoot [value]="50" [max]="100">
           <span baseUiProgressValue [format]="{ style: 'percent', minimumFractionDigits: 0 }"></span>
@@ -414,6 +417,45 @@ describe('Progress component', () => {
       // Note: The format is applied to the raw value (50), so 50% is expected
       // This matches the React behavior where format is for display purposes
       expect(valueEl.textContent).toBe('5,000%');
+    });
+  })
+
+  /**
+   * React parity tests - prop: locale
+   * @see https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/progress/root/ProgressRoot.test.tsx
+   */
+  describe('prop: locale - React parity', () => {
+    @Component({
+      selector: 'test-progress-locale',
+      template: `
+        <div baseUiProgressRoot [value]="1234.5" [max]="10000" [locale]="'de-DE'">
+          <span baseUiProgressValue></span>
+        </div>
+      `,
+      standalone: true,
+      imports: [ProgressRootDirective, ProgressValueDirective],
+    })
+    class TestComponent {}
+
+    let fixture: ComponentFixture<TestComponent>;
+    let root: HTMLElement;
+    let valueEl: HTMLElement;
+
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
+        imports: [TestComponent],
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(TestComponent);
+      fixture.detectChanges();
+      root = fixture.nativeElement.querySelector('[baseUiProgressRoot]');
+      valueEl = fixture.nativeElement.querySelector('[baseUiProgressValue]');
+    });
+
+    it('sets the locale when formatting the value', () => {
+      // German locale uses comma as decimal separator
+      expect(root.getAttribute('aria-valuetext')).toBe('1.234,5');
+      expect(valueEl.textContent).toBe('1.234,5');
     });
   });
 

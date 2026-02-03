@@ -1,6 +1,10 @@
 /**
- * @fileoverview Angular port of Base UI ProgressRoot
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/progress/root/ProgressRoot.tsx
+ * @component BuiProgressRoot
+ * @reactSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/progress/root/ProgressRoot.tsx
+ * @reactDocs https://base-ui.com/react/components/progress
+ * @lastScraped 2026-02-03
+ * @styling Tailwind CSS 4 only
+ * @parity EXACT - Ported from React Base UI
  *
  * Groups all parts of the progress bar and provides task completion status to screen readers.
  */

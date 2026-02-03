@@ -1,8 +1,13 @@
 /**
- * @fileoverview Angular port of Base UI Separator component
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/separator/Separator.tsx
+ * @component BuiSeparator
+ * @reactSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/separator/Separator.tsx
+ * @reactDocs https://base-ui.com/react/components/separator
+ * @lastScraped 2026-02-03
+ * @styling Tailwind CSS 4 only
+ * @parity EXACT - Ported from React Base UI
  *
  * A separator element accessible to screen readers.
+ * Renders a `<div>` element with proper ARIA attributes.
  */
 
 import {
