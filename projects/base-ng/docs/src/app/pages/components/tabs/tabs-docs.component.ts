@@ -1,15 +1,32 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  TabsRootDirective,
+  TabsListDirective,
+  TabsTabDirective,
+  TabsPanelDirective,
+  TabsIndicatorDirective,
+} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-tabs',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    TabsRootDirective,
+    TabsListDirective,
+    TabsTabDirective,
+    TabsPanelDirective,
+    TabsIndicatorDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,12 +38,35 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <docs-demo [code]="basicDemoCode" language="html">
+          <div baseUiTabsRoot [(value)]="selectedTab" class="demo-tabs">
+            <div baseUiTabsList class="demo-tabs-list">
+              <button baseUiTab value="account" class="demo-tab">Account</button>
+              <button baseUiTab value="password" class="demo-tab">Password</button>
+              <button baseUiTab value="settings" class="demo-tab">Settings</button>
+              <span baseUiTabsIndicator class="demo-indicator"></span>
+            </div>
+            <div baseUiTabsPanel value="account" class="demo-panel">
+              <h3 class="demo-panel-title">Account Settings</h3>
+              <p class="demo-panel-text">Manage your account details here.</p>
+            </div>
+            <div baseUiTabsPanel value="password" class="demo-panel">
+              <h3 class="demo-panel-title">Change Password</h3>
+              <p class="demo-panel-text">Update your password securely.</p>
+            </div>
+            <div baseUiTabsPanel value="settings" class="demo-panel">
+              <h3 class="demo-panel-title">App Settings</h3>
+              <p class="demo-panel-text">Configure application preferences.</p>
+            </div>
+          </div>
+        </docs-demo>
+      </section>
 
-        <p class="docs-paragraph">Import the Tabs directives:</p>
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -59,7 +99,26 @@ import {
         <p class="docs-paragraph">
           Use <code>orientation="vertical"</code> for vertical tabs:
         </p>
-        <docs-code-block [code]="verticalDemoCode" language="html" />
+        <docs-demo [code]="verticalDemoCode" language="html">
+          <div baseUiTabsRoot orientation="vertical" [(value)]="verticalTab" class="demo-tabs demo-vertical">
+            <div baseUiTabsList class="demo-tabs-list demo-tabs-list-vertical">
+              <button baseUiTab value="general" class="demo-tab">General</button>
+              <button baseUiTab value="privacy" class="demo-tab">Privacy</button>
+              <button baseUiTab value="notifications" class="demo-tab">Notifications</button>
+            </div>
+            <div class="demo-panels-vertical">
+              <div baseUiTabsPanel value="general" class="demo-panel">
+                General settings content
+              </div>
+              <div baseUiTabsPanel value="privacy" class="demo-panel">
+                Privacy settings content
+              </div>
+              <div baseUiTabsPanel value="notifications" class="demo-panel">
+                Notification settings content
+              </div>
+            </div>
+          </div>
+        </docs-demo>
 
         <h3 class="docs-section-subtitle">With animated indicator</h3>
         <p class="docs-paragraph">
@@ -173,22 +232,110 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-tabs {
+      width: 100%;
+      max-width: 400px;
+      border: 1px solid var(--docs-border);
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+
+    .demo-vertical {
+      display: flex;
+      max-width: 500px;
+    }
+
+    .demo-tabs-list {
+      display: flex;
+      position: relative;
+      background: var(--docs-bg-muted, rgba(0, 0, 0, 0.02));
+      border-bottom: 1px solid var(--docs-border);
+    }
+
+    .demo-tabs-list-vertical {
+      flex-direction: column;
+      border-bottom: none;
+      border-right: 1px solid var(--docs-border);
+    }
+
+    .demo-tab {
+      padding: 0.75rem 1rem;
+      background: none;
+      border: none;
+      font-size: 0.875rem;
+      color: var(--docs-text-secondary);
+      cursor: pointer;
+      transition: color 0.15s, background 0.15s;
+
+      &:hover:not([data-disabled]) {
+        color: var(--docs-text);
+        background: var(--docs-bg-hover, rgba(0, 0, 0, 0.05));
+      }
+
+      &[data-selected] {
+        color: var(--docs-accent, #0066ff);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--docs-accent, #0066ff);
+        outline-offset: -2px;
+      }
+    }
+
+    .demo-indicator {
+      position: absolute;
+      bottom: 0;
+      height: 2px;
+      background: var(--docs-accent, #0066ff);
+      left: var(--indicator-left);
+      width: var(--indicator-width);
+      transition: left 0.2s, width 0.2s;
+    }
+
+    .demo-panel {
+      padding: 1rem;
+      background: var(--docs-bg);
+    }
+
+    .demo-panels-vertical {
+      flex: 1;
+    }
+
+    .demo-panel-title {
+      margin: 0 0 0.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--docs-text);
+    }
+
+    .demo-panel-text {
+      margin: 0;
+      font-size: 0.875rem;
+      color: var(--docs-text-secondary);
+      line-height: 1.6;
+    }
+  `,
 })
 export class TabsDocsComponent {
+  // Demo state
+  protected readonly selectedTab = signal('account');
+  protected readonly verticalTab = signal('general');
+
   protected readonly importCode = `import {
   TabsRootDirective,
   TabsListDirective,
   TabsTabDirective,
   TabsPanelDirective,
-  TabsIndicatorDirective
-} from '@base-ng/ui/tabs';
+  TabsIndicatorDirective,
+} from '@base-ng/ui';
 
 @Component({
   imports: [
@@ -196,7 +343,7 @@ export class TabsDocsComponent {
     TabsListDirective,
     TabsTabDirective,
     TabsPanelDirective,
-    TabsIndicatorDirective
+    TabsIndicatorDirective,
   ],
   // ...
 })`;
