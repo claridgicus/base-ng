@@ -130,7 +130,7 @@
 | 56  | Document Menu component                            | [x]    | `components/menu`             |
 | 57  | Document Context Menu component                    | [x]    | `components/context-menu`     |
 | 58  | Document Menubar component                         | [x]    | `components/menubar`          |
-| 59  | Document Navigation Menu component                 | [ ]    | `components/navigation-menu`  |
+| 59  | Document Navigation Menu component                 | [x]    | `components/navigation-menu`  |
 | 60  | Document Toolbar component                         | [ ]    | `components/toolbar`          |
 
 ---
@@ -225,9 +225,9 @@ Each component page should include:
 ## Progress Summary
 
 - **Total Tasks:** 75
-- **Completed:** 46
+- **Completed:** 47
 - **In Progress:** 0
-- **Remaining:** 29
+- **Remaining:** 28
 
 ---
 
