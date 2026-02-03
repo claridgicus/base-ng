@@ -1,15 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import { InputDirective } from '@base-ng/ui';
 
 @Component({
   selector: 'docs-input',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    InputDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,14 +28,27 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <docs-demo [code]="basicDemoCode" language="html">
+          <div class="demo-form">
+            <label class="demo-label">
+              Username
+              <input
+                baseUiInput
+                [(value)]="username"
+                placeholder="Enter username"
+                class="demo-input"
+              />
+            </label>
+            <span class="demo-preview">Value: {{ username() || '(empty)' }}</span>
+          </div>
+        </docs-demo>
+      </section>
 
-        <p class="docs-paragraph">
-          Import the Input directive from the package:
-        </p>
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -45,49 +65,65 @@ import {
       <section class="docs-section">
         <h2 class="docs-section-title">Examples</h2>
 
-        <h3 class="docs-section-subtitle">Basic usage</h3>
+        <h3 class="docs-section-subtitle">Invalid state</h3>
         <p class="docs-paragraph">
-          Use two-way binding with <code>[(value)]</code> for simple cases.
+          Use the <code>invalid</code> input to show validation errors:
         </p>
-        <docs-code-block [code]="basicDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">With ngModel</h3>
-        <p class="docs-paragraph">
-          The Input directive implements <code>ControlValueAccessor</code> for
-          seamless Angular forms integration.
-        </p>
-        <docs-code-block [code]="ngModelDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">Reactive forms</h3>
-        <p class="docs-paragraph">
-          Use with reactive forms and form controls.
-        </p>
-        <docs-code-block [code]="reactiveDemoCode" language="typescript" />
-
-        <h3 class="docs-section-subtitle">Validation state</h3>
-        <p class="docs-paragraph">
-          Use the <code>invalid</code> input to show validation errors.
-        </p>
-        <docs-code-block [code]="validationDemoCode" language="html" />
+        <docs-demo [code]="validationDemoCode" language="html">
+          <div class="demo-form">
+            <label class="demo-label">
+              Email
+              <input
+                baseUiInput
+                [(value)]="email"
+                [invalid]="isEmailInvalid()"
+                type="email"
+                placeholder="Enter email"
+                class="demo-input"
+              />
+            </label>
+            @if (isEmailInvalid()) {
+              <span class="demo-error">Please enter a valid email address</span>
+            }
+          </div>
+        </docs-demo>
 
         <h3 class="docs-section-subtitle">Disabled state</h3>
         <p class="docs-paragraph">
-          Disable the input using the <code>disabled</code> input.
+          Disable the input using the <code>disabled</code> input:
         </p>
-        <docs-code-block [code]="disabledDemoCode" language="html" />
+        <docs-demo [code]="disabledDemoCode" language="html">
+          <div class="demo-form">
+            <label class="demo-label">
+              Read-only field
+              <input
+                baseUiInput
+                value="Cannot edit this"
+                [disabled]="true"
+                class="demo-input"
+              />
+            </label>
+          </div>
+        </docs-demo>
 
         <h3 class="docs-section-subtitle">Textarea</h3>
         <p class="docs-paragraph">
-          The Input directive also works with textarea elements.
+          The Input directive also works with textarea elements:
         </p>
-        <docs-code-block [code]="textareaDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">With Field component</h3>
-        <p class="docs-paragraph">
-          For complete form fields with labels and validation, combine with
-          the Field component (see Field documentation).
-        </p>
-        <docs-code-block [code]="fieldDemoCode" language="html" />
+        <docs-demo [code]="textareaDemoCode" language="html">
+          <div class="demo-form">
+            <label class="demo-label">
+              Message
+              <textarea
+                baseUiInput
+                [(value)]="message"
+                placeholder="Enter your message..."
+                rows="3"
+                class="demo-input demo-textarea"
+              ></textarea>
+            </label>
+          </div>
+        </docs-demo>
       </section>
 
       <!-- Styling -->
@@ -172,15 +208,92 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .demo-label {
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--docs-text);
+    }
+
+    .demo-input {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      background: var(--docs-bg);
+      border: 1px solid var(--docs-border);
+      border-radius: 0.375rem;
+      transition: all 0.15s;
+      color: var(--docs-text);
+
+      &::placeholder {
+        color: var(--docs-text-secondary);
+      }
+
+      &[data-focused] {
+        border-color: var(--docs-accent, #0066ff);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+      }
+
+      &[data-invalid] {
+        border-color: #ef4444;
+      }
+
+      &[data-invalid][data-focused] {
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+      }
+
+      &[data-disabled] {
+        background: var(--docs-bg-secondary);
+        color: var(--docs-text-secondary);
+        cursor: not-allowed;
+      }
+    }
+
+    .demo-textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .demo-preview {
+      font-size: 0.75rem;
+      color: var(--docs-text-secondary);
+    }
+
+    .demo-error {
+      font-size: 0.75rem;
+      color: #ef4444;
+    }
+  `,
 })
 export class InputDocsComponent {
+  protected readonly username = signal('');
+  protected readonly email = signal('invalid-email');
+  protected readonly message = signal('');
+
+  protected isEmailInvalid(): boolean {
+    const email = this.email();
+    return email.length > 0 && !email.includes('@');
+  }
   protected readonly importCode = `import { InputDirective } from '@base-ng/ui/input';
 
 @Component({
