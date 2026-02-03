@@ -42,6 +42,9 @@
     },
     {
       "path": "./projects/base-ng/docs/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/lander/tsconfig.app.json"
     }
   ]
 }

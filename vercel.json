@@ -1,9 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "npm run build",
-  "outputDirectory": "dist/@base-ng/docs/browser",
+  "outputDirectory": "dist/combined",
   "framework": null,
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/angular/:path*", "destination": "/angular/index.html" },
+    { "source": "/((?!angular/).*)", "destination": "/index.html" }
   ]
 }

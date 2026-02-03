@@ -1,12 +1,9 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'angular/overview/quick-start', pathMatch: 'full' },
+  { path: '', redirectTo: 'overview/quick-start', pathMatch: 'full' },
   {
-    path: 'angular',
-    children: [
-      {
-        path: 'overview',
+    path: 'overview',
         children: [
           {
             path: 'quick-start',
@@ -739,7 +736,5 @@ export const routes: Routes = [
           },
         ],
       },
-    ],
-  },
-  { path: '**', redirectTo: 'angular/overview/quick-start' },
+  { path: '**', redirectTo: 'overview/quick-start' },
 ];
