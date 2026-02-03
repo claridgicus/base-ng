@@ -23,12 +23,16 @@ import { SeparatorComponent } from '@copied/base-ng';
 
       <!-- Live Demo -->
       <section class="docs-section">
-        <docs-demo [code]="horizontalDemoCode" language="html">
-          <div class="demo-stack">
-            <p class="demo-text">First section content</p>
-            <base-ui-separator></base-ui-separator>
-            <p class="demo-text">Second section content</p>
-          </div>
+        <docs-demo [code]="heroDemoCode" language="html">
+          <nav class="flex gap-4 text-nowrap">
+            <a href="javascript:void(0)" class="text-sm text-gray-900 decoration-gray-400 decoration-1 underline-offset-2 outline-none hover:underline focus-visible:rounded-sm focus-visible:no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-800">Home</a>
+            <a href="javascript:void(0)" class="text-sm text-gray-900 decoration-gray-400 decoration-1 underline-offset-2 outline-none hover:underline focus-visible:rounded-sm focus-visible:no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-800">Pricing</a>
+            <a href="javascript:void(0)" class="text-sm text-gray-900 decoration-gray-400 decoration-1 underline-offset-2 outline-none hover:underline focus-visible:rounded-sm focus-visible:no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-800">Blog</a>
+            <a href="javascript:void(0)" class="text-sm text-gray-900 decoration-gray-400 decoration-1 underline-offset-2 outline-none hover:underline focus-visible:rounded-sm focus-visible:no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-800">Support</a>
+            <base-ui-separator orientation="vertical" class="w-px self-stretch bg-gray-300"></base-ui-separator>
+            <a href="javascript:void(0)" class="text-sm text-gray-900 decoration-gray-400 decoration-1 underline-offset-2 outline-none hover:underline focus-visible:rounded-sm focus-visible:no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-800">Log in</a>
+            <a href="javascript:void(0)" class="text-sm text-gray-900 decoration-gray-400 decoration-1 underline-offset-2 outline-none hover:underline focus-visible:rounded-sm focus-visible:no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-800">Sign up</a>
+          </nav>
         </docs-demo>
       </section>
 
@@ -209,23 +213,43 @@ import { SeparatorComponent } from '@copied/base-ng';
       }
     }
 
-    /* Separator component styles */
-    base-ui-separator[data-orientation="horizontal"] {
+    /* Separator component styles - use Tailwind classes instead */
+    base-ui-separator[data-orientation="horizontal"]:not([class*="w-"]) {
       width: 100%;
       height: 1px;
       background-color: var(--docs-border);
       margin: 0.5rem 0;
     }
 
-    base-ui-separator[data-orientation="vertical"] {
+    base-ui-separator[data-orientation="vertical"]:not([class*="w-"]) {
       width: 1px;
       height: 1rem;
       background-color: var(--docs-border);
       margin: 0 0.75rem;
     }
+
+    /* Hero demo nav links */
+    nav.flex a {
+      color: #111827 !important;
+      text-decoration: none;
+    }
+
+    nav.flex a:hover {
+      text-decoration: underline;
+    }
   `,
 })
 export class SeparatorDocsComponent {
+  protected readonly heroDemoCode = `<nav class="flex gap-4 text-nowrap">
+  <a href="#" class="text-sm text-gray-900 hover:underline ...">Home</a>
+  <a href="#" class="text-sm text-gray-900 hover:underline ...">Pricing</a>
+  <a href="#" class="text-sm text-gray-900 hover:underline ...">Blog</a>
+  <a href="#" class="text-sm text-gray-900 hover:underline ...">Support</a>
+  <base-ui-separator orientation="vertical" class="w-px bg-gray-300" />
+  <a href="#" class="text-sm text-gray-900 hover:underline ...">Log in</a>
+  <a href="#" class="text-sm text-gray-900 hover:underline ...">Sign up</a>
+</nav>`;
+
   protected readonly importCode = `import { SeparatorComponent } from '@copied/base-ng/separator';
 
 @Component({
