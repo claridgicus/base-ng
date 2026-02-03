@@ -1,5 +1,5 @@
 /**
- * @fileoverview Integration tests for @base-ng/ui components
+ * @fileoverview Integration tests for @copied/base-ng components
  * Tests real-world component combinations and interactions
  */
 

@@ -14,7 +14,7 @@ import {
   ToastTitleDirective,
   ToastDescriptionDirective,
   ToastCloseDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   selector: 'docs-toast',
@@ -655,7 +655,7 @@ export class ToastDocsComponent {
   ToastCloseDirective,
   ToastActionDirective,
   ToastManagerService,
-} from '@base-ng/ui';`;
+} from '@copied/base-ng';`;
 
   anatomyCode = `<div baseUiToastProvider>
   <div baseUiToastViewport>
@@ -699,7 +699,7 @@ import {
   ToastDescriptionDirective,
   ToastCloseDirective,
   ToastManagerService,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   selector: 'app-root',

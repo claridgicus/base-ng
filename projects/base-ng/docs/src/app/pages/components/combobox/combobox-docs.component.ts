@@ -8,7 +8,7 @@ import {
   ComboboxPositionerDirective,
   ComboboxRootDirective,
   ComboboxTriggerDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 import {
   CodeBlockComponent,
   DemoComponent,
@@ -570,7 +570,7 @@ export class ComboboxDocsComponent {
   ComboboxClearDirective,
   ComboboxGroupDirective,
   ComboboxGroupLabelDirective,
-} from '@base-ng/ui';`;
+} from '@copied/base-ng';`;
 
   anatomyCode = `<div baseUiComboboxRoot>
   <!-- Input with optional trigger -->

@@ -10,7 +10,7 @@ import {
   RadioGroupDirective,
   RadioRootDirective,
   RadioIndicatorDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   selector: 'docs-radio-group',
@@ -303,7 +303,7 @@ export class RadioGroupDocsComponent {
   RadioGroupDirective,
   RadioRootDirective,
   RadioIndicatorDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   imports: [

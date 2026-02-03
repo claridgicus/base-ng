@@ -1,9 +1,9 @@
 /**
- * @fileoverview Version information for @base-ng/ui
+ * @fileoverview Version information for @copied/base-ng
  * @source https://github.com/mui/base-ui/blob/master/packages/react/src
  */
 
 /**
- * The version of @base-ng/ui
+ * The version of @copied/base-ng
  */
 export const VERSION = '0.0.1';

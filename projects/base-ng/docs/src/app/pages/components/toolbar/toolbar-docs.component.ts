@@ -4,7 +4,7 @@ import {
   ToolbarGroupDirective,
   ToolbarRootDirective,
   ToolbarSeparatorDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 import {
   CodeBlockComponent,
   DemoComponent,
@@ -374,7 +374,7 @@ export class ToolbarDocsComponent {
   ToolbarSeparatorDirective,
   ToolbarLinkDirective,
   ToolbarInputDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   imports: [

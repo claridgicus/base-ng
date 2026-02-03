@@ -1,11 +1,11 @@
-# @base-ng/ui
+# @copied/base-ng
 
 Angular 21 port of [Base UI](https://base-ui.com/) - unstyled, accessible components for building design systems.
 
 ## Installation
 
 ```bash
-npm install @base-ng/ui
+npm install @copied/base-ng
 ```
 
 ## Features
@@ -309,7 +309,7 @@ import {
   CheckboxRootDirective,
   DialogRootDirective,
   // ...
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 ```
 
 ## Browser Support

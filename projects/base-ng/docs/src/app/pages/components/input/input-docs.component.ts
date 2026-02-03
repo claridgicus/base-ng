@@ -6,7 +6,7 @@ import {
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
-import { InputDirective } from '@base-ng/ui';
+import { InputDirective } from '@copied/base-ng';
 
 @Component({
   selector: 'docs-input',
@@ -294,7 +294,7 @@ export class InputDocsComponent {
     const email = this.email();
     return email.length > 0 && !email.includes('@');
   }
-  protected readonly importCode = `import { InputDirective } from '@base-ng/ui/input';
+  protected readonly importCode = `import { InputDirective } from '@copied/base-ng/input';
 
 @Component({
   imports: [InputDirective],

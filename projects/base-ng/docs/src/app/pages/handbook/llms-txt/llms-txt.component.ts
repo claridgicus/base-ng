@@ -192,7 +192,7 @@ accessible primitives that you can style however you want.
 ## Installation
 
 \`\`\`bash
-npm install @base-ng/ui
+npm install @copied/base-ng
 \`\`\`
 
 ## Key Concepts
@@ -260,5 +260,5 @@ npm install @base-ng/ui
 
 - Documentation: https://base-ng.dev
 - GitHub: https://github.com/anthropics/base-ng
-- npm: https://npmjs.com/package/@base-ng/ui`;
+- npm: https://npmjs.com/package/@copied/base-ng`;
 }

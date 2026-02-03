@@ -24,7 +24,7 @@ import {
       <section class="docs-section">
         <h2>Installation</h2>
         <docs-package-selector
-          packageName="@base-ng/ui"
+          packageName="@copied/base-ng"
           importName="mergeProps, mergePropsN, preventBaseUIHandler"
         />
       </section>
@@ -271,7 +271,7 @@ import {
     }`,
 })
 export class MergePropsDocsComponent {
-  basicUsageCode = `import { mergeProps } from '@base-ng/ui';
+  basicUsageCode = `import { mergeProps } from '@copied/base-ng';
 
 const defaultProps = {
   type: 'button',
@@ -286,7 +286,7 @@ const userProps = {
 const merged = mergeProps(defaultProps, userProps);
 // Result: { type: 'button', disabled: true, 'aria-label': 'Submit form' }`;
 
-  eventHandlerCode = `import { mergeProps } from '@base-ng/ui';
+  eventHandlerCode = `import { mergeProps } from '@copied/base-ng';
 
 const internalClick = (event: Event) => {
   console.log('Internal handler');
@@ -307,7 +307,7 @@ const merged = mergeProps(
 
 merged.onClick(new MouseEvent('click'));`;
 
-  preventHandlerCode = `import { mergeProps, preventBaseUIHandler } from '@base-ng/ui';
+  preventHandlerCode = `import { mergeProps, preventBaseUIHandler } from '@copied/base-ng';
 
 const internalHandler = (event: Event) => {
   console.log('This will NOT run');
@@ -329,7 +329,7 @@ const merged = mergeProps(
 merged.onClick(new MouseEvent('click'));
 
 // You can also check if prevention occurred
-import { isBaseUIHandlerPrevented } from '@base-ng/ui';
+import { isBaseUIHandlerPrevented } from '@copied/base-ng';
 
 const anotherHandler = (event: Event) => {
   if (isBaseUIHandlerPrevented(event)) {
@@ -339,7 +339,7 @@ const anotherHandler = (event: Event) => {
   // ... continue with logic
 };`;
 
-  classMergingCode = `import { mergeProps } from '@base-ng/ui';
+  classMergingCode = `import { mergeProps } from '@copied/base-ng';
 
 const baseProps = { className: 'btn btn-base' };
 const sizeProps = { className: 'btn-lg' };
@@ -355,7 +355,7 @@ const angularMerged = mergeProps(
 );
 // Result: { class: 'override-class base-class' }`;
 
-  styleMergingCode = `import { mergeProps } from '@base-ng/ui';
+  styleMergingCode = `import { mergeProps } from '@copied/base-ng';
 
 const baseStyle = {
   style: {
@@ -381,7 +381,7 @@ const merged = mergeProps(baseStyle, overrideStyle);
 //   }
 // }`;
 
-  dynamicPropsCode = `import { mergeProps } from '@base-ng/ui';
+  dynamicPropsCode = `import { mergeProps } from '@copied/base-ng';
 
 const baseProps = {
   disabled: false,
@@ -401,7 +401,7 @@ const result = mergeProps(baseProps, dynamicProps);
 //   'aria-disabled': false,
 // }`;
 
-  mergePropsNCode = `import { mergePropsN } from '@base-ng/ui';
+  mergePropsNCode = `import { mergePropsN } from '@copied/base-ng';
 
 // When you have a dynamic array of props
 const propsList = [
@@ -420,7 +420,7 @@ const allProps = mergePropsN([
 ]);`;
 
   realWorldCode = `import { Component, input, computed } from '@angular/core';
-import { mergeProps, type GenericProps } from '@base-ng/ui';
+import { mergeProps, type GenericProps } from '@copied/base-ng';
 
 @Component({
   selector: 'ui-button',

@@ -12,8 +12,8 @@ import {
   FieldControlDirective,
   FieldDescriptionDirective,
   FieldErrorDirective,
-} from '@base-ng/ui';
-import { InputDirective } from '@base-ng/ui';
+} from '@copied/base-ng';
+import { InputDirective } from '@copied/base-ng';
 
 @Component({
   selector: 'docs-field',
@@ -326,7 +326,7 @@ export class FieldDocsComponent {
   FieldControlDirective,
   FieldDescriptionDirective,
   FieldErrorDirective,
-} from '@base-ng/ui/field';
+} from '@copied/base-ng/field';
 
 @Component({
   imports: [

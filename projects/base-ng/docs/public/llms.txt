@@ -7,7 +7,7 @@ Base NG is an Angular port of Base UI (React), providing unstyled, accessible pr
 ## Installation
 
 ```bash
-npm install @base-ng/ui
+npm install @copied/base-ng
 ```
 
 ## Key Concepts
@@ -185,7 +185,7 @@ All Base NG directives follow the pattern `baseUi[ComponentName][SubPart]`:
 Global toast notification management:
 
 ```typescript
-import { ToastManagerService } from '@base-ng/ui';
+import { ToastManagerService } from '@copied/base-ng';
 
 @Component({...})
 export class MyComponent {
@@ -217,7 +217,7 @@ export class MyComponent {
 RTL/LTR text direction management:
 
 ```typescript
-import { DirectionService, provideDirection } from '@base-ng/ui';
+import { DirectionService, provideDirection } from '@copied/base-ng';
 
 // Configure at app level
 export const appConfig = {
@@ -237,7 +237,7 @@ export class MyComponent {
 Content Security Policy nonce management:
 
 ```typescript
-import { provideCSP } from '@base-ng/ui';
+import { provideCSP } from '@copied/base-ng';
 
 export const appConfig = {
   providers: [provideCSP({ nonce: 'your-nonce' })],
@@ -251,7 +251,7 @@ export const appConfig = {
 Merge multiple props objects with intelligent handling:
 
 ```typescript
-import { mergeProps } from '@base-ng/ui';
+import { mergeProps } from '@copied/base-ng';
 
 const merged = mergeProps(
   { onClick: handler1, className: 'base' },
@@ -264,7 +264,7 @@ const merged = mergeProps(
 
 - Documentation: https://base-ng.dev
 - GitHub: https://github.com/anthropics/base-ng
-- npm: https://npmjs.com/package/@base-ng/ui
+- npm: https://npmjs.com/package/@copied/base-ng
 - Base UI (React): https://base-ui.com
 
 ## Quick Reference

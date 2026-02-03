@@ -24,7 +24,7 @@ import {
       <section class="docs-section">
         <h2>Installation</h2>
         <docs-package-selector
-          packageName="@base-ng/ui"
+          packageName="@copied/base-ng"
           importName="RenderElementDirective, computeStateAttributes, applyStateAttributes, createRenderContext"
         />
       </section>
@@ -279,7 +279,7 @@ export class UseRenderDocsComponent {
 <!-- Renders: <button data-disabled data-variant="primary">Click me</button> -->`;
 
   computeAttributesCode = `import { computed, signal } from '@angular/core';
-import { computeStateAttributes } from '@base-ng/ui';
+import { computeStateAttributes } from '@copied/base-ng';
 
 // Define component state
 const state = signal({
@@ -297,7 +297,7 @@ const attrs = computed(() => computeStateAttributes(state()));
 // [attr.data-open]="attrs()['data-open']"
 // [attr.data-size]="attrs()['data-size']"`;
 
-  stateMappingCode = `import { computeStateAttributes, type StateAttributesMapping } from '@base-ng/ui';
+  stateMappingCode = `import { computeStateAttributes, type StateAttributesMapping } from '@copied/base-ng';
 
 interface ButtonState {
   isPressed: boolean;
@@ -330,7 +330,7 @@ const attrs = computeStateAttributes(state, mapping);
   applyStateAttributes,
   removeStateAttributes,
   computeStateAttributes,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   selector: 'app-custom-element',
@@ -378,7 +378,7 @@ export class CustomElementComponent {
   }
 }`;
 
-  renderContextCode = `import { createRenderContext, type RenderContext } from '@base-ng/ui';
+  renderContextCode = `import { createRenderContext, type RenderContext } from '@copied/base-ng';
 
 interface TooltipState {
   open: boolean;
@@ -486,7 +486,7 @@ import {
   RenderElementDirective,
   computeStateAttributes,
   createRenderContext,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 interface ToggleState {
   pressed: boolean;

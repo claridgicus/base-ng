@@ -11,7 +11,7 @@ import {
   NumberFieldInputDirective,
   NumberFieldIncrementDirective,
   NumberFieldDecrementDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   selector: 'docs-number-field',
@@ -313,7 +313,7 @@ export class NumberFieldDocsComponent {
   NumberFieldInputDirective,
   NumberFieldIncrementDirective,
   NumberFieldDecrementDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   imports: [

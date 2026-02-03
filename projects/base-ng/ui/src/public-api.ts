@@ -2,7 +2,7 @@
  * @fileoverview Angular port of Base UI component library
  * @source https://github.com/mui/base-ui/blob/master/packages/react/src
  *
- * Public API Surface of @base-ng/ui
+ * Public API Surface of @copied/base-ng
  * Components will be exported here as they are ported from Base UI React
  */
 

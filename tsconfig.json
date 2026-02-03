@@ -4,7 +4,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "paths": {
-      "@base-ng/ui": [
+      "@copied/base-ng": [
         "./dist/base-ng/ui"
       ]
     },

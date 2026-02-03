@@ -6,7 +6,7 @@ import {
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
-import { ToggleGroupDirective, ToggleDirective } from '@base-ng/ui';
+import { ToggleGroupDirective, ToggleDirective } from '@copied/base-ng';
 
 @Component({
   selector: 'docs-toggle-group',
@@ -250,8 +250,8 @@ export class ToggleGroupDocsComponent {
   protected readonly viewMode = signal<string[]>(['list']);
   protected readonly formats = signal<string[]>([]);
   protected readonly alignment = signal<string[]>(['left']);
-  protected readonly importCode = `import { ToggleGroupDirective } from '@base-ng/ui/toggle-group';
-import { ToggleDirective } from '@base-ng/ui/toggle';
+  protected readonly importCode = `import { ToggleGroupDirective } from '@copied/base-ng/toggle-group';
+import { ToggleDirective } from '@copied/base-ng/toggle';
 
 @Component({
   imports: [ToggleGroupDirective, ToggleDirective],
@@ -439,7 +439,7 @@ export class MyComponent {
 </div>`;
 
   protected readonly contextCode = `import { inject } from '@angular/core';
-import { TOGGLE_GROUP_CONTEXT } from '@base-ng/ui/toggle-group';
+import { TOGGLE_GROUP_CONTEXT } from '@copied/base-ng/toggle-group';
 
 @Directive({
   selector: '[myCustomToggle]',

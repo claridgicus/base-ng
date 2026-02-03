@@ -221,7 +221,7 @@ export class CompositionComponent {
 import {
   SwitchRootDirective,
   SwitchThumbDirective
-} from '@base-ng/ui/switch';
+} from '@copied/base-ng/switch';
 
 @Component({
   selector: 'app-labeled-switch',
@@ -319,7 +319,7 @@ export class LabeledSwitchComponent {
   <p>Panel is {{ open ? 'visible' : 'hidden' }}</p>
 </ng-template>`;
 
-  protected readonly useRenderCode = `import { RenderElementDirective } from '@base-ng/ui/use-render';
+  protected readonly useRenderCode = `import { RenderElementDirective } from '@copied/base-ng/use-render';
 
 @Component({
   imports: [MenuItemDirective, RenderElementDirective],

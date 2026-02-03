@@ -6,7 +6,7 @@ import {
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
-import { SwitchRootDirective, SwitchThumbDirective } from '@base-ng/ui';
+import { SwitchRootDirective, SwitchThumbDirective } from '@copied/base-ng';
 
 @Component({
   selector: 'docs-switch',
@@ -296,7 +296,7 @@ export class SwitchDocsComponent {
   protected readonly importCode = `import {
   SwitchRootDirective,
   SwitchThumbDirective
-} from '@base-ng/ui/switch';
+} from '@copied/base-ng/switch';
 
 @Component({
   imports: [SwitchRootDirective, SwitchThumbDirective],

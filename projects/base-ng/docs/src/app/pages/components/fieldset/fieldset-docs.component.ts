@@ -6,8 +6,8 @@ import {
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
-import { FieldsetRootDirective, FieldsetLegendDirective } from '@base-ng/ui';
-import { InputDirective } from '@base-ng/ui';
+import { FieldsetRootDirective, FieldsetLegendDirective } from '@copied/base-ng';
+import { InputDirective } from '@copied/base-ng';
 
 @Component({
   selector: 'docs-fieldset',
@@ -289,7 +289,7 @@ export class FieldsetDocsComponent {
   protected readonly importCode = `import {
   FieldsetRootDirective,
   FieldsetLegendDirective,
-} from '@base-ng/ui/fieldset';
+} from '@copied/base-ng/fieldset';
 
 @Component({
   imports: [

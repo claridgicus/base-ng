@@ -74,7 +74,7 @@ interface PackageManager {
   `,
 })
 export class PackageSelectorComponent {
-  @Input() package = '@base-ng/ui';
+  @Input() package = '@copied/base-ng';
 
   protected readonly activeTab = signal(0);
 

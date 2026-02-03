@@ -6,7 +6,7 @@ import {
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
-import { SeparatorComponent } from '@base-ng/ui';
+import { SeparatorComponent } from '@copied/base-ng';
 
 @Component({
   selector: 'docs-separator',
@@ -226,7 +226,7 @@ import { SeparatorComponent } from '@base-ng/ui';
   `,
 })
 export class SeparatorDocsComponent {
-  protected readonly importCode = `import { SeparatorComponent } from '@base-ng/ui/separator';
+  protected readonly importCode = `import { SeparatorComponent } from '@copied/base-ng/separator';
 
 @Component({
   imports: [SeparatorComponent],

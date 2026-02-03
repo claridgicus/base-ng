@@ -5,7 +5,7 @@ import {
   ContextMenuRootDirective,
   ContextMenuSeparatorDirective,
   ContextMenuTriggerDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 import {
   CodeBlockComponent,
   DemoComponent,
@@ -348,7 +348,7 @@ export class ContextMenuDocsComponent {
   ContextMenuPopupDirective,
   ContextMenuItemDirective,
   ContextMenuSeparatorDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   imports: [

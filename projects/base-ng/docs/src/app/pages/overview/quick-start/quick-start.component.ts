@@ -266,14 +266,14 @@ export class QuickStartComponent {
   protected activeTab = 0;
 
   protected readonly packageManagers = [
-    { name: 'npm', command: 'npm install @base-ng/ui' },
-    { name: 'yarn', command: 'yarn add @base-ng/ui' },
-    { name: 'pnpm', command: 'pnpm add @base-ng/ui' },
+    { name: 'npm', command: 'npm install @copied/base-ng' },
+    { name: 'yarn', command: 'yarn add @copied/base-ng' },
+    { name: 'pnpm', command: 'pnpm add @copied/base-ng' },
   ];
 
   protected readonly basicUsageCode = `import { Component } from '@angular/core';
-import { BuiButton } from '@base-ng/ui/button';
-import { BuiSwitch, BuiSwitchThumb } from '@base-ng/ui/switch';
+import { BuiButton } from '@copied/base-ng/button';
+import { BuiSwitch, BuiSwitchThumb } from '@copied/base-ng/switch';
 
 @Component({
   selector: 'app-example',

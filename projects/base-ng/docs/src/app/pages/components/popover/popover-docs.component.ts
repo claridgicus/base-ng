@@ -15,7 +15,7 @@ import {
   PopoverCloseDirective,
   PopoverTitleDirective,
   PopoverDescriptionDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   selector: 'docs-popover',
@@ -431,7 +431,7 @@ export class PopoverDocsComponent {
   PopoverDescriptionDirective,
   PopoverBackdropDirective,  // Optional
   PopoverPortalDirective,    // Optional
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   imports: [

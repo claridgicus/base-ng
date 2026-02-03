@@ -6,7 +6,7 @@ import {
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
-import { CheckboxRootDirective, CheckboxIndicatorDirective } from '@base-ng/ui';
+import { CheckboxRootDirective, CheckboxIndicatorDirective } from '@copied/base-ng';
 
 @Component({
   selector: 'docs-checkbox',
@@ -358,7 +358,7 @@ export class CheckboxDocsComponent {
   protected readonly importCode = `import {
   CheckboxRootDirective,
   CheckboxIndicatorDirective
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   imports: [CheckboxRootDirective, CheckboxIndicatorDirective],

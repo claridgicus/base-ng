@@ -12,7 +12,7 @@ import {
   TabsTabDirective,
   TabsPanelDirective,
   TabsIndicatorDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   selector: 'docs-tabs',
@@ -335,7 +335,7 @@ export class TabsDocsComponent {
   TabsTabDirective,
   TabsPanelDirective,
   TabsIndicatorDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   imports: [

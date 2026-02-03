@@ -10,7 +10,7 @@ import {
   SelectRootDirective,
   SelectTriggerDirective,
   SelectValueDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 import {
   CodeBlockComponent,
   DemoComponent,
@@ -632,7 +632,7 @@ export class SelectDocsComponent {
   SelectGroupLabelDirective,
   SelectScrollUpArrowDirective,
   SelectScrollDownArrowDirective,
-} from '@base-ng/ui';`;
+} from '@copied/base-ng';`;
 
   anatomyCode = `<div baseUiSelectRoot>
   <!-- Trigger button -->

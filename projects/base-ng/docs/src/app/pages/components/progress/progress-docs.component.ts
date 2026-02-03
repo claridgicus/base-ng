@@ -11,7 +11,7 @@ import {
   ProgressTrackDirective,
   ProgressIndicatorDirective,
   ProgressValueDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   selector: 'docs-progress',
@@ -270,7 +270,7 @@ export class ProgressDocsComponent {
   ProgressTrackDirective,
   ProgressIndicatorDirective,
   ProgressValueDirective
-} from '@base-ng/ui/progress';
+} from '@copied/base-ng/progress';
 
 @Component({
   imports: [

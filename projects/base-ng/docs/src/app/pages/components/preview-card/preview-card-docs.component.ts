@@ -12,7 +12,7 @@ import {
   PreviewCardPositionerDirective,
   PreviewCardPopupDirective,
   PreviewCardArrowDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   selector: 'docs-preview-card',
@@ -299,7 +299,7 @@ export class PreviewCardDocsComponent {
   PreviewCardPositionerDirective,
   PreviewCardPopupDirective,
   PreviewCardArrowDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   imports: [

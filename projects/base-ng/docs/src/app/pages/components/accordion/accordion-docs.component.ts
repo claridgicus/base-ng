@@ -12,7 +12,7 @@ import {
   AccordionHeaderDirective,
   AccordionTriggerDirective,
   AccordionPanelDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   selector: 'docs-accordion',
@@ -382,7 +382,7 @@ export class AccordionDocsComponent {
   AccordionHeaderDirective,
   AccordionTriggerDirective,
   AccordionPanelDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   imports: [
@@ -434,7 +434,7 @@ export class AccordionDocsComponent {
       </button>
     </h3>
     <div baseUiAccordionPanel>
-      Run npm install @base-ng/ui and import the components you need.
+      Run npm install @copied/base-ng and import the components you need.
     </div>
   </div>
 </div>

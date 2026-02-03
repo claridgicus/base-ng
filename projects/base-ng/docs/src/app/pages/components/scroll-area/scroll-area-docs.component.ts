@@ -5,7 +5,7 @@ import {
   ScrollAreaScrollbarDirective,
   ScrollAreaThumbDirective,
   ScrollAreaViewportDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 import {
   CodeBlockComponent,
   DemoComponent,
@@ -449,7 +449,7 @@ export class ScrollAreaDocsComponent {
   ScrollAreaScrollbarDirective,
   ScrollAreaThumbDirective,
   ScrollAreaCornerDirective,
-} from '@base-ng/ui';`;
+} from '@copied/base-ng';`;
 
   anatomyCode = `<div baseUiScrollAreaRoot class="scroll-area">
   <!-- Scrollable viewport -->

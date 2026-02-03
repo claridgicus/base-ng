@@ -10,7 +10,7 @@ import {
   CollapsibleRootDirective,
   CollapsibleTriggerDirective,
   CollapsiblePanelDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   selector: 'docs-collapsible',
@@ -331,7 +331,7 @@ export class CollapsibleDocsComponent {
   CollapsibleRootDirective,
   CollapsibleTriggerDirective,
   CollapsiblePanelDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   imports: [

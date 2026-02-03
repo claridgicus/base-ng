@@ -25,7 +25,7 @@ import {
       <section class="docs-section">
         <h2>Installation</h2>
         <docs-package-selector
-          packageName="@base-ng/ui"
+          packageName="@copied/base-ng"
           importName="CSPService, provideCSP, CSP_CONFIG"
         />
       </section>
@@ -200,7 +200,7 @@ import {
 export class CspProviderDocsComponent {
   basicUsageCode = `// app.config.ts
 import { ApplicationConfig } from '@angular/core';
-import { provideCSP } from '@base-ng/ui';
+import { provideCSP } from '@copied/base-ng';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -220,7 +220,7 @@ const nonce = crypto.randomBytes(16).toString('base64');
 </script>
 
 // app.config.ts
-import { provideCSP } from '@base-ng/ui';
+import { provideCSP } from '@copied/base-ng';
 
 const nonce = (window as any).__CSP_NONCE__ || '';
 
@@ -234,7 +234,7 @@ export const appConfig = {
 // Content-Security-Policy: style-src 'nonce-<your-nonce>'`;
 
   disableStylesCode = `// app.config.ts
-import { provideCSP } from '@base-ng/ui';
+import { provideCSP } from '@copied/base-ng';
 
 export const appConfig = {
   providers: [
@@ -248,7 +248,7 @@ export const appConfig = {
 // to provide fallback styles for animations and transitions`;
 
   serviceUsageCode = `import { Component, inject } from '@angular/core';
-import { CSPService } from '@base-ng/ui';
+import { CSPService } from '@copied/base-ng';
 
 @Component({
   selector: 'app-custom-style',
@@ -285,7 +285,7 @@ export class DynamicStyleComponent {
 }`;
 
   dynamicNonceCode = `import { Component, inject } from '@angular/core';
-import { CSPService } from '@base-ng/ui';
+import { CSPService } from '@copied/base-ng';
 
 @Component({
   selector: 'app-root',

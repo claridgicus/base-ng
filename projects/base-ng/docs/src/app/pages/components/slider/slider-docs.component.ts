@@ -11,7 +11,7 @@ import {
   SliderTrackDirective,
   SliderIndicatorDirective,
   SliderThumbDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   selector: 'docs-slider',
@@ -344,7 +344,7 @@ export class SliderDocsComponent {
   SliderTrackDirective,
   SliderIndicatorDirective,
   SliderThumbDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   imports: [

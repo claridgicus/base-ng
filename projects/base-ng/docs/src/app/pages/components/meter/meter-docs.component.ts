@@ -12,7 +12,7 @@ import {
   MeterIndicatorDirective,
   MeterLabelDirective,
   MeterValueDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   selector: 'docs-meter',
@@ -320,7 +320,7 @@ export class MeterDocsComponent {
   MeterIndicatorDirective,
   MeterLabelDirective,
   MeterValueDirective,
-} from '@base-ng/ui/meter';
+} from '@copied/base-ng/meter';
 
 @Component({
   imports: [
@@ -462,7 +462,7 @@ formatBattery = (value: number, formattedValue: string) => {
 </div>`;
 
   protected readonly contextCode = `import { inject } from '@angular/core';
-import { METER_CONTEXT } from '@base-ng/ui/meter';
+import { METER_CONTEXT } from '@copied/base-ng/meter';
 
 @Directive({
   selector: '[myCustomMeterDisplay]',

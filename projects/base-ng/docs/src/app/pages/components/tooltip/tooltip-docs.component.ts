@@ -12,7 +12,7 @@ import {
   TooltipPositionerDirective,
   TooltipPopupDirective,
   TooltipArrowDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   selector: 'docs-tooltip',
@@ -310,7 +310,7 @@ export class TooltipDocsComponent {
   TooltipPositionerDirective,
   TooltipPopupDirective,
   TooltipArrowDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   imports: [

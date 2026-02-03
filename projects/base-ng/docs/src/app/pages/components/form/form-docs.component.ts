@@ -13,7 +13,7 @@ import {
   FieldControlDirective,
   FieldErrorDirective,
   type FormSubmitEventDetails,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   selector: 'docs-form',
@@ -270,7 +270,7 @@ export class FormDocsComponent {
     setTimeout(() => this.submitMessage.set(''), 3000);
   }
 
-  protected readonly importCode = `import { FormRootDirective } from '@base-ng/ui';
+  protected readonly importCode = `import { FormRootDirective } from '@copied/base-ng';
 
 @Component({
   imports: [FormRootDirective],

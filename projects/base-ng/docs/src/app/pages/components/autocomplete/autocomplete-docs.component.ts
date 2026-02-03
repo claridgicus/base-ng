@@ -6,7 +6,7 @@ import {
   AutocompletePopupDirective,
   AutocompletePositionerDirective,
   AutocompleteRootDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 import {
   CodeBlockComponent,
   DemoComponent,
@@ -515,7 +515,7 @@ export class AutocompleteDocsComponent {
   AutocompleteClearDirective,
   AutocompleteGroupDirective,
   AutocompleteGroupLabelDirective,
-} from '@base-ng/ui';`;
+} from '@copied/base-ng';`;
 
   anatomyCode = `<div baseUiAutocompleteRoot mode="list">
   <!-- Input -->

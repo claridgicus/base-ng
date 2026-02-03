@@ -6,7 +6,7 @@ import {
   NavigationMenuListDirective,
   NavigationMenuRootDirective,
   NavigationMenuTriggerDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 import {
   CodeBlockComponent,
   DemoComponent,
@@ -389,7 +389,7 @@ export class NavigationMenuDocsComponent {
   NavigationMenuViewportDirective,
   NavigationMenuLinkDirective,
   NavigationMenuBackdropDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   imports: [

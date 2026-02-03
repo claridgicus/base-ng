@@ -156,16 +156,16 @@ import {
   SwitchRootDirective,
   type SwitchState,
   type SwitchCheckedChangeEvent
-} from '@base-ng/ui/switch';
+} from '@copied/base-ng/switch';
 
 // Import from types subpath
-import type { OpenChangeReason } from '@base-ng/ui/types';`;
+import type { OpenChangeReason } from '@copied/base-ng/types';`;
 
   protected readonly componentTypesCode = `import type {
   AccordionState,
   AccordionItemState,
   AccordionValue
-} from '@base-ng/ui/accordion';
+} from '@copied/base-ng/accordion';
 
 // State interface provides component state shape
 interface AccordionState {
@@ -187,7 +187,7 @@ interface AccordionItemState extends AccordionState {
   OpenChangeEvent,
   ValueChangeEvent,
   CheckedChangeEvent
-} from '@base-ng/ui/types';
+} from '@copied/base-ng/types';
 
 // Open/close events include reason
 interface OpenChangeEvent {
@@ -229,7 +229,7 @@ export class MyComponent {
   }
 }`;
 
-  protected readonly genericComponentsCode = `import { TabsRootDirective } from '@base-ng/ui/tabs';
+  protected readonly genericComponentsCode = `import { TabsRootDirective } from '@copied/base-ng/tabs';
 
 // Tabs value can be typed
 interface MyTabValue {
@@ -262,7 +262,7 @@ export class TabsComponent {
   Side,
   Alignment,
   Direction
-} from '@base-ng/ui/types';
+} from '@copied/base-ng/types';
 
 // Common orientation type
 type Orientation = 'horizontal' | 'vertical';
@@ -291,7 +291,7 @@ export class MyPopover {
 import {
   CollapsibleRootDirective,
   type CollapsibleState
-} from '@base-ng/ui/collapsible';
+} from '@copied/base-ng/collapsible';
 
 @Component({
   template: \`
@@ -328,7 +328,7 @@ import {
   SwitchRootDirective,
   SwitchThumbDirective,
   type SwitchState
-} from '@base-ng/ui/switch';
+} from '@copied/base-ng/switch';
 
 // Re-export types for consumers
 export type { SwitchState };

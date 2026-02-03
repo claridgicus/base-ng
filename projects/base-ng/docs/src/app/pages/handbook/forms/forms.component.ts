@@ -207,9 +207,9 @@ export class FormsComponent {
 
   protected readonly reactiveFormsCode = `import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { FieldDirectives } from '@base-ng/ui/field';
-import { InputDirective } from '@base-ng/ui/input';
-import { SwitchDirectives } from '@base-ng/ui/switch';
+import { FieldDirectives } from '@copied/base-ng/field';
+import { InputDirective } from '@copied/base-ng/input';
+import { SwitchDirectives } from '@copied/base-ng/switch';
 
 @Component({
   imports: [

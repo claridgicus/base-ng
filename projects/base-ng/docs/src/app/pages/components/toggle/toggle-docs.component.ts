@@ -6,7 +6,7 @@ import {
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
-import { ToggleDirective } from '@base-ng/ui';
+import { ToggleDirective } from '@copied/base-ng';
 
 @Component({
   selector: 'docs-toggle',
@@ -279,7 +279,7 @@ export class ToggleDocsComponent {
   protected readonly isItalic = signal(false);
   protected readonly isUnderline = signal(false);
   protected readonly isFavorite = signal(false);
-  protected readonly importCode = `import { ToggleDirective } from '@base-ng/ui/toggle';
+  protected readonly importCode = `import { ToggleDirective } from '@copied/base-ng/toggle';
 
 @Component({
   imports: [ToggleDirective],

@@ -10,7 +10,7 @@ import {
   AvatarRootDirective,
   AvatarImageDirective,
   AvatarFallbackDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   selector: 'docs-avatar',
@@ -285,7 +285,7 @@ export class AvatarDocsComponent {
   AvatarRootDirective,
   AvatarImageDirective,
   AvatarFallbackDirective,
-} from '@base-ng/ui/avatar';
+} from '@copied/base-ng/avatar';
 
 @Component({
   imports: [

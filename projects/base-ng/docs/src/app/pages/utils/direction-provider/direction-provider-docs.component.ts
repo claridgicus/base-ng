@@ -25,7 +25,7 @@ import {
       <section class="docs-section">
         <h2>Installation</h2>
         <docs-package-selector
-          packageName="@base-ng/ui"
+          packageName="@copied/base-ng"
           importName="DirectionService, provideDirection, DIRECTION_CONFIG"
         />
       </section>
@@ -202,7 +202,7 @@ import {
 export class DirectionProviderDocsComponent {
   basicUsageCode = `// app.config.ts
 import { ApplicationConfig } from '@angular/core';
-import { provideDirection } from '@base-ng/ui';
+import { provideDirection } from '@copied/base-ng';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -228,7 +228,7 @@ export const appConfig: ApplicationConfig = {
 </style>`;
 
   serviceUsageCode = `import { Component, inject, computed } from '@angular/core';
-import { DirectionService } from '@base-ng/ui';
+import { DirectionService } from '@copied/base-ng';
 
 @Component({
   selector: 'app-layout',
@@ -251,7 +251,7 @@ export class LayoutComponent {
 }`;
 
   dynamicSwitchCode = `import { Component, inject } from '@angular/core';
-import { DirectionService } from '@base-ng/ui';
+import { DirectionService } from '@copied/base-ng';
 
 @Component({
   selector: 'app-language-switcher',
@@ -294,7 +294,7 @@ export class DirectionToggleComponent {
 }`;
 
   directionalStylesCode = `import { Component, inject, computed } from '@angular/core';
-import { DirectionService } from '@base-ng/ui';
+import { DirectionService } from '@copied/base-ng';
 
 @Component({
   selector: 'app-card',
@@ -337,7 +337,7 @@ export class CardComponent {
 }`;
 
   componentOverrideCode = `import { Component } from '@angular/core';
-import { provideDirection } from '@base-ng/ui';
+import { provideDirection } from '@copied/base-ng';
 
 // Force LTR for a specific component (e.g., code editor)
 @Component({

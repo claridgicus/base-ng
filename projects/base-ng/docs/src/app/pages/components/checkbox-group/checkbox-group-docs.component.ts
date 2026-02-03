@@ -10,7 +10,7 @@ import {
   CheckboxGroupDirective,
   CheckboxRootDirective,
   CheckboxIndicatorDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   selector: 'docs-checkbox-group',
@@ -376,7 +376,7 @@ export class CheckboxGroupDocsComponent {
   CheckboxGroupDirective,
   CheckboxRootDirective,
   CheckboxIndicatorDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   imports: [

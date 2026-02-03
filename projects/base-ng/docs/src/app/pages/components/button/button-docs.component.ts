@@ -6,7 +6,7 @@ import {
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
-import { ButtonComponent } from '@base-ng/ui';
+import { ButtonComponent } from '@copied/base-ng';
 
 @Component({
   selector: 'docs-button',
@@ -223,7 +223,7 @@ export class ButtonDocsComponent {
   protected toggleDisabled(): void {
     this.isDisabled.update(v => !v);
   }
-  protected readonly importCode = `import { ButtonComponent } from '@base-ng/ui/button';
+  protected readonly importCode = `import { ButtonComponent } from '@copied/base-ng/button';
 
 @Component({
   imports: [ButtonComponent],

@@ -14,7 +14,7 @@ import {
   DialogTitleDirective,
   DialogDescriptionDirective,
   DialogCloseDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   selector: 'docs-dialog',
@@ -335,7 +335,7 @@ export class DialogDocsComponent {
   DialogTitleDirective,
   DialogDescriptionDirective,
   DialogCloseDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   imports: [

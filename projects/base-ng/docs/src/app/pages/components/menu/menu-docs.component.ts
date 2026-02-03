@@ -6,7 +6,7 @@ import {
   MenuRootDirective,
   MenuSeparatorDirective,
   MenuTriggerDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 import {
   CodeBlockComponent,
   DemoComponent,
@@ -322,7 +322,7 @@ export class MenuDocsComponent {
   MenuRadioGroupDirective,
   MenuRadioItemDirective,
   MenuArrowDirective
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   imports: [

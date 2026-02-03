@@ -14,7 +14,7 @@ import {
   AlertDialogTitleDirective,
   AlertDialogDescriptionDirective,
   AlertDialogCloseDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   selector: 'docs-alert-dialog',
@@ -361,7 +361,7 @@ export class AlertDialogDocsComponent {
   AlertDialogCloseDirective,
   AlertDialogTitleDirective,
   AlertDialogDescriptionDirective,
-} from '@base-ng/ui';
+} from '@copied/base-ng';
 
 @Component({
   imports: [

@@ -314,7 +314,7 @@ export class StylingComponent {
 </button>`;
 
   protected readonly cssModulesComponentCode = `import { Component, ViewEncapsulation } from '@angular/core';
-import { SwitchRootDirective, SwitchThumbDirective } from '@base-ng/ui/switch';
+import { SwitchRootDirective, SwitchThumbDirective } from '@copied/base-ng/switch';
 
 @Component({
   selector: 'app-custom-switch',
