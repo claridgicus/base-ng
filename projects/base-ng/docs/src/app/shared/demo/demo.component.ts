@@ -1,9 +1,10 @@
-import { Component, Input, signal } from '@angular/core';
+import { Component, Input, signal, computed } from '@angular/core';
 import { CodeBlockComponent } from '../code-block/code-block.component';
+import { VariantSelectorComponent, type StyleVariant } from '../variant-selector/variant-selector.component';
 
 @Component({
   selector: 'docs-demo',
-  imports: [CodeBlockComponent],
+  imports: [CodeBlockComponent, VariantSelectorComponent],
   template: `
     <div class="demo-container">
       <div class="demo-preview">
@@ -29,6 +30,9 @@ import { CodeBlockComponent } from '../code-block/code-block.component';
           </svg>
           {{ showCode() ? 'Hide' : 'Show' }} code
         </button>
+        @if (tailwindCode) {
+          <docs-variant-selector [(selected)]="selectedVariant" />
+        }
         @if (stackblitzUrl) {
           <a
             [href]="stackblitzUrl"
@@ -55,7 +59,7 @@ import { CodeBlockComponent } from '../code-block/code-block.component';
       </div>
       @if (showCode()) {
         <div class="demo-code">
-          <docs-code-block [code]="code" [language]="language" />
+          <docs-code-block [code]="displayCode()" [language]="language" />
         </div>
       }
     </div>
@@ -126,8 +130,17 @@ import { CodeBlockComponent } from '../code-block/code-block.component';
 })
 export class DemoComponent {
   @Input() code = '';
+  @Input() tailwindCode?: string;
   @Input() language = 'typescript';
   @Input() stackblitzUrl?: string;
 
   protected readonly showCode = signal(false);
+  protected readonly selectedVariant = signal<StyleVariant>('css');
+
+  protected readonly displayCode = computed(() => {
+    if (this.selectedVariant() === 'tailwind' && this.tailwindCode) {
+      return this.tailwindCode;
+    }
+    return this.code;
+  });
 }
