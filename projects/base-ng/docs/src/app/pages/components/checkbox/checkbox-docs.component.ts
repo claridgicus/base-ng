@@ -36,22 +36,24 @@ import { CheckboxRootDirective, CheckboxIndicatorDirective } from '@base-ng/ui';
             [(checked)]="acceptTerms"
             class="demo-checkbox"
           >
-            <span baseUiCheckboxIndicator class="demo-indicator">
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
-                class="demo-check-icon"
-              >
-                <path
-                  d="M10 3L4.5 8.5L2 6"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
+            <span class="demo-box">
+              <span baseUiCheckboxIndicator class="demo-indicator">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  class="demo-check-icon"
+                >
+                  <path
+                    d="M10 3L4.5 8.5L2 6"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
             </span>
             I accept the terms and conditions
           </button>
@@ -92,16 +94,18 @@ import { CheckboxRootDirective, CheckboxIndicatorDirective } from '@base-ng/ui';
               (checkedChange)="onSelectAllChange($event)"
               class="demo-checkbox"
             >
-              <span baseUiCheckboxIndicator class="demo-indicator">
-                @if (someSelected() && !allSelected) {
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="demo-check-icon">
-                    <path d="M3 6H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                  </svg>
-                } @else {
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="demo-check-icon">
-                    <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                  </svg>
-                }
+              <span class="demo-box">
+                <span baseUiCheckboxIndicator class="demo-indicator">
+                  @if (someSelected() && !allSelected) {
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="demo-check-icon">
+                      <path d="M3 6H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                  } @else {
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="demo-check-icon">
+                      <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  }
+                </span>
               </span>
               Select all
             </button>
@@ -113,10 +117,12 @@ import { CheckboxRootDirective, CheckboxIndicatorDirective } from '@base-ng/ui';
                   (checkedChange)="onOptionChange()"
                   class="demo-checkbox demo-checkbox-nested"
                 >
-                  <span baseUiCheckboxIndicator class="demo-indicator">
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="demo-check-icon">
-                      <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
+                  <span class="demo-box">
+                    <span baseUiCheckboxIndicator class="demo-indicator">
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="demo-check-icon">
+                        <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </span>
                   </span>
                   {{ option.label }}
                 </button>
@@ -137,10 +143,12 @@ import { CheckboxRootDirective, CheckboxIndicatorDirective } from '@base-ng/ui';
               [disabled]="true"
               class="demo-checkbox"
             >
-              <span baseUiCheckboxIndicator class="demo-indicator">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="demo-check-icon">
-                  <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
+              <span class="demo-box">
+                <span baseUiCheckboxIndicator class="demo-indicator">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="demo-check-icon">
+                    <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </span>
               </span>
               Disabled (checked)
             </button>
@@ -150,10 +158,12 @@ import { CheckboxRootDirective, CheckboxIndicatorDirective } from '@base-ng/ui';
               [disabled]="true"
               class="demo-checkbox"
             >
-              <span baseUiCheckboxIndicator class="demo-indicator">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="demo-check-icon">
-                  <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
+              <span class="demo-box">
+                <span baseUiCheckboxIndicator class="demo-indicator">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="demo-check-icon">
+                    <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </span>
               </span>
               Disabled (unchecked)
             </button>
@@ -244,7 +254,7 @@ import { CheckboxRootDirective, CheckboxIndicatorDirective } from '@base-ng/ui';
       font-size: 0.875rem;
       color: var(--docs-text);
 
-      &:focus-visible .demo-indicator {
+      &:focus-visible .demo-box {
         outline: 2px solid var(--docs-accent, #0066ff);
         outline-offset: 2px;
       }
@@ -255,7 +265,8 @@ import { CheckboxRootDirective, CheckboxIndicatorDirective } from '@base-ng/ui';
       }
     }
 
-    .demo-indicator {
+    /* The visual checkbox box - always visible */
+    .demo-box {
       width: 20px;
       height: 20px;
       border: 2px solid var(--docs-border);
@@ -265,6 +276,7 @@ import { CheckboxRootDirective, CheckboxIndicatorDirective } from '@base-ng/ui';
       justify-content: center;
       background: var(--docs-bg);
       transition: all 0.15s;
+      flex-shrink: 0;
 
       [data-checked] & {
         background: var(--docs-accent, #0066ff);
@@ -277,14 +289,15 @@ import { CheckboxRootDirective, CheckboxIndicatorDirective } from '@base-ng/ui';
       }
     }
 
-    .demo-check-icon {
-      color: transparent;
-      transition: color 0.15s;
+    /* The indicator contains only the icon - hidden when unchecked */
+    .demo-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-      [data-checked] &,
-      [data-indeterminate] & {
-        color: white;
-      }
+    .demo-check-icon {
+      color: white;
     }
 
     .demo-status {
@@ -353,57 +366,73 @@ export class CheckboxDocsComponent {
 })`;
 
   protected readonly anatomyCode = `<button baseUiCheckboxRoot>
-  <span baseUiCheckboxIndicator>
-    <!-- Checkmark icon -->
+  <span class="checkbox-box">
+    <span baseUiCheckboxIndicator>
+      <!-- Checkmark icon (hidden when unchecked) -->
+    </span>
   </span>
   Label text
 </button>`;
 
   protected readonly basicDemoCode = `<button baseUiCheckboxRoot [(checked)]="acceptTerms">
-  <span baseUiCheckboxIndicator>
-    <svg width="12" height="12" viewBox="0 0 12 12">
-      <path d="M10 3L4.5 8.5L2 6" fill="none" stroke="currentColor" stroke-width="2"/>
-    </svg>
+  <span class="checkbox-box">
+    <span baseUiCheckboxIndicator>
+      <svg width="12" height="12" viewBox="0 0 12 12">
+        <path d="M10 3L4.5 8.5L2 6" fill="none" stroke="currentColor" stroke-width="2"/>
+      </svg>
+    </span>
   </span>
   I accept the terms and conditions
 </button>`;
 
   protected readonly indeterminateDemoCode = `<button baseUiCheckboxRoot
   [(checked)]="allSelected"
-  [(indeterminate)]="someSelected">
-  <span baseUiCheckboxIndicator>
-    @if (someSelected) {
-      <svg><!-- minus icon --></svg>
-    } @else {
-      <svg><!-- check icon --></svg>
-    }
+  [indeterminate]="someSelected()">
+  <span class="checkbox-box">
+    <span baseUiCheckboxIndicator>
+      @if (someSelected()) {
+        <svg><!-- minus icon --></svg>
+      } @else {
+        <svg><!-- check icon --></svg>
+      }
+    </span>
   </span>
   Select all
 </button>`;
 
   protected readonly formDemoCode = `<!-- Template-driven forms -->
 <button baseUiCheckboxRoot [(ngModel)]="settings.newsletter" name="newsletter">
-  <span baseUiCheckboxIndicator>✓</span>
+  <span class="checkbox-box">
+    <span baseUiCheckboxIndicator>✓</span>
+  </span>
   Subscribe to newsletter
 </button>
 
 <!-- Reactive forms -->
 <button baseUiCheckboxRoot [formControl]="newsletterControl">
-  <span baseUiCheckboxIndicator>✓</span>
+  <span class="checkbox-box">
+    <span baseUiCheckboxIndicator>✓</span>
+  </span>
   Subscribe to newsletter
 </button>`;
 
   protected readonly groupDemoCode = `<div baseUiCheckboxGroup [(value)]="selectedFruits">
   <button baseUiCheckboxRoot value="apple">
-    <span baseUiCheckboxIndicator>✓</span>
+    <span class="checkbox-box">
+      <span baseUiCheckboxIndicator>✓</span>
+    </span>
     Apple
   </button>
   <button baseUiCheckboxRoot value="banana">
-    <span baseUiCheckboxIndicator>✓</span>
+    <span class="checkbox-box">
+      <span baseUiCheckboxIndicator>✓</span>
+    </span>
     Banana
   </button>
   <button baseUiCheckboxRoot value="orange">
-    <span baseUiCheckboxIndicator>✓</span>
+    <span class="checkbox-box">
+      <span baseUiCheckboxIndicator>✓</span>
+    </span>
     Orange
   </button>
 </div>
@@ -411,12 +440,16 @@ export class CheckboxDocsComponent {
 <!-- selectedFruits: string[] -->`;
 
   protected readonly disabledDemoCode = `<button baseUiCheckboxRoot [checked]="true" [disabled]="true">
-  <span baseUiCheckboxIndicator>✓</span>
+  <span class="checkbox-box">
+    <span baseUiCheckboxIndicator>✓</span>
+  </span>
   Disabled (checked)
 </button>
 
 <button baseUiCheckboxRoot [checked]="false" [disabled]="true">
-  <span baseUiCheckboxIndicator>✓</span>
+  <span class="checkbox-box">
+    <span baseUiCheckboxIndicator>✓</span>
+  </span>
   Disabled (unchecked)
 </button>`;
 
@@ -431,8 +464,8 @@ export class CheckboxDocsComponent {
   cursor: pointer;
 }
 
-/* Indicator box */
-[baseUiCheckboxIndicator] {
+/* The visible checkbox box (always visible) */
+.checkbox-box {
   width: 20px;
   height: 20px;
   border: 2px solid #d1d5db;
@@ -440,21 +473,24 @@ export class CheckboxDocsComponent {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: transparent;
   transition: all 0.15s;
 }
 
-/* Checked state */
-[baseUiCheckboxRoot][data-checked] [baseUiCheckboxIndicator] {
+/* Checked state - style the box */
+[data-checked] .checkbox-box {
   background: #0066ff;
   border-color: #0066ff;
-  color: white;
 }
 
 /* Indeterminate state */
-[baseUiCheckboxRoot][data-indeterminate] [baseUiCheckboxIndicator] {
+[data-indeterminate] .checkbox-box {
   background: #0066ff;
   border-color: #0066ff;
+}
+
+/* The indicator contains the icon (hidden when unchecked) */
+[baseUiCheckboxIndicator] {
+  display: flex;
   color: white;
 }
 
@@ -465,7 +501,7 @@ export class CheckboxDocsComponent {
 }
 
 /* Focus state */
-[baseUiCheckboxRoot]:focus-visible [baseUiCheckboxIndicator] {
+[baseUiCheckboxRoot]:focus-visible .checkbox-box {
   outline: 2px solid #0066ff;
   outline-offset: 2px;
 }`;
