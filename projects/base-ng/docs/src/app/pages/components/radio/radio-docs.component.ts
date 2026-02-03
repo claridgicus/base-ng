@@ -1,15 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  RadioGroupDirective,
+  RadioRootDirective,
+  RadioIndicatorDirective,
+} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-radio',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    RadioGroupDirective,
+    RadioRootDirective,
+    RadioIndicatorDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,14 +34,26 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <docs-demo [code]="basicDemoCode" language="html">
+          <div class="demo-container">
+            <div baseUiRadioGroup [(value)]="selectedSize" class="demo-radio-group">
+              @for (size of sizes; track size.value) {
+                <button baseUiRadioRoot [value]="size.value" class="demo-radio">
+                  <span baseUiRadioIndicator [keepMounted]="true" class="demo-indicator"></span>
+                  {{ size.label }}
+                </button>
+              }
+            </div>
+            <span class="demo-status">Selected: {{ selectedSize() }}</span>
+          </div>
+        </docs-demo>
+      </section>
 
-        <p class="docs-paragraph">
-          Import the Radio and Radio Group directives from the package:
-        </p>
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -45,41 +70,52 @@ import {
       <section class="docs-section">
         <h2 class="docs-section-title">Examples</h2>
 
-        <h3 class="docs-section-subtitle">Basic usage</h3>
+        <h3 class="docs-section-subtitle">With descriptions</h3>
         <p class="docs-paragraph">
-          Create a radio group with exclusive selection.
+          Radio buttons can include detailed descriptions:
         </p>
-        <docs-code-block [code]="basicDemoCode" language="html" />
+        <docs-demo [code]="labeledDemoCode" language="html">
+          <div baseUiRadioGroup [(value)]="selectedPlan" class="demo-radio-group demo-plan-group">
+            @for (plan of plans; track plan.value) {
+              <label class="demo-radio-label">
+                <button baseUiRadioRoot [value]="plan.value" class="demo-radio">
+                  <span baseUiRadioIndicator [keepMounted]="true" class="demo-indicator"></span>
+                </button>
+                <div class="demo-radio-content">
+                  <span class="demo-radio-title">{{ plan.name }}</span>
+                  <span class="demo-radio-description">{{ plan.description }}</span>
+                </div>
+              </label>
+            }
+          </div>
+        </docs-demo>
 
-        <h3 class="docs-section-subtitle">With labels</h3>
+        <h3 class="docs-section-subtitle">Disabled state</h3>
         <p class="docs-paragraph">
-          Radio buttons typically include descriptive labels.
+          Disable the entire group or individual options:
         </p>
-        <docs-code-block [code]="labeledDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">Default value</h3>
-        <p class="docs-paragraph">
-          Set an initial selected value with <code>[value]</code>.
-        </p>
-        <docs-code-block [code]="defaultValueDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">With Angular forms</h3>
-        <p class="docs-paragraph">
-          Radio Group implements <code>ControlValueAccessor</code> for Angular forms.
-        </p>
-        <docs-code-block [code]="formsDemoCode" language="typescript" />
-
-        <h3 class="docs-section-subtitle">Disabled options</h3>
-        <p class="docs-paragraph">
-          Disable individual radio buttons or the entire group.
-        </p>
-        <docs-code-block [code]="disabledDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">Keep indicator mounted</h3>
-        <p class="docs-paragraph">
-          Use <code>keepMounted</code> on the indicator for CSS transitions.
-        </p>
-        <docs-code-block [code]="keepMountedDemoCode" language="html" />
+        <docs-demo [code]="disabledDemoCode" language="html">
+          <div class="demo-container">
+            <div baseUiRadioGroup [(value)]="disabledSelection" [disabled]="isGroupDisabled()" class="demo-radio-group">
+              <button baseUiRadioRoot value="a" class="demo-radio">
+                <span baseUiRadioIndicator [keepMounted]="true" class="demo-indicator"></span>
+                Option A
+              </button>
+              <button baseUiRadioRoot value="b" class="demo-radio">
+                <span baseUiRadioIndicator [keepMounted]="true" class="demo-indicator"></span>
+                Option B
+              </button>
+              <button baseUiRadioRoot value="c" class="demo-radio">
+                <span baseUiRadioIndicator [keepMounted]="true" class="demo-indicator"></span>
+                Option C
+              </button>
+            </div>
+            <label class="demo-toggle">
+              <input type="checkbox" [checked]="isGroupDisabled()" (change)="toggleDisabled()" />
+              Disabled
+            </label>
+          </div>
+        </docs-demo>
       </section>
 
       <!-- Styling -->
@@ -164,26 +200,167 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .demo-radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      &[data-disabled] {
+        opacity: 0.5;
+      }
+    }
+
+    .demo-plan-group {
+      gap: 0.75rem;
+    }
+
+    .demo-radio {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.875rem;
+      color: var(--docs-text);
+
+      &:focus-visible .demo-indicator {
+        outline: 2px solid var(--docs-accent, #0066ff);
+        outline-offset: 2px;
+      }
+
+      &[data-disabled] {
+        cursor: not-allowed;
+      }
+    }
+
+    .demo-indicator {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--docs-border);
+      border-radius: 50%;
+      position: relative;
+      transition: all 0.15s;
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 3px;
+        background: var(--docs-accent, #0066ff);
+        border-radius: 50%;
+        transform: scale(0);
+        transition: transform 0.15s;
+      }
+
+      [data-checked] & {
+        border-color: var(--docs-accent, #0066ff);
+
+        &::after {
+          transform: scale(1);
+        }
+      }
+    }
+
+    .demo-radio-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      cursor: pointer;
+      padding: 0.75rem;
+      border: 1px solid var(--docs-border);
+      border-radius: 0.5rem;
+      transition: border-color 0.15s;
+
+      &:has([data-checked]) {
+        border-color: var(--docs-accent, #0066ff);
+        background: rgba(0, 102, 255, 0.05);
+      }
+    }
+
+    .demo-radio-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.125rem;
+    }
+
+    .demo-radio-title {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--docs-text);
+    }
+
+    .demo-radio-description {
+      font-size: 0.75rem;
+      color: var(--docs-text-secondary);
+    }
+
+    .demo-status {
+      font-size: 0.75rem;
+      color: var(--docs-text-secondary);
+    }
+
+    .demo-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--docs-text-secondary);
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+  `,
 })
 export class RadioDocsComponent {
+  // Basic demo
+  protected readonly sizes = [
+    { value: 'small', label: 'Small' },
+    { value: 'medium', label: 'Medium' },
+    { value: 'large', label: 'Large' },
+  ];
+  protected readonly selectedSize = signal('medium');
+
+  // Plan demo
+  protected readonly plans = [
+    { value: 'basic', name: 'Basic', description: 'Perfect for getting started' },
+    { value: 'pro', name: 'Pro', description: 'For growing teams' },
+    { value: 'enterprise', name: 'Enterprise', description: 'For large organizations' },
+  ];
+  protected readonly selectedPlan = signal('basic');
+
+  // Disabled demo
+  protected readonly disabledSelection = signal('a');
+  protected readonly isGroupDisabled = signal(false);
+
+  protected toggleDisabled(): void {
+    this.isGroupDisabled.update(v => !v);
+  }
+
   protected readonly importCode = `import {
+  RadioGroupDirective,
   RadioRootDirective,
   RadioIndicatorDirective,
-} from '@base-ng/ui/radio';
-import { RadioGroupDirective } from '@base-ng/ui/radio-group';
+} from '@base-ng/ui';
 
 @Component({
   imports: [
+    RadioGroupDirective,
     RadioRootDirective,
     RadioIndicatorDirective,
-    RadioGroupDirective,
   ],
   // ...
 })`;
