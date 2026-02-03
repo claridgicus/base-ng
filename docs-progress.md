@@ -186,7 +186,7 @@
 | #   | Task                                               | Status | Notes                         |
 | --- | -------------------------------------------------- | ------ | ----------------------------- |
 | 76  | Fix Button docs - add live interactive demo        | [x]    | Use `<docs-demo>` with actual component |
-| 77  | Fix Separator docs - add live interactive demo     | [ ]    | Use `<docs-demo>` with actual component |
+| 77  | Fix Separator docs - add live interactive demo     | [x]    | Use `<docs-demo>` with actual component |
 | 78  | Fix Progress docs - add live interactive demo      | [ ]    | Use `<docs-demo>` with actual component |
 | 79  | Fix Meter docs - add live interactive demo         | [ ]    | Use `<docs-demo>` with actual component |
 | 80  | Fix Switch docs - add live interactive demo        | [ ]    | Use `<docs-demo>` with actual component |
@@ -272,9 +272,9 @@ Each component page should include:
 ## Progress Summary
 
 - **Total Tasks:** 112
-- **Completed:** 76
+- **Completed:** 77
 - **In Progress:** 0
-- **Remaining:** 36 (Phase 15 - CRITICAL)
+- **Remaining:** 35 (Phase 15 - CRITICAL)
 
 ---
 

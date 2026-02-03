@@ -2,14 +2,15 @@ import { Component } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import { SeparatorComponent } from '@base-ng/ui';
 
 @Component({
   selector: 'docs-separator',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [EditOnGitHubComponent, CodeBlockComponent, DemoComponent, PropsTableComponent, SeparatorComponent],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -20,14 +21,20 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <docs-demo [code]="horizontalDemoCode" language="html">
+          <div class="demo-stack">
+            <p class="demo-text">First section content</p>
+            <base-ui-separator></base-ui-separator>
+            <p class="demo-text">Second section content</p>
+          </div>
+        </docs-demo>
+      </section>
 
-        <p class="docs-paragraph">
-          Import the Separator component from the package:
-        </p>
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -45,25 +52,36 @@ import {
       <section class="docs-section">
         <h2 class="docs-section-title">Examples</h2>
 
-        <h3 class="docs-section-subtitle">Horizontal separator</h3>
-        <p class="docs-paragraph">
-          By default, the Separator renders horizontally. Use it to divide
-          vertically stacked content.
-        </p>
-        <docs-code-block [code]="horizontalDemoCode" language="html" />
-
         <h3 class="docs-section-subtitle">Vertical separator</h3>
         <p class="docs-paragraph">
           Set <code>orientation="vertical"</code> to render a vertical separator
           for horizontally aligned content like navigation bars or toolbars.
         </p>
-        <docs-code-block [code]="verticalDemoCode" language="html" />
+        <docs-demo [code]="verticalDemoCode" language="html">
+          <div class="demo-row">
+            <span class="demo-item">Item A</span>
+            <base-ui-separator orientation="vertical"></base-ui-separator>
+            <span class="demo-item">Item B</span>
+            <base-ui-separator orientation="vertical"></base-ui-separator>
+            <span class="demo-item">Item C</span>
+          </div>
+        </docs-demo>
 
         <h3 class="docs-section-subtitle">In a navigation bar</h3>
         <p class="docs-paragraph">
           A common use case is separating groups of navigation links.
         </p>
-        <docs-code-block [code]="navbarDemoCode" language="html" />
+        <docs-demo [code]="navbarDemoCode" language="html">
+          <nav class="demo-navbar">
+            <a href="javascript:void(0)" class="demo-link">Home</a>
+            <a href="javascript:void(0)" class="demo-link">About</a>
+            <base-ui-separator orientation="vertical"></base-ui-separator>
+            <a href="javascript:void(0)" class="demo-link">Docs</a>
+            <a href="javascript:void(0)" class="demo-link">API</a>
+            <base-ui-separator orientation="vertical"></base-ui-separator>
+            <a href="javascript:void(0)" class="demo-link">Login</a>
+          </nav>
+        </docs-demo>
       </section>
 
       <!-- Styling -->
@@ -138,13 +156,74 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .demo-text {
+      margin: 0;
+      padding: 0.5rem 0;
+      color: var(--docs-text);
+    }
+
+    .demo-row {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .demo-item {
+      color: var(--docs-text);
+      font-size: 0.875rem;
+    }
+
+    .demo-navbar {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      padding: 0.5rem 1rem;
+      background: var(--docs-bg-secondary);
+      border-radius: 0.5rem;
+    }
+
+    .demo-link {
+      color: var(--docs-text);
+      text-decoration: none;
+      font-size: 0.875rem;
+      padding: 0.25rem 0.5rem;
+
+      &:hover {
+        color: var(--docs-accent);
+      }
+    }
+
+    /* Separator component styles */
+    base-ui-separator[data-orientation="horizontal"] {
+      width: 100%;
+      height: 1px;
+      background-color: var(--docs-border);
+      margin: 0.5rem 0;
+    }
+
+    base-ui-separator[data-orientation="vertical"] {
+      width: 1px;
+      height: 1rem;
+      background-color: var(--docs-border);
+      margin: 0 0.75rem;
+    }
+  `,
 })
 export class SeparatorDocsComponent {
   protected readonly importCode = `import { SeparatorComponent } from '@base-ng/ui/separator';
