@@ -1,61 +1,40 @@
-# Base NG
+> **_Unoffical_**
 
-An Angular port of [Base UI](https://base-ui.com/) - the unstyled React component library from the creators of Material UI.
+Angular Port
 
-Base NG brings the same philosophy of headless, accessible, and customizable components to the Angular ecosystem.
+# Base UI
 
-## Development server
+From the creators of Radix, Floating UI, and Material UI, Base UI is an unstyled UI component library for building accessible user interfaces.
 
-To start a local development server, run:
+---
 
-```bash
-ng serve
-```
+## Documentation
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+To get started, check out the [Base UI documentation](https://base-ui.com/react/overview/quick-start).
 
-## Code scaffolding
+## Contributing
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Read our [contributing guide](/CONTRIBUTING.md) to learn about our development process, how to propose bug fixes and improvements, and how to build and test your changes.
 
-```bash
-ng generate component component-name
-```
+## Releases
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+To see the latest updates, check out the [releases](https://base-ui.com/react/overview/releases).
 
-```bash
-ng generate --help
-```
+## Community
 
-## Building
+- **Discord** For community support, questions, and tips, join our [Discord](https://discord.gg/g6C3hUtuxz).
+- **X** To stay up-to-date on new releases and announcements follow [Base UI on X](https://x.com/base_ui).
+- **Bluesky** We're also on [Bluesky](https://bsky.app/profile/base-ui.com).
 
-To build the project run:
+## Team
 
-```bash
-ng build
-```
+- **Colm Tuite** (Radix) [@colmtuite](https://x.com/colmtuite)
+- **James Nelson** (Floating UI) [@atomiksdev](https://x.com/atomiksdev)
+- **Michał Dudak** (Material UI) [@michaldudak](https://x.com/michaldudak)
+- **Marija Najdova** (Material UI + Fluent UI) [@marijanajdova](https://x.com/marijanajdova)
+- **Albert Yu** (Material UI) [@mj12albert](https://github.com/mj12albert)
+- **Lukas Tyla** (Material UI) [@LukasTy](https://github.com/LukasTy)
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## License
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+This project is licensed under the terms of the [MIT license](/LICENSE).
