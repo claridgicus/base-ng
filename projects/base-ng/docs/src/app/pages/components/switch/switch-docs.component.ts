@@ -1,15 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import { SwitchRootDirective, SwitchThumbDirective } from '@base-ng/ui';
 
 @Component({
   selector: 'docs-switch',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    SwitchRootDirective,
+    SwitchThumbDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -20,12 +28,27 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <docs-demo [code]="basicDemoCode" language="html">
+          <div class="demo-switch-container">
+            <button
+              baseUiSwitchRoot
+              [(checked)]="isEnabled"
+              class="demo-switch"
+            >
+              <span baseUiSwitchThumb class="demo-switch-thumb"></span>
+            </button>
+            <span class="demo-switch-label">
+              {{ isEnabled() ? 'On' : 'Off' }}
+            </span>
+          </div>
+        </docs-demo>
+      </section>
 
-        <p class="docs-paragraph">Import the Switch directives:</p>
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -43,32 +66,53 @@ import {
       <section class="docs-section">
         <h2 class="docs-section-title">Examples</h2>
 
-        <h3 class="docs-section-subtitle">Basic usage</h3>
-        <p class="docs-paragraph">
-          Use two-way binding with <code>[(checked)]</code> to control the
-          switch state:
-        </p>
-        <docs-code-block [code]="basicDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">Form integration</h3>
-        <p class="docs-paragraph">
-          The Switch supports Angular forms with <code>ngModel</code> and
-          Reactive Forms:
-        </p>
-        <docs-code-block [code]="formDemoCode" language="html" />
-
         <h3 class="docs-section-subtitle">Disabled state</h3>
         <p class="docs-paragraph">
           Use the <code>disabled</code> attribute to disable the switch:
         </p>
-        <docs-code-block [code]="disabledDemoCode" language="html" />
+        <docs-demo [code]="disabledDemoCode" language="html">
+          <div class="demo-row">
+            <div class="demo-switch-container">
+              <button baseUiSwitchRoot [checked]="true" disabled class="demo-switch">
+                <span baseUiSwitchThumb class="demo-switch-thumb"></span>
+              </button>
+              <span class="demo-switch-label demo-disabled">Checked (disabled)</span>
+            </div>
+            <div class="demo-switch-container">
+              <button baseUiSwitchRoot [checked]="false" disabled class="demo-switch">
+                <span baseUiSwitchThumb class="demo-switch-thumb"></span>
+              </button>
+              <span class="demo-switch-label demo-disabled">Unchecked (disabled)</span>
+            </div>
+          </div>
+        </docs-demo>
 
-        <h3 class="docs-section-subtitle">Read-only state</h3>
+        <h3 class="docs-section-subtitle">Settings example</h3>
         <p class="docs-paragraph">
-          Use <code>readOnly</code> to make the switch non-interactive while
-          still showing its value:
+          Common pattern for application settings:
         </p>
-        <docs-code-block [code]="readOnlyDemoCode" language="html" />
+        <docs-demo [code]="settingsDemoCode" language="html">
+          <div class="demo-settings">
+            <div class="demo-setting">
+              <div class="demo-setting-info">
+                <span class="demo-setting-label">Dark mode</span>
+                <span class="demo-setting-desc">Use dark theme</span>
+              </div>
+              <button baseUiSwitchRoot [(checked)]="darkMode" class="demo-switch">
+                <span baseUiSwitchThumb class="demo-switch-thumb"></span>
+              </button>
+            </div>
+            <div class="demo-setting">
+              <div class="demo-setting-info">
+                <span class="demo-setting-label">Notifications</span>
+                <span class="demo-setting-desc">Receive push notifications</span>
+              </div>
+              <button baseUiSwitchRoot [(checked)]="notifications" class="demo-switch">
+                <span baseUiSwitchThumb class="demo-switch-thumb"></span>
+              </button>
+            </div>
+          </div>
+        </docs-demo>
       </section>
 
       <!-- Styling -->
@@ -138,15 +182,117 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-switch-container {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .demo-row {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .demo-switch {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      background: var(--docs-border);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+      padding: 0;
+
+      &[data-checked] {
+        background: var(--docs-accent, #0066ff);
+      }
+
+      &[data-disabled] {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--docs-accent, #0066ff);
+        outline-offset: 2px;
+      }
+    }
+
+    .demo-switch-thumb {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+
+      &[data-checked] {
+        transform: translateX(20px);
+      }
+    }
+
+    .demo-switch-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--docs-text);
+
+      &.demo-disabled {
+        color: var(--docs-text-secondary);
+      }
+    }
+
+    .demo-settings {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .demo-setting {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      background: var(--docs-bg-secondary);
+      border-radius: 0.5rem;
+    }
+
+    .demo-setting-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.125rem;
+    }
+
+    .demo-setting-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--docs-text);
+    }
+
+    .demo-setting-desc {
+      font-size: 0.75rem;
+      color: var(--docs-text-secondary);
+    }
+  `,
 })
 export class SwitchDocsComponent {
+  protected readonly isEnabled = signal(true);
+  protected readonly darkMode = signal(false);
+  protected readonly notifications = signal(true);
   protected readonly importCode = `import {
   SwitchRootDirective,
   SwitchThumbDirective
@@ -184,6 +330,21 @@ export class SwitchDocsComponent {
   protected readonly readOnlyDemoCode = `<button baseUiSwitchRoot [checked]="true" readOnly>
   <span baseUiSwitchThumb></span>
 </button>`;
+
+  protected readonly settingsDemoCode = `<div class="settings">
+  <div class="setting">
+    <span>Dark mode</span>
+    <button baseUiSwitchRoot [(checked)]="darkMode">
+      <span baseUiSwitchThumb></span>
+    </button>
+  </div>
+  <div class="setting">
+    <span>Notifications</span>
+    <button baseUiSwitchRoot [(checked)]="notifications">
+      <span baseUiSwitchThumb></span>
+    </button>
+  </div>
+</div>`;
 
   protected readonly stylingCode = `/* Base switch styles */
 [baseUiSwitchRoot] {
