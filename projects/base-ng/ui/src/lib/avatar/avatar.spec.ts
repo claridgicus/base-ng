@@ -1,7 +1,9 @@
 /**
+ * @component Avatar
  * @fileoverview Tests for Avatar component
  * @source https://github.com/mui/base-ui/blob/master/packages/react/src/avatar/Avatar.test.tsx
- * @parity Verified against React Base UI
+ * @parity Verified against React Base UI - includes State Attributes test categories
+ * @note Avatar is a display-only element - no Keyboard Navigation or Focus Management required
  */
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
