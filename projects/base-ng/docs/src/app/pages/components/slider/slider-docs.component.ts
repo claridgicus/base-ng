@@ -1,15 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  SliderRootDirective,
+  SliderTrackDirective,
+  SliderIndicatorDirective,
+  SliderThumbDirective,
+} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-slider',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    SliderRootDirective,
+    SliderTrackDirective,
+    SliderIndicatorDirective,
+    SliderThumbDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,14 +36,28 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <docs-demo [code]="basicDemoCode" language="html">
+          <div class="demo-container">
+            <div
+              baseUiSliderRoot
+              [(value)]="volume"
+              class="demo-slider"
+            >
+              <div baseUiSliderTrack class="demo-track">
+                <div baseUiSliderIndicator class="demo-indicator"></div>
+              </div>
+              <div baseUiSliderThumb class="demo-thumb" aria-label="Volume"></div>
+            </div>
+            <span class="demo-status">Volume: {{ volume() }}</span>
+          </div>
+        </docs-demo>
+      </section>
 
-        <p class="docs-paragraph">
-          Import the Slider directives from the package:
-        </p>
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -45,41 +74,76 @@ import {
       <section class="docs-section">
         <h2 class="docs-section-title">Examples</h2>
 
-        <h3 class="docs-section-subtitle">Basic usage</h3>
+        <h3 class="docs-section-subtitle">With step</h3>
         <p class="docs-paragraph">
-          Create a simple slider with two-way binding.
+          Configure min, max, and step values:
         </p>
-        <docs-code-block [code]="basicDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">With min, max, and step</h3>
-        <p class="docs-paragraph">
-          Configure the range and increment step.
-        </p>
-        <docs-code-block [code]="configuredDemoCode" language="html" />
+        <docs-demo [code]="configuredDemoCode" language="html">
+          <div class="demo-container">
+            <div
+              baseUiSliderRoot
+              [(value)]="temperature"
+              [min]="0"
+              [max]="100"
+              [step]="5"
+              class="demo-slider"
+            >
+              <div baseUiSliderTrack class="demo-track">
+                <div baseUiSliderIndicator class="demo-indicator"></div>
+              </div>
+              <div baseUiSliderThumb class="demo-thumb" aria-label="Temperature"></div>
+            </div>
+            <span class="demo-status">Temperature: {{ temperature() }}°</span>
+          </div>
+        </docs-demo>
 
         <h3 class="docs-section-subtitle">Range slider</h3>
         <p class="docs-paragraph">
-          Create a range slider with multiple thumbs by passing an array value.
+          Create a range slider with two thumbs:
         </p>
-        <docs-code-block [code]="rangeDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">Vertical orientation</h3>
-        <p class="docs-paragraph">
-          Set <code>orientation="vertical"</code> for vertical sliders.
-        </p>
-        <docs-code-block [code]="verticalDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">With Angular forms</h3>
-        <p class="docs-paragraph">
-          Slider implements <code>ControlValueAccessor</code> for forms integration.
-        </p>
-        <docs-code-block [code]="formsDemoCode" language="typescript" />
+        <docs-demo [code]="rangeDemoCode" language="html">
+          <div class="demo-container">
+            <div
+              baseUiSliderRoot
+              [(value)]="priceRange"
+              [min]="0"
+              [max]="1000"
+              [step]="50"
+              class="demo-slider"
+            >
+              <div baseUiSliderTrack class="demo-track">
+                <div baseUiSliderIndicator class="demo-indicator"></div>
+              </div>
+              <div baseUiSliderThumb [index]="0" class="demo-thumb" aria-label="Minimum price"></div>
+              <div baseUiSliderThumb [index]="1" class="demo-thumb" aria-label="Maximum price"></div>
+            </div>
+            <span class="demo-status">Price: \${{ priceRange()[0] }} - \${{ priceRange()[1] }}</span>
+          </div>
+        </docs-demo>
 
         <h3 class="docs-section-subtitle">Disabled state</h3>
         <p class="docs-paragraph">
-          Disable the slider using the <code>disabled</code> input.
+          Disable the slider:
         </p>
-        <docs-code-block [code]="disabledDemoCode" language="html" />
+        <docs-demo [code]="disabledDemoCode" language="html">
+          <div class="demo-container">
+            <div
+              baseUiSliderRoot
+              [(value)]="disabledValue"
+              [disabled]="isDisabled()"
+              class="demo-slider"
+            >
+              <div baseUiSliderTrack class="demo-track">
+                <div baseUiSliderIndicator class="demo-indicator"></div>
+              </div>
+              <div baseUiSliderThumb class="demo-thumb" aria-label="Volume"></div>
+            </div>
+            <label class="demo-toggle">
+              <input type="checkbox" [checked]="isDisabled()" (change)="toggleDisabled()" />
+              Disabled
+            </label>
+          </div>
+        </docs-demo>
       </section>
 
       <!-- Styling -->
@@ -169,21 +233,118 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      width: 100%;
+      max-width: 280px;
+    }
+
+    .demo-slider {
+      position: relative;
+      width: 100%;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      touch-action: none;
+
+      &[data-disabled] {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+    }
+
+    .demo-track {
+      position: relative;
+      width: 100%;
+      height: 4px;
+      background: var(--docs-border);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .demo-indicator {
+      position: absolute;
+      left: 0;
+      height: 100%;
+      background: var(--docs-accent, #0066ff);
+      border-radius: 9999px;
+    }
+
+    .demo-thumb {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: var(--docs-bg);
+      border: 2px solid var(--docs-accent, #0066ff);
+      border-radius: 50%;
+      cursor: grab;
+      transition: transform 0.1s;
+      transform: translateX(-50%);
+
+      &:hover {
+        transform: translateX(-50%) scale(1.1);
+      }
+
+      &[data-dragging] {
+        cursor: grabbing;
+        transform: translateX(-50%) scale(1.15);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--docs-accent, #0066ff);
+        outline-offset: 2px;
+      }
+    }
+
+    .demo-status {
+      font-size: 0.75rem;
+      color: var(--docs-text-secondary);
+    }
+
+    .demo-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--docs-text-secondary);
+      cursor: pointer;
+    }
+  `,
 })
 export class SliderDocsComponent {
+  // Basic demo
+  protected readonly volume = signal(50);
+
+  // Configured demo
+  protected readonly temperature = signal(25);
+
+  // Range demo
+  protected readonly priceRange = signal([200, 800]);
+
+  // Disabled demo
+  protected readonly disabledValue = signal(50);
+  protected readonly isDisabled = signal(false);
+
+  protected toggleDisabled(): void {
+    this.isDisabled.update(v => !v);
+  }
+
   protected readonly importCode = `import {
   SliderRootDirective,
   SliderTrackDirective,
   SliderIndicatorDirective,
   SliderThumbDirective,
-} from '@base-ng/ui/slider';
+} from '@base-ng/ui';
 
 @Component({
   imports: [
