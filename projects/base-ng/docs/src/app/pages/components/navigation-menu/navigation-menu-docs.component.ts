@@ -1,19 +1,19 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import {
-  EditOnGitHubComponent,
+  NavigationMenuContentDirective,
+  NavigationMenuItemDirective,
+  NavigationMenuLinkDirective,
+  NavigationMenuListDirective,
+  NavigationMenuRootDirective,
+  NavigationMenuTriggerDirective,
+} from '@base-ng/ui';
+import {
   CodeBlockComponent,
   DemoComponent,
+  EditOnGitHubComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
-import {
-  NavigationMenuRootDirective,
-  NavigationMenuListDirective,
-  NavigationMenuItemDirective,
-  NavigationMenuTriggerDirective,
-  NavigationMenuContentDirective,
-  NavigationMenuLinkDirective,
-} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-navigation-menu',
@@ -34,15 +34,14 @@ import {
       <header class="docs-header-section">
         <h1 class="docs-title">Navigation Menu</h1>
         <p class="docs-description">
-          A navigation component with animated dropdown menus, commonly used for
-          website headers. Supports smooth transitions between menu sections and
-          a shared viewport for consistent animations.
+          A navigation component with animated dropdown menus, commonly used for website headers.
+          Supports smooth transitions between menu sections and a shared viewport for consistent
+          animations.
         </p>
       </header>
 
       <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Live Demo</h2>
         <docs-demo [code]="basicDemoCode">
           <nav baseUiNavigationMenuRoot aria-label="Demo navigation" class="demo-nav">
             <ul baseUiNavigationMenuList class="demo-nav-list">
@@ -51,7 +50,7 @@ import {
                 <button baseUiNavigationMenuTrigger class="demo-nav-trigger">
                   Products
                   <svg class="demo-nav-chevron" viewBox="0 0 12 12" width="12" height="12">
-                    <path d="M2 4l4 4 4-4" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                    <path d="M2 4l4 4 4-4" stroke="currentColor" fill="none" stroke-width="1.5" />
                   </svg>
                 </button>
                 <div baseUiNavigationMenuContent class="demo-nav-content">
@@ -59,7 +58,11 @@ import {
                     <li>
                       <a baseUiNavigationMenuLink href="#analytics" class="demo-nav-link">
                         <svg viewBox="0 0 24 24" width="20" height="20">
-                          <path d="M3 13h4v8H3v-8zm7-8h4v16h-4V5zm7 4h4v12h-4V9z" fill="currentColor" opacity="0.6"/>
+                          <path
+                            d="M3 13h4v8H3v-8zm7-8h4v16h-4V5zm7 4h4v12h-4V9z"
+                            fill="currentColor"
+                            opacity="0.6"
+                          />
                         </svg>
                         <div>
                           <strong>Analytics</strong>
@@ -70,7 +73,11 @@ import {
                     <li>
                       <a baseUiNavigationMenuLink href="#automation" class="demo-nav-link">
                         <svg viewBox="0 0 24 24" width="20" height="20">
-                          <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm4 11h-8v-1l1-1v-4l-1-1v-1h5v1l-1 1v3.5l2 .5v2z" fill="currentColor" opacity="0.6"/>
+                          <path
+                            d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm4 11h-8v-1l1-1v-4l-1-1v-1h5v1l-1 1v3.5l2 .5v2z"
+                            fill="currentColor"
+                            opacity="0.6"
+                          />
                         </svg>
                         <div>
                           <strong>Automation</strong>
@@ -87,7 +94,7 @@ import {
                 <button baseUiNavigationMenuTrigger class="demo-nav-trigger">
                   Solutions
                   <svg class="demo-nav-chevron" viewBox="0 0 12 12" width="12" height="12">
-                    <path d="M2 4l4 4 4-4" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                    <path d="M2 4l4 4 4-4" stroke="currentColor" fill="none" stroke-width="1.5" />
                   </svg>
                 </button>
                 <div baseUiNavigationMenuContent class="demo-nav-content">
@@ -117,9 +124,7 @@ import {
 
               <!-- Docs link -->
               <li baseUiNavigationMenuItem>
-                <a baseUiNavigationMenuLink href="#docs" class="demo-nav-simple-link">
-                  Docs
-                </a>
+                <a baseUiNavigationMenuLink href="#docs" class="demo-nav-simple-link"> Docs </a>
               </li>
             </ul>
           </nav>
@@ -136,8 +141,7 @@ import {
       <section class="docs-section">
         <h2 class="docs-section-title">Anatomy</h2>
         <p class="docs-paragraph">
-          The Navigation Menu uses a hierarchical structure with items, triggers,
-          and content:
+          The Navigation Menu uses a hierarchical structure with items, triggers, and content:
         </p>
         <docs-code-block [code]="anatomyCode" language="html" />
       </section>
@@ -147,21 +151,15 @@ import {
         <h2 class="docs-section-title">Examples</h2>
 
         <h3 class="docs-section-subtitle">Basic navigation</h3>
-        <p class="docs-paragraph">
-          A navigation menu with dropdown content sections.
-        </p>
+        <p class="docs-paragraph">A navigation menu with dropdown content sections.</p>
         <docs-code-block [code]="basicDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">Website header</h3>
-        <p class="docs-paragraph">
-          A complete website header with logo, navigation, and actions.
-        </p>
+        <p class="docs-paragraph">A complete website header with logo, navigation, and actions.</p>
         <docs-code-block [code]="headerDemoCode" language="typescript" />
 
         <h3 class="docs-section-subtitle">With viewport</h3>
-        <p class="docs-paragraph">
-          Use a shared viewport for smooth animations between sections.
-        </p>
+        <p class="docs-paragraph">Use a shared viewport for smooth animations between sections.</p>
         <docs-code-block [code]="viewportDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">Mega menu layout</h3>
@@ -171,30 +169,22 @@ import {
         <docs-code-block [code]="megaMenuDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">Vertical orientation</h3>
-        <p class="docs-paragraph">
-          Create a vertical navigation menu for sidebars.
-        </p>
+        <p class="docs-paragraph">Create a vertical navigation menu for sidebars.</p>
         <docs-code-block [code]="verticalDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">Custom delays</h3>
-        <p class="docs-paragraph">
-          Adjust open and close delays for better UX.
-        </p>
+        <p class="docs-paragraph">Adjust open and close delays for better UX.</p>
         <docs-code-block [code]="delayDemoCode" language="html" />
       </section>
 
       <!-- Styling -->
       <section class="docs-section">
         <h2 class="docs-section-title">Styling</h2>
-        <p class="docs-paragraph">
-          Style the Navigation Menu parts using CSS:
-        </p>
+        <p class="docs-paragraph">Style the Navigation Menu parts using CSS:</p>
         <docs-code-block [code]="stylingCode" language="css" />
 
         <h3 class="docs-section-subtitle">Tailwind CSS</h3>
-        <p class="docs-paragraph">
-          Style with Tailwind utilities:
-        </p>
+        <p class="docs-paragraph">Style with Tailwind utilities:</p>
         <docs-code-block [code]="tailwindCode" language="html" />
       </section>
 
@@ -227,34 +217,26 @@ import {
       <!-- Accessibility -->
       <section class="docs-section">
         <h2 class="docs-section-title">Accessibility</h2>
-        <p class="docs-paragraph">
-          Navigation Menu follows WAI-ARIA guidelines for navigation:
-        </p>
+        <p class="docs-paragraph">Navigation Menu follows WAI-ARIA guidelines for navigation:</p>
         <ul class="docs-list">
           <li>
             Renders as a <code>&lt;nav&gt;</code> element with proper
             <code>aria-label</code>
           </li>
-          <li>
-            Menu items are keyboard accessible with Arrow key navigation
-          </li>
+          <li>Menu items are keyboard accessible with Arrow key navigation</li>
           <li>Opens on hover with configurable delays for better usability</li>
           <li>Closes on Escape key press or clicking outside</li>
-          <li>
-            Focus is managed within the menu for seamless keyboard navigation
-          </li>
+          <li>Focus is managed within the menu for seamless keyboard navigation</li>
           <li>
             Links within content use <code>role="link"</code> or standard
             <code>&lt;a&gt;</code> elements
           </li>
           <li>
             <strong>Direction indicator:</strong>
-            <code>data-activation-direction</code> enables directional
-            animations
+            <code>data-activation-direction</code> enables directional animations
           </li>
         </ul>
       </section>
-    
 
       <footer class="docs-footer">
         <docs-edit-on-github
@@ -977,8 +959,7 @@ export class HeaderComponent {
     {
       name: 'valueChange',
       type: 'EventEmitter<{ value: string | null; details: NavigationMenuChangeEventDetails }>',
-      description:
-        'Emitted when the active item changes. Includes reason (hover, click, etc.).',
+      description: 'Emitted when the active item changes. Includes reason (hover, click, etc.).',
     },
     {
       name: 'openChangeComplete',
@@ -991,8 +972,7 @@ export class HeaderComponent {
     {
       name: 'value',
       type: 'string',
-      description:
-        'Unique identifier for this item. Required for items with dropdown content.',
+      description: 'Unique identifier for this item. Required for items with dropdown content.',
     },
   ];
 
@@ -1010,8 +990,7 @@ export class HeaderComponent {
     {
       name: 'data-activation-direction',
       type: "'left' | 'right' | 'up' | 'down'",
-      description:
-        'On viewport and content, indicates the direction of navigation for animations.',
+      description: 'On viewport and content, indicates the direction of navigation for animations.',
     },
     {
       name: 'data-starting',
@@ -1072,26 +1051,22 @@ export class HeaderComponent {
     {
       name: 'ArrowDown',
       type: 'key',
-      description:
-        'Open dropdown (horizontal) or move to next item (vertical).',
+      description: 'Open dropdown (horizontal) or move to next item (vertical).',
     },
     {
       name: 'ArrowUp',
       type: 'key',
-      description:
-        'Close dropdown (horizontal) or move to previous item (vertical).',
+      description: 'Close dropdown (horizontal) or move to previous item (vertical).',
     },
     {
       name: 'ArrowRight',
       type: 'key',
-      description:
-        'Move to next trigger (horizontal) or open dropdown (vertical).',
+      description: 'Move to next trigger (horizontal) or open dropdown (vertical).',
     },
     {
       name: 'ArrowLeft',
       type: 'key',
-      description:
-        'Move to previous trigger (horizontal) or close dropdown (vertical).',
+      description: 'Move to previous trigger (horizontal) or close dropdown (vertical).',
     },
     {
       name: 'Enter / Space',

@@ -1,18 +1,18 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
+import {
+  ScrollAreaContentDirective,
+  ScrollAreaRootDirective,
+  ScrollAreaScrollbarDirective,
+  ScrollAreaThumbDirective,
+  ScrollAreaViewportDirective,
+} from '@base-ng/ui';
 import {
   CodeBlockComponent,
-  EditOnGitHubComponent,
   DemoComponent,
+  EditOnGitHubComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
-import {
-  ScrollAreaRootDirective,
-  ScrollAreaViewportDirective,
-  ScrollAreaContentDirective,
-  ScrollAreaScrollbarDirective,
-  ScrollAreaThumbDirective,
-} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-scroll-area',
@@ -32,14 +32,13 @@ import {
       <header class="docs-header-section">
         <h1 class="docs-title">Scroll Area</h1>
         <p class="docs-description">
-          A native scroll container with custom scrollbars. Provides fully customizable
-          scrollbar appearance while maintaining native scroll behavior and accessibility.
+          A native scroll container with custom scrollbars. Provides fully customizable scrollbar
+          appearance while maintaining native scroll behavior and accessibility.
         </p>
       </header>
 
       <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Live Demo</h2>
         <docs-demo [code]="verticalCode">
           <div baseUiScrollAreaRoot class="demo-scroll-area">
             <div baseUiScrollAreaViewport class="demo-scroll-viewport">
@@ -72,8 +71,8 @@ import {
       <section class="docs-section">
         <h2 class="docs-section-title">Anatomy</h2>
         <p class="docs-paragraph">
-          The Scroll Area uses a directive-based composition pattern with separate parts
-          for the viewport, content, scrollbars, and thumb:
+          The Scroll Area uses a directive-based composition pattern with separate parts for the
+          viewport, content, scrollbars, and thumb:
         </p>
         <docs-code-block [code]="anatomyCode" language="html" />
       </section>
@@ -83,21 +82,17 @@ import {
         <h2 class="docs-section-title">Examples</h2>
 
         <h3 class="docs-section-subtitle">Basic Vertical Scroll</h3>
-        <p class="docs-paragraph">
-          A basic scrollable area with a custom vertical scrollbar:
-        </p>
+        <p class="docs-paragraph">A basic scrollable area with a custom vertical scrollbar:</p>
         <docs-code-block [code]="verticalCode" language="html" />
 
         <h3 class="docs-section-subtitle">Horizontal Scroll</h3>
-        <p class="docs-paragraph">
-          Horizontal scrolling with a horizontal scrollbar:
-        </p>
+        <p class="docs-paragraph">Horizontal scrolling with a horizontal scrollbar:</p>
         <docs-code-block [code]="horizontalCode" language="html" />
 
         <h3 class="docs-section-subtitle">Both Scrollbars</h3>
         <p class="docs-paragraph">
-          Content that scrolls both horizontally and vertically. Use the Corner
-          component to fill the space where scrollbars meet:
+          Content that scrolls both horizontally and vertically. Use the Corner component to fill
+          the space where scrollbars meet:
         </p>
         <docs-code-block [code]="bothCode" language="html" />
 
@@ -117,9 +112,7 @@ import {
       <!-- Styling -->
       <section class="docs-section">
         <h2 class="docs-section-title">Styling</h2>
-        <p class="docs-paragraph">
-          Complete styling example with custom scrollbar appearance:
-        </p>
+        <p class="docs-paragraph">Complete styling example with custom scrollbar appearance:</p>
         <docs-code-block [code]="stylingCssCode" language="css" />
 
         <h3 class="docs-section-subtitle">Tailwind CSS</h3>
@@ -129,9 +122,7 @@ import {
       <!-- CSS Variables -->
       <section class="docs-section">
         <h2 class="docs-section-title">CSS Variables</h2>
-        <p class="docs-paragraph">
-          The component exposes CSS variables for advanced styling:
-        </p>
+        <p class="docs-paragraph">The component exposes CSS variables for advanced styling:</p>
         <div class="docs-attribute-table">
           <table>
             <thead>
@@ -218,9 +209,7 @@ import {
       <!-- Data Attributes -->
       <section class="docs-section">
         <h2 class="docs-section-title">Data Attributes</h2>
-        <p class="docs-paragraph">
-          Data attributes for CSS styling based on scroll state:
-        </p>
+        <p class="docs-paragraph">Data attributes for CSS styling based on scroll state:</p>
         <div class="docs-attribute-table">
           <table>
             <thead>
@@ -707,11 +696,26 @@ export class ScrollAreaDocsComponent {
 
   // API Props
   rootInputProps: PropDefinition[] = [
-    { name: 'overflowEdgeThreshold', type: 'number', default: '0', description: 'Threshold in pixels for detecting overflow edges.' },
+    {
+      name: 'overflowEdgeThreshold',
+      type: 'number',
+      default: '0',
+      description: 'Threshold in pixels for detecting overflow edges.',
+    },
   ];
 
   scrollbarInputProps: PropDefinition[] = [
-    { name: 'orientation', type: "'horizontal' | 'vertical'", default: "'vertical'", description: 'The scrollbar orientation.' },
-    { name: 'keepMounted', type: 'boolean', default: 'false', description: 'Keep scrollbar mounted when not needed.' },
+    {
+      name: 'orientation',
+      type: "'horizontal' | 'vertical'",
+      default: "'vertical'",
+      description: 'The scrollbar orientation.',
+    },
+    {
+      name: 'keepMounted',
+      type: 'boolean',
+      default: 'false',
+      description: 'Keep scrollbar mounted when not needed.',
+    },
   ];
 }

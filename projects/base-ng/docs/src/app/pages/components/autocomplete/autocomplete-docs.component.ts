@@ -1,19 +1,19 @@
 import { Component, signal } from '@angular/core';
 import {
+  AutocompleteInputDirective,
+  AutocompleteItemDirective,
+  AutocompleteListDirective,
+  AutocompletePopupDirective,
+  AutocompletePositionerDirective,
+  AutocompleteRootDirective,
+} from '@base-ng/ui';
+import {
   CodeBlockComponent,
-  EditOnGitHubComponent,
   DemoComponent,
+  EditOnGitHubComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
-import {
-  AutocompleteRootDirective,
-  AutocompleteInputDirective,
-  AutocompletePositionerDirective,
-  AutocompletePopupDirective,
-  AutocompleteListDirective,
-  AutocompleteItemDirective,
-} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-autocomplete',
@@ -34,15 +34,13 @@ import {
       <header class="docs-header-section">
         <h1 class="docs-title">Autocomplete</h1>
         <p class="docs-description">
-          An input that suggests options as you type, allowing free-form text entry
-          alongside dynamic suggestions. Unlike Combobox, selection is optional and
-          custom text is acceptable.
+          An input that suggests options as you type, allowing free-form text entry alongside
+          dynamic suggestions. Unlike Combobox, selection is optional and custom text is acceptable.
         </p>
       </header>
 
       <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Live Demo</h2>
         <docs-demo [code]="basicCode">
           <div baseUiAutocompleteRoot [(value)]="searchValue" class="demo-autocomplete">
             <input
@@ -85,9 +83,7 @@ import {
         <h2 class="docs-section-title">Examples</h2>
 
         <h3 class="docs-section-subtitle">Basic Autocomplete</h3>
-        <p class="docs-paragraph">
-          A simple input with suggestions that appear as the user types:
-        </p>
+        <p class="docs-paragraph">A simple input with suggestions that appear as the user types:</p>
         <docs-code-block [code]="basicCode" language="html" />
 
         <h3 class="docs-section-subtitle">Autocomplete Modes</h3>
@@ -104,8 +100,8 @@ import {
 
         <h3 class="docs-section-subtitle">Inline Autocomplete</h3>
         <p class="docs-paragraph">
-          In <code>'inline'</code> or <code>'both'</code> mode, matching text is auto-filled
-          as the user types:
+          In <code>'inline'</code> or <code>'both'</code> mode, matching text is auto-filled as the
+          user types:
         </p>
         <docs-code-block [code]="inlineCode" language="html" />
 
@@ -116,21 +112,15 @@ import {
         <docs-code-block [code]="multipleCode" language="html" />
 
         <h3 class="docs-section-subtitle">Grouped Items</h3>
-        <p class="docs-paragraph">
-          Organize suggestions into groups with labels:
-        </p>
+        <p class="docs-paragraph">Organize suggestions into groups with labels:</p>
         <docs-code-block [code]="groupedCode" language="html" />
 
         <h3 class="docs-section-subtitle">Empty State</h3>
-        <p class="docs-paragraph">
-          Show a message when no suggestions match:
-        </p>
+        <p class="docs-paragraph">Show a message when no suggestions match:</p>
         <docs-code-block [code]="emptyCode" language="html" />
 
         <h3 class="docs-section-subtitle">Custom Filter</h3>
-        <p class="docs-paragraph">
-          Provide a custom filter function for advanced matching logic:
-        </p>
+        <p class="docs-paragraph">Provide a custom filter function for advanced matching logic:</p>
         <docs-code-block [code]="customFilterCode" language="typescript" />
       </section>
 
@@ -171,21 +161,19 @@ import {
           </table>
         </div>
         <p class="docs-paragraph">
-          Use <strong>Autocomplete</strong> when: suggestions are optional and users can
-          enter any text (search boxes, command palettes).
+          Use <strong>Autocomplete</strong> when: suggestions are optional and users can enter any
+          text (search boxes, command palettes).
         </p>
         <p class="docs-paragraph">
-          Use <strong>Combobox</strong> when: value must be from predefined options
-          (form fields with strict validation).
+          Use <strong>Combobox</strong> when: value must be from predefined options (form fields
+          with strict validation).
         </p>
       </section>
 
       <!-- Styling -->
       <section class="docs-section">
         <h2 class="docs-section-title">Styling</h2>
-        <p class="docs-paragraph">
-          Style the autocomplete using CSS classes and data attributes:
-        </p>
+        <p class="docs-paragraph">Style the autocomplete using CSS classes and data attributes:</p>
         <docs-code-block [code]="stylingCssCode" language="css" />
 
         <h3 class="docs-section-subtitle">Tailwind CSS</h3>
@@ -198,8 +186,8 @@ import {
 
         <h3 class="docs-section-subtitle">AutocompleteRootDirective</h3>
         <p class="docs-paragraph">
-          Container that manages autocomplete state and behavior.
-          Selector: <code>[baseUiAutocompleteRoot]</code>
+          Container that manages autocomplete state and behavior. Selector:
+          <code>[baseUiAutocompleteRoot]</code>
         </p>
         <docs-props-table [props]="rootInputProps" title="Inputs" />
         <docs-props-table [props]="rootOutputProps" title="Outputs" />
@@ -239,9 +227,7 @@ import {
       <!-- Data Attributes -->
       <section class="docs-section">
         <h2 class="docs-section-title">Data Attributes</h2>
-        <p class="docs-paragraph">
-          Data attributes applied for CSS styling:
-        </p>
+        <p class="docs-paragraph">Data attributes applied for CSS styling:</p>
         <div class="docs-attribute-table">
           <table>
             <thead>
@@ -470,8 +456,14 @@ import {
     }
 
     @keyframes autocompleteIn {
-      from { opacity: 0; transform: translateY(-4px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(-4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .demo-autocomplete-list {
@@ -802,47 +794,148 @@ export class MyComponent {
 
   // API Props
   rootInputProps: PropDefinition[] = [
-    { name: 'mode', type: "'list' | 'inline' | 'both' | 'none'", default: "'list'", description: 'Controls filtering and inline completion behavior.' },
+    {
+      name: 'mode',
+      type: "'list' | 'inline' | 'both' | 'none'",
+      default: "'list'",
+      description: 'Controls filtering and inline completion behavior.',
+    },
     { name: 'value', type: 'T | T[] | null', description: 'The selected value (controlled).' },
-    { name: 'defaultValue', type: 'T | T[] | null', description: 'The initial value (uncontrolled).' },
+    {
+      name: 'defaultValue',
+      type: 'T | T[] | null',
+      description: 'The initial value (uncontrolled).',
+    },
     { name: 'inputValue', type: 'string', description: 'The input text value (controlled).' },
-    { name: 'defaultInputValue', type: 'string', default: "''", description: 'The initial input text (uncontrolled).' },
+    {
+      name: 'defaultInputValue',
+      type: 'string',
+      default: "''",
+      description: 'The initial input text (uncontrolled).',
+    },
     { name: 'open', type: 'boolean', description: 'Whether the popup is open (controlled).' },
-    { name: 'defaultOpen', type: 'boolean', default: 'false', description: 'Initial open state (uncontrolled).' },
-    { name: 'disabled', type: 'boolean', default: 'false', description: 'Whether the autocomplete is disabled.' },
-    { name: 'readOnly', type: 'boolean', default: 'false', description: 'Whether the autocomplete is read-only.' },
-    { name: 'required', type: 'boolean', default: 'false', description: 'Whether the autocomplete is required.' },
-    { name: 'multiple', type: 'boolean', default: 'false', description: 'Whether multiple selection is allowed.' },
+    {
+      name: 'defaultOpen',
+      type: 'boolean',
+      default: 'false',
+      description: 'Initial open state (uncontrolled).',
+    },
+    {
+      name: 'disabled',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether the autocomplete is disabled.',
+    },
+    {
+      name: 'readOnly',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether the autocomplete is read-only.',
+    },
+    {
+      name: 'required',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether the autocomplete is required.',
+    },
+    {
+      name: 'multiple',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether multiple selection is allowed.',
+    },
     { name: 'filterFn', type: 'AutocompleteFilterFn<T>', description: 'Custom filter function.' },
-    { name: 'filterOptions', type: 'AutocompleteFilterOptions', default: '{}', description: 'Filter options: caseSensitive, matchFrom.' },
-    { name: 'valueEqualityFn', type: '(a: T, b: T) => boolean', description: 'Custom equality function.' },
-    { name: 'valueToString', type: '(value: T) => string', description: 'Function to convert value to display string.' },
+    {
+      name: 'filterOptions',
+      type: 'AutocompleteFilterOptions',
+      default: '{}',
+      description: 'Filter options: caseSensitive, matchFrom.',
+    },
+    {
+      name: 'valueEqualityFn',
+      type: '(a: T, b: T) => boolean',
+      description: 'Custom equality function.',
+    },
+    {
+      name: 'valueToString',
+      type: '(value: T) => string',
+      description: 'Function to convert value to display string.',
+    },
   ];
 
   rootOutputProps: PropDefinition[] = [
-    { name: 'valueChange', type: 'EventEmitter<T | T[] | null>', description: 'Emits when value changes.' },
-    { name: 'inputValueChange', type: 'EventEmitter<string>', description: 'Emits when input text changes.' },
-    { name: 'openChange', type: 'EventEmitter<boolean>', description: 'Emits when open state changes.' },
-    { name: 'change', type: 'EventEmitter<AutocompleteChangeDetails<T>>', description: 'Emits change details (reason, value).' },
-    { name: 'highlightChange', type: 'EventEmitter<AutocompleteHighlightDetails<T>>', description: 'Emits when highlight changes.' },
+    {
+      name: 'valueChange',
+      type: 'EventEmitter<T | T[] | null>',
+      description: 'Emits when value changes.',
+    },
+    {
+      name: 'inputValueChange',
+      type: 'EventEmitter<string>',
+      description: 'Emits when input text changes.',
+    },
+    {
+      name: 'openChange',
+      type: 'EventEmitter<boolean>',
+      description: 'Emits when open state changes.',
+    },
+    {
+      name: 'change',
+      type: 'EventEmitter<AutocompleteChangeDetails<T>>',
+      description: 'Emits change details (reason, value).',
+    },
+    {
+      name: 'highlightChange',
+      type: 'EventEmitter<AutocompleteHighlightDetails<T>>',
+      description: 'Emits when highlight changes.',
+    },
   ];
 
   inputInputProps: PropDefinition[] = [
-    { name: 'disabled', type: 'boolean', default: 'false', description: 'Whether the input is disabled independently.' },
+    {
+      name: 'disabled',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether the input is disabled independently.',
+    },
   ];
 
   positionerInputProps: PropDefinition[] = [
-    { name: 'side', type: "'top' | 'bottom' | 'left' | 'right'", default: "'bottom'", description: 'Preferred positioning side.' },
-    { name: 'align', type: "'start' | 'center' | 'end'", default: "'start'", description: 'Preferred alignment.' },
+    {
+      name: 'side',
+      type: "'top' | 'bottom' | 'left' | 'right'",
+      default: "'bottom'",
+      description: 'Preferred positioning side.',
+    },
+    {
+      name: 'align',
+      type: "'start' | 'center' | 'end'",
+      default: "'start'",
+      description: 'Preferred alignment.',
+    },
     { name: 'sideOffset', type: 'number', default: '0', description: 'Offset along main axis.' },
     { name: 'alignOffset', type: 'number', default: '0', description: 'Offset along cross axis.' },
-    { name: 'keepMounted', type: 'boolean', default: 'false', description: 'Keep popup in DOM when closed.' },
+    {
+      name: 'keepMounted',
+      type: 'boolean',
+      default: 'false',
+      description: 'Keep popup in DOM when closed.',
+    },
   ];
 
   itemInputProps: PropDefinition[] = [
     { name: 'value', type: 'T', required: true, description: 'The value of this item.' },
     { name: 'label', type: 'string', description: 'Optional label (defaults to text content).' },
-    { name: 'textValue', type: 'string', description: 'Text used for filtering and inline completion.' },
-    { name: 'disabled', type: 'boolean', default: 'false', description: 'Whether the item is disabled.' },
+    {
+      name: 'textValue',
+      type: 'string',
+      description: 'Text used for filtering and inline completion.',
+    },
+    {
+      name: 'disabled',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether the item is disabled.',
+    },
   ];
 }

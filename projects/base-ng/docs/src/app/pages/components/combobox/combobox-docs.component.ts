@@ -1,21 +1,21 @@
 import { Component, signal } from '@angular/core';
 import {
+  ComboboxInputDirective,
+  ComboboxItemDirective,
+  ComboboxItemIndicatorDirective,
+  ComboboxListDirective,
+  ComboboxPopupDirective,
+  ComboboxPositionerDirective,
+  ComboboxRootDirective,
+  ComboboxTriggerDirective,
+} from '@base-ng/ui';
+import {
   CodeBlockComponent,
-  EditOnGitHubComponent,
   DemoComponent,
+  EditOnGitHubComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
-import {
-  ComboboxRootDirective,
-  ComboboxInputDirective,
-  ComboboxTriggerDirective,
-  ComboboxPositionerDirective,
-  ComboboxPopupDirective,
-  ComboboxListDirective,
-  ComboboxItemDirective,
-  ComboboxItemIndicatorDirective,
-} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-combobox',
@@ -38,15 +38,13 @@ import {
       <header class="docs-header-section">
         <h1 class="docs-title">Combobox</h1>
         <p class="docs-description">
-          An input combined with a list of predefined items, enabling filtering and
-          selection. Use when users need to search through options rather than
-          scrolling through a long list.
+          An input combined with a list of predefined items, enabling filtering and selection. Use
+          when users need to search through options rather than scrolling through a long list.
         </p>
       </header>
 
       <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Live Demo</h2>
         <docs-demo [code]="basicCode">
           <div baseUiComboboxRoot [(value)]="selectedCountry" class="demo-combobox">
             <div class="demo-combobox-input-wrap">
@@ -57,7 +55,7 @@ import {
               />
               <button baseUiComboboxTrigger class="demo-combobox-trigger">
                 <svg viewBox="0 0 12 12" width="12" height="12">
-                  <path d="M2 4l4 4 4-4" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                  <path d="M2 4l4 4 4-4" stroke="currentColor" fill="none" stroke-width="1.5" />
                 </svg>
               </button>
             </div>
@@ -68,7 +66,12 @@ import {
                     <div baseUiComboboxItem [value]="country.value" class="demo-combobox-item">
                       <span baseUiComboboxItemIndicator class="demo-combobox-indicator">
                         <svg viewBox="0 0 12 12" width="12" height="12">
-                          <path d="M2 6l3 3 5-6" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                          <path
+                            d="M2 6l3 3 5-6"
+                            stroke="currentColor"
+                            fill="none"
+                            stroke-width="1.5"
+                          />
                         </svg>
                       </span>
                       {{ country.label }}
@@ -91,8 +94,8 @@ import {
       <section class="docs-section">
         <h2 class="docs-section-title">Anatomy</h2>
         <p class="docs-paragraph">
-          The Combobox uses a directive-based composition pattern combining an input
-          field with a filterable dropdown list:
+          The Combobox uses a directive-based composition pattern combining an input field with a
+          filterable dropdown list:
         </p>
         <docs-code-block [code]="anatomyCode" language="html" />
       </section>
@@ -115,39 +118,29 @@ import {
 
         <h3 class="docs-section-subtitle">Multiple Selection</h3>
         <p class="docs-paragraph">
-          Enable multiple selection with the <code>multiple</code> input. Selected
-          items can be displayed as chips or tags:
+          Enable multiple selection with the <code>multiple</code> input. Selected items can be
+          displayed as chips or tags:
         </p>
         <docs-code-block [code]="multipleCode" language="html" />
 
         <h3 class="docs-section-subtitle">With Clear Button</h3>
-        <p class="docs-paragraph">
-          Add a clear button to reset the selection:
-        </p>
+        <p class="docs-paragraph">Add a clear button to reset the selection:</p>
         <docs-code-block [code]="clearCode" language="html" />
 
         <h3 class="docs-section-subtitle">Grouped Items</h3>
-        <p class="docs-paragraph">
-          Organize items into groups with labels:
-        </p>
+        <p class="docs-paragraph">Organize items into groups with labels:</p>
         <docs-code-block [code]="groupedCode" language="html" />
 
         <h3 class="docs-section-subtitle">Empty State</h3>
-        <p class="docs-paragraph">
-          Show a message when no items match the filter:
-        </p>
+        <p class="docs-paragraph">Show a message when no items match the filter:</p>
         <docs-code-block [code]="emptyCode" language="html" />
 
         <h3 class="docs-section-subtitle">Custom Filter</h3>
-        <p class="docs-paragraph">
-          Configure filtering behavior with <code>filterOptions</code>:
-        </p>
+        <p class="docs-paragraph">Configure filtering behavior with <code>filterOptions</code>:</p>
         <docs-code-block [code]="filterCode" language="html" />
 
         <h3 class="docs-section-subtitle">Disabled State</h3>
-        <p class="docs-paragraph">
-          Disable the entire combobox or individual items:
-        </p>
+        <p class="docs-paragraph">Disable the entire combobox or individual items:</p>
         <docs-code-block [code]="disabledCode" language="html" />
       </section>
 
@@ -169,8 +162,8 @@ import {
 
         <h3 class="docs-section-subtitle">ComboboxRootDirective</h3>
         <p class="docs-paragraph">
-          Container that groups all parts of the combobox. Apply to any element.
-          Selector: <code>[baseUiComboboxRoot]</code>
+          Container that groups all parts of the combobox. Apply to any element. Selector:
+          <code>[baseUiComboboxRoot]</code>
         </p>
         <docs-props-table [props]="rootInputProps" title="Inputs" />
         <docs-props-table [props]="rootOutputProps" title="Outputs" />
@@ -198,8 +191,8 @@ import {
 
         <h3 class="docs-section-subtitle">ComboboxItemDirective</h3>
         <p class="docs-paragraph">
-          An individual selectable option. Apply to a <code>&lt;div&gt;</code> element.
-          Selector: <code>[baseUiComboboxItem]</code>
+          An individual selectable option. Apply to a <code>&lt;div&gt;</code> element. Selector:
+          <code>[baseUiComboboxItem]</code>
         </p>
         <docs-props-table [props]="itemInputProps" title="Inputs" />
 
@@ -407,9 +400,15 @@ import {
       <section class="docs-section">
         <h2 class="docs-section-title">When to Use</h2>
         <ul class="docs-list">
-          <li><strong>Use Combobox</strong> when selecting from a predefined list with filtering, especially for large datasets</li>
+          <li>
+            <strong>Use Combobox</strong> when selecting from a predefined list with filtering,
+            especially for large datasets
+          </li>
           <li><strong>Use Select</strong> when no text input/filtering is needed</li>
-          <li><strong>Use Autocomplete</strong> when free-form text input is allowed alongside suggestions</li>
+          <li>
+            <strong>Use Autocomplete</strong> when free-form text input is allowed alongside
+            suggestions
+          </li>
         </ul>
       </section>
 
@@ -418,7 +417,9 @@ import {
         <h2 class="docs-section-title">Accessibility</h2>
         <ul class="docs-list">
           <li>Follows the WAI-ARIA Combobox pattern</li>
-          <li>The input has <code>role="combobox"</code> with <code>aria-autocomplete="list"</code></li>
+          <li>
+            The input has <code>role="combobox"</code> with <code>aria-autocomplete="list"</code>
+          </li>
           <li>Items have <code>role="option"</code> with <code>aria-selected</code> state</li>
           <li>Groups use <code>role="group"</code> with <code>aria-labelledby</code></li>
           <li>Supports full keyboard navigation</li>
@@ -500,8 +501,14 @@ import {
     }
 
     @keyframes comboboxIn {
-      from { opacity: 0; transform: translateY(-4px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(-4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .demo-combobox-list {
@@ -926,42 +933,142 @@ export class ComboboxDocsComponent {
   // API Props
   rootInputProps: PropDefinition[] = [
     { name: 'value', type: 'T | T[] | null', description: 'The selected value (controlled).' },
-    { name: 'defaultValue', type: 'T | T[] | null', description: 'The initial value (uncontrolled).' },
-    { name: 'open', type: 'boolean', default: 'false', description: 'Whether the popup is open (controlled).' },
-    { name: 'defaultOpen', type: 'boolean', default: 'false', description: 'Whether the popup is initially open (uncontrolled).' },
-    { name: 'disabled', type: 'boolean', default: 'false', description: 'Whether the combobox is disabled.' },
-    { name: 'readOnly', type: 'boolean', default: 'false', description: 'Whether the combobox is read-only.' },
-    { name: 'required', type: 'boolean', default: 'false', description: 'Whether the combobox is required.' },
-    { name: 'multiple', type: 'boolean', default: 'false', description: 'Whether multiple selection is allowed.' },
-    { name: 'filterOptions', type: 'ComboboxFilterOptions', default: '{}', description: 'Filter configuration: caseSensitive, matchFrom (start|contains).' },
-    { name: 'autoHighlight', type: 'boolean', default: 'true', description: 'Whether to auto-highlight first item when filtering.' },
+    {
+      name: 'defaultValue',
+      type: 'T | T[] | null',
+      description: 'The initial value (uncontrolled).',
+    },
+    {
+      name: 'open',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether the popup is open (controlled).',
+    },
+    {
+      name: 'defaultOpen',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether the popup is initially open (uncontrolled).',
+    },
+    {
+      name: 'disabled',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether the combobox is disabled.',
+    },
+    {
+      name: 'readOnly',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether the combobox is read-only.',
+    },
+    {
+      name: 'required',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether the combobox is required.',
+    },
+    {
+      name: 'multiple',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether multiple selection is allowed.',
+    },
+    {
+      name: 'filterOptions',
+      type: 'ComboboxFilterOptions',
+      default: '{}',
+      description: 'Filter configuration: caseSensitive, matchFrom (start|contains).',
+    },
+    {
+      name: 'autoHighlight',
+      type: 'boolean',
+      default: 'true',
+      description: 'Whether to auto-highlight first item when filtering.',
+    },
   ];
 
   rootOutputProps: PropDefinition[] = [
-    { name: 'valueChange', type: 'EventEmitter<T | T[] | null>', description: 'Emits when the value changes.' },
-    { name: 'openChange', type: 'EventEmitter<boolean>', description: 'Emits when the open state changes.' },
-    { name: 'inputValueChange', type: 'EventEmitter<string>', description: 'Emits when the input text changes.' },
+    {
+      name: 'valueChange',
+      type: 'EventEmitter<T | T[] | null>',
+      description: 'Emits when the value changes.',
+    },
+    {
+      name: 'openChange',
+      type: 'EventEmitter<boolean>',
+      description: 'Emits when the open state changes.',
+    },
+    {
+      name: 'inputValueChange',
+      type: 'EventEmitter<string>',
+      description: 'Emits when the input text changes.',
+    },
   ];
 
   inputInputProps: PropDefinition[] = [
-    { name: 'disabled', type: 'boolean', default: 'false', description: 'Whether the input is disabled independently.' },
+    {
+      name: 'disabled',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether the input is disabled independently.',
+    },
   ];
 
   triggerInputProps: PropDefinition[] = [
-    { name: 'disabled', type: 'boolean', default: 'false', description: 'Whether the trigger is disabled independently.' },
+    {
+      name: 'disabled',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether the trigger is disabled independently.',
+    },
   ];
 
   positionerInputProps: PropDefinition[] = [
-    { name: 'side', type: "'top' | 'bottom' | 'left' | 'right'", default: "'bottom'", description: 'The preferred side for positioning.' },
-    { name: 'align', type: "'start' | 'center' | 'end'", default: "'start'", description: 'The preferred alignment.' },
-    { name: 'sideOffset', type: 'number', default: '0', description: 'Offset from input along the main axis.' },
-    { name: 'alignOffset', type: 'number', default: '0', description: 'Offset from input along the cross axis.' },
-    { name: 'keepMounted', type: 'boolean', default: 'false', description: 'Whether to keep the popup in DOM when closed.' },
+    {
+      name: 'side',
+      type: "'top' | 'bottom' | 'left' | 'right'",
+      default: "'bottom'",
+      description: 'The preferred side for positioning.',
+    },
+    {
+      name: 'align',
+      type: "'start' | 'center' | 'end'",
+      default: "'start'",
+      description: 'The preferred alignment.',
+    },
+    {
+      name: 'sideOffset',
+      type: 'number',
+      default: '0',
+      description: 'Offset from input along the main axis.',
+    },
+    {
+      name: 'alignOffset',
+      type: 'number',
+      default: '0',
+      description: 'Offset from input along the cross axis.',
+    },
+    {
+      name: 'keepMounted',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether to keep the popup in DOM when closed.',
+    },
   ];
 
   itemInputProps: PropDefinition[] = [
     { name: 'value', type: 'T', required: true, description: 'The value of this item.' },
-    { name: 'label', type: 'string', description: 'Optional label for filtering (defaults to text content).' },
-    { name: 'disabled', type: 'boolean', default: 'false', description: 'Whether the item is disabled.' },
+    {
+      name: 'label',
+      type: 'string',
+      description: 'Optional label for filtering (defaults to text content).',
+    },
+    {
+      name: 'disabled',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether the item is disabled.',
+    },
   ];
 }

@@ -1,18 +1,18 @@
 import { Component, signal } from '@angular/core';
 import {
-  EditOnGitHubComponent,
+  ContextMenuItemDirective,
+  ContextMenuPopupDirective,
+  ContextMenuRootDirective,
+  ContextMenuSeparatorDirective,
+  ContextMenuTriggerDirective,
+} from '@base-ng/ui';
+import {
   CodeBlockComponent,
   DemoComponent,
+  EditOnGitHubComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
-import {
-  ContextMenuRootDirective,
-  ContextMenuTriggerDirective,
-  ContextMenuPopupDirective,
-  ContextMenuItemDirective,
-  ContextMenuSeparatorDirective,
-} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-context-menu',
@@ -32,20 +32,19 @@ import {
       <header class="docs-header-section">
         <h1 class="docs-title">Context Menu</h1>
         <p class="docs-description">
-          A menu that opens on right-click or long-press, positioned at the
-          cursor location. Commonly used for providing contextual actions on
-          elements like files, images, or text selections.
+          A menu that opens on right-click or long-press, positioned at the cursor location.
+          Commonly used for providing contextual actions on elements like files, images, or text
+          selections.
         </p>
       </header>
 
       <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Live Demo</h2>
         <docs-demo [code]="basicDemoCode">
           <div baseUiContextMenuRoot [(open)]="isOpen" class="demo-context-menu">
             <div baseUiContextMenuTrigger class="trigger-area">
               <svg viewBox="0 0 24 24" width="24" height="24" class="trigger-icon">
-                <path d="M3 5h18v2H3V5zm0 6h18v2H3v-2zm0 6h18v2H3v-2z" fill="currentColor"/>
+                <path d="M3 5h18v2H3V5zm0 6h18v2H3v-2zm0 6h18v2H3v-2z" fill="currentColor" />
               </svg>
               <span>Right-click anywhere in this area</span>
               <span class="hint">or long-press on touch devices</span>
@@ -54,29 +53,43 @@ import {
             <div baseUiContextMenuPopup class="context-popup">
               <div baseUiContextMenuItem class="context-item" (itemClick)="handleAction('cut')">
                 <svg viewBox="0 0 16 16" width="14" height="14">
-                  <path d="M4 1.5a2.5 2.5 0 1 0 1.7 4.3L7.9 8l-2.2 2.2A2.5 2.5 0 1 0 4 14.5a2.5 2.5 0 0 0 1.7-4.3L8 8l5.5 5.5.7-.7-5.5-5.5L14.5 2l-.7-.7-5.5 5.5-2.2-2.2A2.5 2.5 0 0 0 4 1.5zM3 4a1 1 0 1 1 2 0 1 1 0 0 1-2 0zm0 8a1 1 0 1 1 2 0 1 1 0 0 1-2 0z" fill="currentColor"/>
+                  <path
+                    d="M4 1.5a2.5 2.5 0 1 0 1.7 4.3L7.9 8l-2.2 2.2A2.5 2.5 0 1 0 4 14.5a2.5 2.5 0 0 0 1.7-4.3L8 8l5.5 5.5.7-.7-5.5-5.5L14.5 2l-.7-.7-5.5 5.5-2.2-2.2A2.5 2.5 0 0 0 4 1.5zM3 4a1 1 0 1 1 2 0 1 1 0 0 1-2 0zm0 8a1 1 0 1 1 2 0 1 1 0 0 1-2 0z"
+                    fill="currentColor"
+                  />
                 </svg>
                 Cut
                 <span class="shortcut">Ctrl+X</span>
               </div>
               <div baseUiContextMenuItem class="context-item" (itemClick)="handleAction('copy')">
                 <svg viewBox="0 0 16 16" width="14" height="14">
-                  <path d="M5 3H3v10h8v-2H5V3zm0 0V1h10v10h-2V3H5z" stroke="currentColor" fill="none"/>
+                  <path
+                    d="M5 3H3v10h8v-2H5V3zm0 0V1h10v10h-2V3H5z"
+                    stroke="currentColor"
+                    fill="none"
+                  />
                 </svg>
                 Copy
                 <span class="shortcut">Ctrl+C</span>
               </div>
               <div baseUiContextMenuItem class="context-item" (itemClick)="handleAction('paste')">
                 <svg viewBox="0 0 16 16" width="14" height="14">
-                  <path d="M4 2v1H2v11h10V3h-2V2H4zm1 1h4v1H5V3zm-2 2h8v8H3V5z" fill="currentColor"/>
+                  <path
+                    d="M4 2v1H2v11h10V3h-2V2H4zm1 1h4v1H5V3zm-2 2h8v8H3V5z"
+                    fill="currentColor"
+                  />
                 </svg>
                 Paste
                 <span class="shortcut">Ctrl+V</span>
               </div>
               <div baseUiContextMenuSeparator class="context-separator"></div>
-              <div baseUiContextMenuItem class="context-item context-item-danger" (itemClick)="handleAction('delete')">
+              <div
+                baseUiContextMenuItem
+                class="context-item context-item-danger"
+                (itemClick)="handleAction('delete')"
+              >
                 <svg viewBox="0 0 16 16" width="14" height="14">
-                  <path d="M3 4h10M6 4V2h4v2M5 4v9h6V4" stroke="currentColor" fill="none"/>
+                  <path d="M3 4h10M6 4V2h4v2M5 4v9h6V4" stroke="currentColor" fill="none" />
                 </svg>
                 Delete
               </div>
@@ -105,60 +118,42 @@ import {
         <h2 class="docs-section-title">Examples</h2>
 
         <h3 class="docs-section-subtitle">Basic context menu</h3>
-        <p class="docs-paragraph">
-          Right-click on an element to open the context menu.
-        </p>
+        <p class="docs-paragraph">Right-click on an element to open the context menu.</p>
         <docs-code-block [code]="basicDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">File browser context menu</h3>
-        <p class="docs-paragraph">
-          A typical file browser context menu with common actions.
-        </p>
+        <p class="docs-paragraph">A typical file browser context menu with common actions.</p>
         <docs-code-block [code]="fileDemoCode" language="typescript" />
 
         <h3 class="docs-section-subtitle">With groups and labels</h3>
-        <p class="docs-paragraph">
-          Organize menu items into labeled groups.
-        </p>
+        <p class="docs-paragraph">Organize menu items into labeled groups.</p>
         <docs-code-block [code]="groupDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">With checkbox items</h3>
-        <p class="docs-paragraph">
-          Use checkbox items for togglable options.
-        </p>
+        <p class="docs-paragraph">Use checkbox items for togglable options.</p>
         <docs-code-block [code]="checkboxDemoCode" language="typescript" />
 
         <h3 class="docs-section-subtitle">With radio items</h3>
-        <p class="docs-paragraph">
-          Use radio items for single-selection options.
-        </p>
+        <p class="docs-paragraph">Use radio items for single-selection options.</p>
         <docs-code-block [code]="radioDemoCode" language="typescript" />
 
         <h3 class="docs-section-subtitle">Disabled items</h3>
-        <p class="docs-paragraph">
-          Disable items that are not currently available.
-        </p>
+        <p class="docs-paragraph">Disable items that are not currently available.</p>
         <docs-code-block [code]="disabledDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">Text selection context menu</h3>
-        <p class="docs-paragraph">
-          Show a context menu for text selections.
-        </p>
+        <p class="docs-paragraph">Show a context menu for text selections.</p>
         <docs-code-block [code]="textSelectionDemoCode" language="typescript" />
       </section>
 
       <!-- Styling -->
       <section class="docs-section">
         <h2 class="docs-section-title">Styling</h2>
-        <p class="docs-paragraph">
-          Style the Context Menu parts using CSS:
-        </p>
+        <p class="docs-paragraph">Style the Context Menu parts using CSS:</p>
         <docs-code-block [code]="stylingCode" language="css" />
 
         <h3 class="docs-section-subtitle">Tailwind CSS</h3>
-        <p class="docs-paragraph">
-          Style with Tailwind utilities:
-        </p>
+        <p class="docs-paragraph">Style with Tailwind utilities:</p>
         <docs-code-block [code]="tailwindCode" language="html" />
       </section>
 
@@ -193,29 +188,25 @@ import {
       <!-- Accessibility -->
       <section class="docs-section">
         <h2 class="docs-section-title">Accessibility</h2>
-        <p class="docs-paragraph">
-          Context Menu follows WAI-ARIA guidelines for menus:
-        </p>
+        <p class="docs-paragraph">Context Menu follows WAI-ARIA guidelines for menus:</p>
         <ul class="docs-list">
           <li>
             Popup has <code>role="menu"</code> with proper
             <code>aria-labelledby</code>
           </li>
           <li>
-            Items have <code>role="menuitem"</code> with
-            <code>aria-disabled</code> when disabled
+            Items have <code>role="menuitem"</code> with <code>aria-disabled</code> when disabled
           </li>
           <li>Opens on right-click or long-press (500ms) for touch devices</li>
           <li>Closes on Escape, outside click, or item selection</li>
           <li>Arrow keys navigate between items</li>
           <li>Enter/Space activates the highlighted item</li>
           <li>
-            <strong>Touch support:</strong> Long-press on touch devices triggers
-            the menu after 500ms
+            <strong>Touch support:</strong> Long-press on touch devices triggers the menu after
+            500ms
           </li>
         </ul>
       </section>
-    
 
       <footer class="docs-footer">
         <docs-edit-on-github

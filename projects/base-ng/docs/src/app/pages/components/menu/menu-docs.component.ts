@@ -1,19 +1,19 @@
 import { Component, signal } from '@angular/core';
 import {
-  EditOnGitHubComponent,
+  MenuItemDirective,
+  MenuPopupDirective,
+  MenuPositionerDirective,
+  MenuRootDirective,
+  MenuSeparatorDirective,
+  MenuTriggerDirective,
+} from '@base-ng/ui';
+import {
   CodeBlockComponent,
   DemoComponent,
+  EditOnGitHubComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
-import {
-  MenuRootDirective,
-  MenuTriggerDirective,
-  MenuPositionerDirective,
-  MenuPopupDirective,
-  MenuItemDirective,
-  MenuSeparatorDirective,
-} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-menu',
@@ -34,21 +34,19 @@ import {
       <header class="docs-header-section">
         <h1 class="docs-title">Menu</h1>
         <p class="docs-description">
-          A dropdown menu component for displaying a list of actions. Features
-          keyboard navigation, focus management, and support for checkboxes,
-          radio groups, and separators.
+          A dropdown menu component for displaying a list of actions. Features keyboard navigation,
+          focus management, and support for checkboxes, radio groups, and separators.
         </p>
       </header>
 
       <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Live Demo</h2>
         <docs-demo [code]="basicDemoCode">
           <div baseUiMenuRoot [(open)]="isMenuOpen" class="demo-menu">
             <button baseUiMenuTrigger class="menu-trigger">
               Actions
               <svg class="chevron" viewBox="0 0 16 16" width="12" height="12">
-                <path d="M4 6l4 4 4-4" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                <path d="M4 6l4 4 4-4" stroke="currentColor" fill="none" stroke-width="1.5" />
               </svg>
             </button>
 
@@ -56,26 +54,30 @@ import {
               <div baseUiMenuPopup class="menu-popup">
                 <div baseUiMenuItem class="menu-item" (itemClick)="handleAction('edit')">
                   <svg viewBox="0 0 16 16" width="14" height="14">
-                    <path d="M11.5 1.5l3 3L5 14H2v-3l9.5-9.5z" stroke="currentColor" fill="none"/>
+                    <path d="M11.5 1.5l3 3L5 14H2v-3l9.5-9.5z" stroke="currentColor" fill="none" />
                   </svg>
                   Edit
                 </div>
                 <div baseUiMenuItem class="menu-item" (itemClick)="handleAction('duplicate')">
                   <svg viewBox="0 0 16 16" width="14" height="14">
-                    <path d="M5 3H3v10h8v-2M5 3v10h8V3H5z" stroke="currentColor" fill="none"/>
+                    <path d="M5 3H3v10h8v-2M5 3v10h8V3H5z" stroke="currentColor" fill="none" />
                   </svg>
                   Duplicate
                 </div>
                 <div baseUiMenuItem class="menu-item" (itemClick)="handleAction('share')">
                   <svg viewBox="0 0 16 16" width="14" height="14">
-                    <path d="M4 8v6h8V8M8 2v8M5 5l3-3 3 3" stroke="currentColor" fill="none"/>
+                    <path d="M4 8v6h8V8M8 2v8M5 5l3-3 3 3" stroke="currentColor" fill="none" />
                   </svg>
                   Share
                 </div>
                 <div baseUiMenuSeparator class="menu-separator"></div>
-                <div baseUiMenuItem class="menu-item menu-item-danger" (itemClick)="handleAction('delete')">
+                <div
+                  baseUiMenuItem
+                  class="menu-item menu-item-danger"
+                  (itemClick)="handleAction('delete')"
+                >
                   <svg viewBox="0 0 16 16" width="14" height="14">
-                    <path d="M3 4h10M6 4V2h4v2M5 4v9h6V4" stroke="currentColor" fill="none"/>
+                    <path d="M3 4h10M6 4V2h4v2M5 4v9h6V4" stroke="currentColor" fill="none" />
                   </svg>
                   Delete
                 </div>
@@ -94,9 +96,7 @@ import {
       <!-- Anatomy -->
       <section class="docs-section">
         <h2 class="docs-section-title">Anatomy</h2>
-        <p class="docs-paragraph">
-          The Menu uses a directive-based composition pattern:
-        </p>
+        <p class="docs-paragraph">The Menu uses a directive-based composition pattern:</p>
         <docs-code-block [code]="anatomyCode" language="html" />
       </section>
 
@@ -105,60 +105,42 @@ import {
         <h2 class="docs-section-title">Examples</h2>
 
         <h3 class="docs-section-subtitle">Basic usage</h3>
-        <p class="docs-paragraph">
-          A simple dropdown menu with actions:
-        </p>
+        <p class="docs-paragraph">A simple dropdown menu with actions:</p>
         <docs-code-block [code]="basicDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">With groups</h3>
-        <p class="docs-paragraph">
-          Organize items into labeled groups:
-        </p>
+        <p class="docs-paragraph">Organize items into labeled groups:</p>
         <docs-code-block [code]="groupsDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">With separators</h3>
-        <p class="docs-paragraph">
-          Add visual dividers between menu sections:
-        </p>
+        <p class="docs-paragraph">Add visual dividers between menu sections:</p>
         <docs-code-block [code]="separatorsDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">Checkbox items</h3>
-        <p class="docs-paragraph">
-          Add checkable menu items:
-        </p>
+        <p class="docs-paragraph">Add checkable menu items:</p>
         <docs-code-block [code]="checkboxDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">Radio group</h3>
-        <p class="docs-paragraph">
-          Create mutually exclusive options:
-        </p>
+        <p class="docs-paragraph">Create mutually exclusive options:</p>
         <docs-code-block [code]="radioDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">Disabled items</h3>
-        <p class="docs-paragraph">
-          Disable individual menu items:
-        </p>
+        <p class="docs-paragraph">Disable individual menu items:</p>
         <docs-code-block [code]="disabledDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">Keep open on click</h3>
-        <p class="docs-paragraph">
-          Prevent menu from closing when an item is clicked:
-        </p>
+        <p class="docs-paragraph">Prevent menu from closing when an item is clicked:</p>
         <docs-code-block [code]="keepOpenDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">Controlled menu</h3>
-        <p class="docs-paragraph">
-          Use <code>[(open)]</code> to control the menu state:
-        </p>
+        <p class="docs-paragraph">Use <code>[(open)]</code> to control the menu state:</p>
         <docs-code-block [code]="controlledDemoCode" language="html" />
       </section>
 
       <!-- Styling -->
       <section class="docs-section">
         <h2 class="docs-section-title">Styling</h2>
-        <p class="docs-paragraph">
-          Use data attributes to style different menu states:
-        </p>
+        <p class="docs-paragraph">Use data attributes to style different menu states:</p>
         <docs-code-block [code]="stylingCode" language="css" />
       </section>
 
@@ -169,32 +151,21 @@ import {
         <docs-props-table title="MenuRoot Outputs" [props]="rootOutputProps" />
         <docs-props-table title="MenuItem Inputs" [props]="itemInputProps" />
         <docs-props-table title="MenuItem Outputs" [props]="itemOutputProps" />
-        <docs-props-table
-          title="MenuCheckboxItem Inputs"
-          [props]="checkboxInputProps"
-        />
-        <docs-props-table
-          title="MenuRadioGroup Inputs"
-          [props]="radioGroupInputProps"
-        />
+        <docs-props-table title="MenuCheckboxItem Inputs" [props]="checkboxInputProps" />
+        <docs-props-table title="MenuRadioGroup Inputs" [props]="radioGroupInputProps" />
       </section>
 
       <!-- Data Attributes -->
       <section class="docs-section">
         <h2 class="docs-section-title">Data attributes</h2>
-        <docs-props-table
-          title="MenuRoot / MenuPopup"
-          [props]="rootDataAttributes"
-        />
+        <docs-props-table title="MenuRoot / MenuPopup" [props]="rootDataAttributes" />
         <docs-props-table title="MenuItem" [props]="itemDataAttributes" />
       </section>
 
       <!-- Accessibility -->
       <section class="docs-section">
         <h2 class="docs-section-title">Accessibility</h2>
-        <p class="docs-paragraph">
-          The Menu component follows WAI-ARIA Menu pattern:
-        </p>
+        <p class="docs-paragraph">The Menu component follows WAI-ARIA Menu pattern:</p>
         <ul class="docs-list">
           <li>Popup has <code>role="menu"</code></li>
           <li>Items have <code>role="menuitem"</code></li>
@@ -208,7 +179,6 @@ import {
           <li>Type-ahead search to jump to items</li>
         </ul>
       </section>
-    
 
       <footer class="docs-footer">
         <docs-edit-on-github
@@ -259,11 +229,11 @@ import {
       background: var(--docs-bg-hover);
     }
 
-    .menu-trigger[data-state="open"] {
+    .menu-trigger[data-state='open'] {
       background: var(--docs-bg-hover);
     }
 
-    .menu-trigger[data-state="open"] .chevron {
+    .menu-trigger[data-state='open'] .chevron {
       transform: rotate(180deg);
     }
 
@@ -700,8 +670,7 @@ handleOpenChange(event: { open: boolean; reason: string }) {
       name: 'open',
       type: 'boolean',
       default: 'false',
-      description:
-        'The controlled open state of the menu. Supports two-way binding with [(open)].',
+      description: 'The controlled open state of the menu. Supports two-way binding with [(open)].',
     },
     {
       name: 'defaultOpen',
@@ -736,8 +705,7 @@ handleOpenChange(event: { open: boolean; reason: string }) {
     {
       name: 'label',
       type: 'string',
-      description:
-        'Label for keyboard navigation (type-ahead). Defaults to text content.',
+      description: 'Label for keyboard navigation (type-ahead). Defaults to text content.',
     },
   ];
 
@@ -754,8 +722,7 @@ handleOpenChange(event: { open: boolean; reason: string }) {
       name: 'checked',
       type: 'boolean',
       default: 'false',
-      description:
-        'Whether the checkbox is checked. Supports two-way binding with [(checked)].',
+      description: 'Whether the checkbox is checked. Supports two-way binding with [(checked)].',
     },
     {
       name: 'disabled',
@@ -767,8 +734,7 @@ handleOpenChange(event: { open: boolean; reason: string }) {
       name: 'closeOnClick',
       type: 'boolean',
       default: 'false',
-      description:
-        'Whether clicking closes the menu. Defaults to false for checkbox items.',
+      description: 'Whether clicking closes the menu. Defaults to false for checkbox items.',
     },
   ];
 
@@ -776,8 +742,7 @@ handleOpenChange(event: { open: boolean; reason: string }) {
     {
       name: 'value',
       type: 'string',
-      description:
-        'The selected value. Supports two-way binding with [(value)].',
+      description: 'The selected value. Supports two-way binding with [(value)].',
     },
     {
       name: 'disabled',
@@ -799,8 +764,7 @@ handleOpenChange(event: { open: boolean; reason: string }) {
     {
       name: 'data-highlighted',
       type: 'string',
-      description:
-        'Present when the item is highlighted (focused via keyboard or hover).',
+      description: 'Present when the item is highlighted (focused via keyboard or hover).',
     },
     {
       name: 'data-disabled',

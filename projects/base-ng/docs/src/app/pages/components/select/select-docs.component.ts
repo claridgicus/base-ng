@@ -1,23 +1,23 @@
 import { Component, signal } from '@angular/core';
 import {
-  CodeBlockComponent,
-  EditOnGitHubComponent,
-  DemoComponent,
-  PropsTableComponent,
-  type PropDefinition,
-} from '../../../shared';
-import {
-  SelectRootDirective,
-  SelectTriggerDirective,
-  SelectValueDirective,
   SelectIconDirective,
-  SelectPositionerDirective,
-  SelectPopupDirective,
-  SelectListDirective,
   SelectItemDirective,
   SelectItemIndicatorDirective,
   SelectItemTextDirective,
+  SelectListDirective,
+  SelectPopupDirective,
+  SelectPositionerDirective,
+  SelectRootDirective,
+  SelectTriggerDirective,
+  SelectValueDirective,
 } from '@base-ng/ui';
+import {
+  CodeBlockComponent,
+  DemoComponent,
+  EditOnGitHubComponent,
+  PropsTableComponent,
+  type PropDefinition,
+} from '../../../shared';
 
 @Component({
   selector: 'docs-select',
@@ -42,15 +42,13 @@ import {
       <header class="docs-header-section">
         <h1 class="docs-title">Select</h1>
         <p class="docs-description">
-          A form control for choosing a predefined value from a dropdown menu.
-          Features keyboard navigation, type-ahead search, multiple selection,
-          and grouped items.
+          A form control for choosing a predefined value from a dropdown menu. Features keyboard
+          navigation, type-ahead search, multiple selection, and grouped items.
         </p>
       </header>
 
       <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Live Demo</h2>
         <docs-demo [code]="basicCode">
           <div baseUiSelectRoot [(value)]="selectedFruit" class="demo-select">
             <button baseUiSelectTrigger class="demo-select-trigger">
@@ -59,7 +57,7 @@ import {
               </span>
               <span baseUiSelectIcon class="demo-select-icon">
                 <svg viewBox="0 0 12 12" width="12" height="12">
-                  <path d="M2 4l4 4 4-4" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                  <path d="M2 4l4 4 4-4" stroke="currentColor" fill="none" stroke-width="1.5" />
                 </svg>
               </span>
             </button>
@@ -70,7 +68,12 @@ import {
                     <div baseUiSelectItem [value]="fruit.value" class="demo-select-item">
                       <span baseUiSelectItemIndicator class="demo-select-indicator">
                         <svg viewBox="0 0 12 12" width="12" height="12">
-                          <path d="M2 6l3 3 5-6" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                          <path
+                            d="M2 6l3 3 5-6"
+                            stroke="currentColor"
+                            fill="none"
+                            stroke-width="1.5"
+                          />
                         </svg>
                       </span>
                       <span baseUiSelectItemText>{{ fruit.label }}</span>
@@ -93,8 +96,8 @@ import {
       <section class="docs-section">
         <h2 class="docs-section-title">Anatomy</h2>
         <p class="docs-paragraph">
-          The Select uses a directive-based composition pattern with many parts
-          that can be combined as needed:
+          The Select uses a directive-based composition pattern with many parts that can be combined
+          as needed:
         </p>
         <docs-code-block [code]="anatomyCode" language="html" />
       </section>
@@ -122,9 +125,7 @@ import {
         <docs-code-block [code]="multipleCode" language="html" />
 
         <h3 class="docs-section-subtitle">Disabled State</h3>
-        <p class="docs-paragraph">
-          The select or individual items can be disabled:
-        </p>
+        <p class="docs-paragraph">The select or individual items can be disabled:</p>
         <docs-code-block [code]="disabledCode" language="html" />
 
         <h3 class="docs-section-subtitle">Positioning</h3>
@@ -134,9 +135,7 @@ import {
         <docs-code-block [code]="positioningCode" language="html" />
 
         <h3 class="docs-section-subtitle">Scroll Arrows</h3>
-        <p class="docs-paragraph">
-          Add scroll arrows to indicate content overflow in long lists:
-        </p>
+        <p class="docs-paragraph">Add scroll arrows to indicate content overflow in long lists:</p>
         <docs-code-block [code]="scrollArrowsCode" language="html" />
       </section>
 
@@ -158,16 +157,16 @@ import {
 
         <h3 class="docs-section-subtitle">SelectRootDirective</h3>
         <p class="docs-paragraph">
-          Container that groups all parts of the select. Apply to any element.
-          Selector: <code>[baseUiSelectRoot]</code>
+          Container that groups all parts of the select. Apply to any element. Selector:
+          <code>[baseUiSelectRoot]</code>
         </p>
         <docs-props-table [props]="rootInputProps" title="Inputs" />
         <docs-props-table [props]="rootOutputProps" title="Outputs" />
 
         <h3 class="docs-section-subtitle">SelectTriggerDirective</h3>
         <p class="docs-paragraph">
-          Button that opens the popup. Apply to a <code>&lt;button&gt;</code> element.
-          Selector: <code>[baseUiSelectTrigger]</code>
+          Button that opens the popup. Apply to a <code>&lt;button&gt;</code> element. Selector:
+          <code>[baseUiSelectTrigger]</code>
         </p>
         <docs-props-table [props]="triggerInputProps" title="Inputs" />
 
@@ -187,15 +186,17 @@ import {
 
         <h3 class="docs-section-subtitle">SelectItemDirective</h3>
         <p class="docs-paragraph">
-          An individual selectable option. Apply to a <code>&lt;div&gt;</code> element.
-          Selector: <code>[baseUiSelectItem]</code>
+          An individual selectable option. Apply to a <code>&lt;div&gt;</code> element. Selector:
+          <code>[baseUiSelectItem]</code>
         </p>
         <docs-props-table [props]="itemInputProps" title="Inputs" />
 
-        <h3 class="docs-section-subtitle">SelectScrollUpArrowDirective / SelectScrollDownArrowDirective</h3>
+        <h3 class="docs-section-subtitle">
+          SelectScrollUpArrowDirective / SelectScrollDownArrowDirective
+        </h3>
         <p class="docs-paragraph">
-          Scroll indicators for long lists. Apply to <code>&lt;div&gt;</code> elements.
-          Selectors: <code>[baseUiSelectScrollUpArrow]</code>, <code>[baseUiSelectScrollDownArrow]</code>
+          Scroll indicators for long lists. Apply to <code>&lt;div&gt;</code> elements. Selectors:
+          <code>[baseUiSelectScrollUpArrow]</code>, <code>[baseUiSelectScrollDownArrow]</code>
         </p>
         <docs-props-table [props]="scrollArrowInputProps" title="Inputs" />
 
@@ -392,7 +393,9 @@ import {
             <tbody>
               <tr>
                 <td><kbd>Enter</kbd> / <kbd>Space</kbd></td>
-                <td>When trigger focused: opens the popup. When item highlighted: selects the item.</td>
+                <td>
+                  When trigger focused: opens the popup. When item highlighted: selects the item.
+                </td>
               </tr>
               <tr>
                 <td><kbd>ArrowDown</kbd></td>
@@ -470,7 +473,8 @@ import {
         font-size: 0.875rem;
       }
 
-      th, td {
+      th,
+      td {
         padding: 0.75rem;
         text-align: left;
         border-bottom: 1px solid var(--docs-border);
@@ -951,44 +955,136 @@ export class SelectDocsComponent {
   // API Props
   rootInputProps: PropDefinition[] = [
     { name: 'value', type: 'T | T[] | null', description: 'The selected value (controlled).' },
-    { name: 'defaultValue', type: 'T | T[] | null', description: 'The initial value (uncontrolled).' },
-    { name: 'open', type: 'boolean', default: 'false', description: 'Whether the popup is open (controlled).' },
-    { name: 'defaultOpen', type: 'boolean', default: 'false', description: 'Whether the popup is initially open (uncontrolled).' },
-    { name: 'disabled', type: 'boolean', default: 'false', description: 'Whether the select is disabled.' },
-    { name: 'readOnly', type: 'boolean', default: 'false', description: 'Whether the select is read-only.' },
-    { name: 'required', type: 'boolean', default: 'false', description: 'Whether the select is required.' },
-    { name: 'multiple', type: 'boolean', default: 'false', description: 'Whether multiple selection is allowed.' },
+    {
+      name: 'defaultValue',
+      type: 'T | T[] | null',
+      description: 'The initial value (uncontrolled).',
+    },
+    {
+      name: 'open',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether the popup is open (controlled).',
+    },
+    {
+      name: 'defaultOpen',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether the popup is initially open (uncontrolled).',
+    },
+    {
+      name: 'disabled',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether the select is disabled.',
+    },
+    {
+      name: 'readOnly',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether the select is read-only.',
+    },
+    {
+      name: 'required',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether the select is required.',
+    },
+    {
+      name: 'multiple',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether multiple selection is allowed.',
+    },
   ];
 
   rootOutputProps: PropDefinition[] = [
-    { name: 'valueChange', type: 'EventEmitter<T | T[] | null>', description: 'Emits when the value changes.' },
-    { name: 'openChange', type: 'EventEmitter<boolean>', description: 'Emits when the open state changes.' },
+    {
+      name: 'valueChange',
+      type: 'EventEmitter<T | T[] | null>',
+      description: 'Emits when the value changes.',
+    },
+    {
+      name: 'openChange',
+      type: 'EventEmitter<boolean>',
+      description: 'Emits when the open state changes.',
+    },
   ];
 
   triggerInputProps: PropDefinition[] = [
-    { name: 'disabled', type: 'boolean', default: 'false', description: 'Whether the trigger is disabled independently.' },
+    {
+      name: 'disabled',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether the trigger is disabled independently.',
+    },
   ];
 
   valueInputProps: PropDefinition[] = [
-    { name: 'placeholder', type: 'string', default: "''", description: 'Placeholder text when no value is selected.' },
+    {
+      name: 'placeholder',
+      type: 'string',
+      default: "''",
+      description: 'Placeholder text when no value is selected.',
+    },
   ];
 
   positionerInputProps: PropDefinition[] = [
-    { name: 'side', type: "'top' | 'bottom' | 'left' | 'right'", default: "'bottom'", description: 'The preferred side for positioning.' },
-    { name: 'align', type: "'start' | 'center' | 'end'", default: "'start'", description: 'The preferred alignment.' },
-    { name: 'sideOffset', type: 'number', default: '0', description: 'Offset from trigger along the main axis.' },
-    { name: 'alignOffset', type: 'number', default: '0', description: 'Offset from trigger along the cross axis.' },
-    { name: 'keepMounted', type: 'boolean', default: 'false', description: 'Whether to keep the popup in DOM when closed.' },
-    { name: 'alignItemWithTrigger', type: 'boolean', default: 'true', description: 'Align selected item with trigger (mouse interaction).' },
+    {
+      name: 'side',
+      type: "'top' | 'bottom' | 'left' | 'right'",
+      default: "'bottom'",
+      description: 'The preferred side for positioning.',
+    },
+    {
+      name: 'align',
+      type: "'start' | 'center' | 'end'",
+      default: "'start'",
+      description: 'The preferred alignment.',
+    },
+    {
+      name: 'sideOffset',
+      type: 'number',
+      default: '0',
+      description: 'Offset from trigger along the main axis.',
+    },
+    {
+      name: 'alignOffset',
+      type: 'number',
+      default: '0',
+      description: 'Offset from trigger along the cross axis.',
+    },
+    {
+      name: 'keepMounted',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether to keep the popup in DOM when closed.',
+    },
+    {
+      name: 'alignItemWithTrigger',
+      type: 'boolean',
+      default: 'true',
+      description: 'Align selected item with trigger (mouse interaction).',
+    },
   ];
 
   itemInputProps: PropDefinition[] = [
     { name: 'value', type: 'T', required: true, description: 'The value of this item.' },
     { name: 'label', type: 'string', description: 'Optional label (defaults to text content).' },
-    { name: 'disabled', type: 'boolean', default: 'false', description: 'Whether the item is disabled.' },
+    {
+      name: 'disabled',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether the item is disabled.',
+    },
   ];
 
   scrollArrowInputProps: PropDefinition[] = [
-    { name: 'keepMounted', type: 'boolean', default: 'false', description: 'Whether to keep arrow mounted when not visible.' },
+    {
+      name: 'keepMounted',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether to keep arrow mounted when not visible.',
+    },
   ];
 }

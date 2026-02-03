@@ -1,20 +1,20 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import {
-  EditOnGitHubComponent,
+  MenubarDirective,
+  MenuItemDirective,
+  MenuPopupDirective,
+  MenuPositionerDirective,
+  MenuRootDirective,
+  MenuSeparatorDirective,
+  MenuTriggerDirective,
+} from '@base-ng/ui';
+import {
   CodeBlockComponent,
   DemoComponent,
+  EditOnGitHubComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
-import {
-  MenubarDirective,
-  MenuRootDirective,
-  MenuTriggerDirective,
-  MenuPositionerDirective,
-  MenuPopupDirective,
-  MenuItemDirective,
-  MenuSeparatorDirective,
-} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-menubar',
@@ -36,15 +36,13 @@ import {
       <header class="docs-header-section">
         <h1 class="docs-title">Menubar</h1>
         <p class="docs-description">
-          A horizontal or vertical bar containing menu triggers. Commonly used
-          for application navigation with dropdown menus, similar to the menu
-          bar in desktop applications.
+          A horizontal or vertical bar containing menu triggers. Commonly used for application
+          navigation with dropdown menus, similar to the menu bar in desktop applications.
         </p>
       </header>
 
       <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Live Demo</h2>
         <docs-demo [code]="basicDemoCode">
           <nav baseUiMenubar class="demo-menubar">
             <!-- File menu -->
@@ -54,14 +52,14 @@ import {
                 <div baseUiMenuPopup class="menubar-popup">
                   <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('new')">
                     <svg viewBox="0 0 16 16" width="14" height="14">
-                      <path d="M4 1h6l4 4v10H4V1zm1 1v12h8V6h-3V2H5z" fill="currentColor"/>
+                      <path d="M4 1h6l4 4v10H4V1zm1 1v12h8V6h-3V2H5z" fill="currentColor" />
                     </svg>
                     New File
                     <span class="menubar-shortcut">Ctrl+N</span>
                   </div>
                   <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('open')">
                     <svg viewBox="0 0 16 16" width="14" height="14">
-                      <path d="M1 3v10h14V5H7L5 3H1z" stroke="currentColor" fill="none"/>
+                      <path d="M1 3v10h14V5H7L5 3H1z" stroke="currentColor" fill="none" />
                     </svg>
                     Open
                     <span class="menubar-shortcut">Ctrl+O</span>
@@ -69,7 +67,10 @@ import {
                   <div baseUiMenuSeparator class="menubar-separator"></div>
                   <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('save')">
                     <svg viewBox="0 0 16 16" width="14" height="14">
-                      <path d="M2 2v12h12V4l-2-2H2zm2 0h6v3H4V2zm8 5v5H4V7h8z" fill="currentColor"/>
+                      <path
+                        d="M2 2v12h12V4l-2-2H2zm2 0h6v3H4V2zm8 5v5H4V7h8z"
+                        fill="currentColor"
+                      />
                     </svg>
                     Save
                     <span class="menubar-shortcut">Ctrl+S</span>
@@ -85,22 +86,28 @@ import {
                 <div baseUiMenuPopup class="menubar-popup">
                   <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('undo')">
                     <svg viewBox="0 0 16 16" width="14" height="14">
-                      <path d="M3 8l4-4v3h4a3 3 0 0 1 0 6H8" stroke="currentColor" fill="none"/>
+                      <path d="M3 8l4-4v3h4a3 3 0 0 1 0 6H8" stroke="currentColor" fill="none" />
                     </svg>
                     Undo
                     <span class="menubar-shortcut">Ctrl+Z</span>
                   </div>
                   <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('redo')">
                     <svg viewBox="0 0 16 16" width="14" height="14">
-                      <path d="M13 8l-4-4v3H5a3 3 0 0 0 0 6h3" stroke="currentColor" fill="none"/>
+                      <path d="M13 8l-4-4v3H5a3 3 0 0 0 0 6h3" stroke="currentColor" fill="none" />
                     </svg>
                     Redo
                     <span class="menubar-shortcut">Ctrl+Y</span>
                   </div>
                   <div baseUiMenuSeparator class="menubar-separator"></div>
-                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('cut')">Cut</div>
-                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('copy')">Copy</div>
-                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('paste')">Paste</div>
+                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('cut')">
+                    Cut
+                  </div>
+                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('copy')">
+                    Copy
+                  </div>
+                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('paste')">
+                    Paste
+                  </div>
                 </div>
               </div>
             </div>
@@ -110,9 +117,15 @@ import {
               <button baseUiMenuTrigger class="menubar-trigger">View</button>
               <div baseUiMenuPositioner>
                 <div baseUiMenuPopup class="menubar-popup">
-                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('zoomIn')">Zoom In</div>
-                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('zoomOut')">Zoom Out</div>
-                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('resetZoom')">Reset Zoom</div>
+                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('zoomIn')">
+                    Zoom In
+                  </div>
+                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('zoomOut')">
+                    Zoom Out
+                  </div>
+                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('resetZoom')">
+                    Reset Zoom
+                  </div>
                 </div>
               </div>
             </div>
@@ -122,8 +135,12 @@ import {
               <button baseUiMenuTrigger class="menubar-trigger">Help</button>
               <div baseUiMenuPositioner>
                 <div baseUiMenuPopup class="menubar-popup">
-                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('docs')">Documentation</div>
-                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('about')">About</div>
+                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('docs')">
+                    Documentation
+                  </div>
+                  <div baseUiMenuItem class="menubar-item" (itemClick)="handleAction('about')">
+                    About
+                  </div>
                 </div>
               </div>
             </div>
@@ -141,8 +158,7 @@ import {
       <section class="docs-section">
         <h2 class="docs-section-title">Anatomy</h2>
         <p class="docs-paragraph">
-          The Menubar contains multiple Menu components, each with its own
-          trigger and popup:
+          The Menubar contains multiple Menu components, each with its own trigger and popup:
         </p>
         <docs-code-block [code]="anatomyCode" language="html" />
       </section>
@@ -152,9 +168,7 @@ import {
         <h2 class="docs-section-title">Examples</h2>
 
         <h3 class="docs-section-subtitle">Basic menubar</h3>
-        <p class="docs-paragraph">
-          A horizontal menubar with multiple dropdown menus.
-        </p>
+        <p class="docs-paragraph">A horizontal menubar with multiple dropdown menus.</p>
         <docs-code-block [code]="basicDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">Application menubar</h3>
@@ -164,42 +178,30 @@ import {
         <docs-code-block [code]="appDemoCode" language="typescript" />
 
         <h3 class="docs-section-subtitle">Vertical orientation</h3>
-        <p class="docs-paragraph">
-          Create a vertical menubar for sidebar navigation.
-        </p>
+        <p class="docs-paragraph">Create a vertical menubar for sidebar navigation.</p>
         <docs-code-block [code]="verticalDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">With icons and shortcuts</h3>
-        <p class="docs-paragraph">
-          Add icons and keyboard shortcuts to menu items.
-        </p>
+        <p class="docs-paragraph">Add icons and keyboard shortcuts to menu items.</p>
         <docs-code-block [code]="iconsDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">With submenus</h3>
-        <p class="docs-paragraph">
-          Nest menus for hierarchical navigation.
-        </p>
+        <p class="docs-paragraph">Nest menus for hierarchical navigation.</p>
         <docs-code-block [code]="submenuDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">Disabled state</h3>
-        <p class="docs-paragraph">
-          Disable the entire menubar or individual menus.
-        </p>
+        <p class="docs-paragraph">Disable the entire menubar or individual menus.</p>
         <docs-code-block [code]="disabledDemoCode" language="html" />
       </section>
 
       <!-- Styling -->
       <section class="docs-section">
         <h2 class="docs-section-title">Styling</h2>
-        <p class="docs-paragraph">
-          Style the Menubar and its menus using CSS:
-        </p>
+        <p class="docs-paragraph">Style the Menubar and its menus using CSS:</p>
         <docs-code-block [code]="stylingCode" language="css" />
 
         <h3 class="docs-section-subtitle">Tailwind CSS</h3>
-        <p class="docs-paragraph">
-          Style with Tailwind utilities:
-        </p>
+        <p class="docs-paragraph">Style with Tailwind utilities:</p>
         <docs-code-block [code]="tailwindCode" language="html" />
       </section>
 
@@ -230,37 +232,23 @@ import {
       <!-- Accessibility -->
       <section class="docs-section">
         <h2 class="docs-section-title">Accessibility</h2>
-        <p class="docs-paragraph">
-          Menubar follows WAI-ARIA guidelines for menubars:
-        </p>
+        <p class="docs-paragraph">Menubar follows WAI-ARIA guidelines for menubars:</p>
         <ul class="docs-list">
           <li>
             Uses <code>role="menubar"</code> with proper
             <code>aria-orientation</code>
           </li>
-          <li>
-            Child menus use <code>role="menu"</code> with
-            <code>role="menuitem"</code> items
-          </li>
+          <li>Child menus use <code>role="menu"</code> with <code>role="menuitem"</code> items</li>
           <li>Arrow keys navigate between menu triggers</li>
+          <li>Opening a menu while another is open automatically closes the previous menu</li>
+          <li>Focus follows the active menu trigger for seamless keyboard navigation</li>
+          <li><code>aria-disabled</code> set when disabled</li>
           <li>
-            Opening a menu while another is open automatically closes the
-            previous menu
-          </li>
-          <li>
-            Focus follows the active menu trigger for seamless keyboard
-            navigation
-          </li>
-          <li>
-            <code>aria-disabled</code> set when disabled
-          </li>
-          <li>
-            <strong>Loop behavior:</strong> By default, navigation wraps from
-            last to first and vice versa
+            <strong>Loop behavior:</strong> By default, navigation wraps from last to first and vice
+            versa
           </li>
         </ul>
       </section>
-    
 
       <footer class="docs-footer">
         <docs-edit-on-github
@@ -311,7 +299,7 @@ import {
     }
 
     .menubar-trigger:hover,
-    .menubar-trigger[data-state="open"] {
+    .menubar-trigger[data-state='open'] {
       background: var(--docs-bg);
     }
 
@@ -990,8 +978,7 @@ export class AppMenubarComponent {
       name: 'loop',
       type: 'boolean',
       default: 'true',
-      description:
-        'Whether to loop focus when navigating with keyboard (wrap from last to first).',
+      description: 'Whether to loop focus when navigating with keyboard (wrap from last to first).',
     },
   ];
 
@@ -1040,26 +1027,22 @@ export class AppMenubarComponent {
     {
       name: 'ArrowRight',
       type: 'key',
-      description:
-        'Move focus to the next menu trigger (horizontal) or open submenu.',
+      description: 'Move focus to the next menu trigger (horizontal) or open submenu.',
     },
     {
       name: 'ArrowLeft',
       type: 'key',
-      description:
-        'Move focus to the previous menu trigger (horizontal) or close submenu.',
+      description: 'Move focus to the previous menu trigger (horizontal) or close submenu.',
     },
     {
       name: 'ArrowDown',
       type: 'key',
-      description:
-        'Open menu (horizontal) or move to next trigger (vertical).',
+      description: 'Open menu (horizontal) or move to next trigger (vertical).',
     },
     {
       name: 'ArrowUp',
       type: 'key',
-      description:
-        'Close menu (horizontal) or move to previous trigger (vertical).',
+      description: 'Close menu (horizontal) or move to previous trigger (vertical).',
     },
     {
       name: 'Home',

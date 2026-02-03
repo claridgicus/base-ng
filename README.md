@@ -1,6 +1,8 @@
-# BaseNg
+# Base NG
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.0.
+An Angular port of [Base UI](https://base-ui.com/) - the unstyled React component library from the creators of Material UI.
+
+Base NG brings the same philosophy of headless, accessible, and customizable components to the Angular ecosystem.
 
 ## Development server
 

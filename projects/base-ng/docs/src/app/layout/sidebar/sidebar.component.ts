@@ -41,6 +41,22 @@ interface NavSection {
           </ul>
         </div>
       }
+
+      <footer class="SideNavFooter">
+        <p class="footer-tagline">An unofficial Angular port of Base UI.</p>
+        <p class="footer-tagline">Same great taste, different framework.</p>
+        <p class="footer-credit">
+          Maintained by
+          <a
+            href="https://github.com/claridgicus"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="footer-link"
+          >
+            James Claridge
+          </a>
+        </p>
+      </footer>
     </nav>
   `,
   styles: `
@@ -122,6 +138,36 @@ interface NavSection {
       text-transform: uppercase;
       padding-inline: 2px;
       transform: translateY(-2px);
+    }
+
+    .SideNavFooter {
+      margin-top: auto;
+      padding-top: 2rem;
+      border-top: 1px solid var(--color-gridline);
+    }
+
+    .footer-tagline {
+      margin: 0;
+      font-size: 0.75rem;
+      color: var(--docs-text-secondary);
+      line-height: 1.5;
+    }
+
+    .footer-credit {
+      margin: 0.5rem 0 0 0;
+      font-size: 0.75rem;
+      color: var(--docs-text-secondary);
+    }
+
+    .footer-link {
+      color: var(--docs-text);
+      text-decoration: none;
+      font-weight: 500;
+
+      &:hover {
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
     }
   `,
 })

@@ -2,6 +2,14 @@
 
 Synchronize `@base-ng/ui` components and documentation with the latest Base UI React reference.
 
+## Arguments
+
+- `$ARGUMENTS` - Optional component name (e.g., `button`, `dialog`, `accordion`)
+
+If a component name is provided, only process that single component through both loops (one iteration each), then run tests and push.
+
+If no argument is provided, run the full loops until completion.
+
 ## Workflow
 
 Execute the following steps in order:
@@ -10,6 +18,17 @@ Execute the following steps in order:
 
 Start the component ralph loop to verify and update components against the remote Base UI repository:
 
+**If `$ARGUMENTS` is provided (single component mode):**
+1. Process ONLY the specified component `$ARGUMENTS`
+2. Fetch React source from `https://github.com/mui/base-ui/tree/master/packages/react/src/$ARGUMENTS`
+3. Fetch React docs from `https://base-ui.com/react/components/$ARGUMENTS`
+4. Compare visual and behavioral parity
+5. Update component implementation if needed
+6. Enhance specs with required test categories
+7. Mark progress in `component-parity-progress.md`
+8. Stop after this one component (do NOT continue loop)
+
+**If no argument (full loop mode):**
 1. Invoke `/ralph-loop:ralph-loop` with the component parity prompt
 2. For each component in `component-parity-progress.md`:
    - Fetch the React source from `https://github.com/mui/base-ui`
@@ -23,6 +42,15 @@ Start the component ralph loop to verify and update components against the remot
 
 Start the docs ralph loop to update documentation:
 
+**If `$ARGUMENTS` is provided (single component mode):**
+1. Process ONLY the documentation for `$ARGUMENTS`
+2. Fetch reference from `https://base-ui.com/react/components/$ARGUMENTS`
+3. Update the documentation page at `projects/base-ng/docs/src/app/pages/components/$ARGUMENTS/`
+4. Ensure live demos work with the updated component
+5. Mark progress in `docs-progress.md` for this component only
+6. Stop after this one component (do NOT continue loop)
+
+**If no argument (full loop mode):**
 1. Invoke `/ralph-loop:ralph-loop` with the docs site prompt
 2. For each task in `docs-progress.md`:
    - Fetch reference docs from `https://base-ui.com/`
@@ -65,8 +93,20 @@ Ensure both projects build successfully.
 ## Completion
 
 Report summary of:
-- Components updated
+- Components updated (or single component `$ARGUMENTS` if specified)
 - Specs enhanced
 - Documentation pages updated
 - Test results
 - Push status
+
+## Examples
+
+```bash
+# Full sync - all components
+/update-from-remote
+
+# Single component only
+/update-from-remote button
+/update-from-remote dialog
+/update-from-remote accordion
+```

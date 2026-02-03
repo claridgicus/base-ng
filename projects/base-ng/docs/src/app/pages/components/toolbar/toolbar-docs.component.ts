@@ -1,17 +1,17 @@
 import { Component, signal } from '@angular/core';
 import {
-  EditOnGitHubComponent,
+  ToolbarButtonDirective,
+  ToolbarGroupDirective,
+  ToolbarRootDirective,
+  ToolbarSeparatorDirective,
+} from '@base-ng/ui';
+import {
   CodeBlockComponent,
   DemoComponent,
+  EditOnGitHubComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
-import {
-  ToolbarRootDirective,
-  ToolbarGroupDirective,
-  ToolbarButtonDirective,
-  ToolbarSeparatorDirective,
-} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-toolbar',
@@ -30,15 +30,13 @@ import {
       <header class="docs-header-section">
         <h1 class="docs-title">Toolbar</h1>
         <p class="docs-description">
-          A container for grouping a set of controls, such as buttons, toggle
-          groups, or menus. Provides keyboard navigation between items and
-          proper accessibility roles.
+          A container for grouping a set of controls, such as buttons, toggle groups, or menus.
+          Provides keyboard navigation between items and proper accessibility roles.
         </p>
       </header>
 
       <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Live Demo</h2>
         <docs-demo [code]="basicDemoCode">
           <div baseUiToolbarRoot class="demo-toolbar">
             <!-- Text formatting group -->
@@ -50,7 +48,12 @@ import {
                 (click)="toggleBold()"
               >
                 <svg viewBox="0 0 16 16" width="16" height="16">
-                  <path d="M4 2h5a3 3 0 0 1 0 6H4V2zm0 6h6a3 3 0 0 1 0 6H4V8z" stroke="currentColor" fill="none" stroke-width="2"/>
+                  <path
+                    d="M4 2h5a3 3 0 0 1 0 6H4V2zm0 6h6a3 3 0 0 1 0 6H4V8z"
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-width="2"
+                  />
                 </svg>
               </button>
               <button
@@ -60,7 +63,12 @@ import {
                 (click)="toggleItalic()"
               >
                 <svg viewBox="0 0 16 16" width="16" height="16">
-                  <path d="M6 2h6M4 14h6M10 2L6 14" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                  <path
+                    d="M6 2h6M4 14h6M10 2L6 14"
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-width="1.5"
+                  />
                 </svg>
               </button>
               <button
@@ -70,7 +78,12 @@ import {
                 (click)="toggleUnderline()"
               >
                 <svg viewBox="0 0 16 16" width="16" height="16">
-                  <path d="M4 2v6a4 4 0 0 0 8 0V2M3 14h10" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                  <path
+                    d="M4 2v6a4 4 0 0 0 8 0V2M3 14h10"
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-width="1.5"
+                  />
                 </svg>
               </button>
             </div>
@@ -86,7 +99,12 @@ import {
                 (click)="alignment.set('left')"
               >
                 <svg viewBox="0 0 16 16" width="16" height="16">
-                  <path d="M2 3h12M2 6h8M2 9h12M2 12h6" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                  <path
+                    d="M2 3h12M2 6h8M2 9h12M2 12h6"
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-width="1.5"
+                  />
                 </svg>
               </button>
               <button
@@ -96,7 +114,12 @@ import {
                 (click)="alignment.set('center')"
               >
                 <svg viewBox="0 0 16 16" width="16" height="16">
-                  <path d="M2 3h12M4 6h8M2 9h12M5 12h6" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                  <path
+                    d="M2 3h12M4 6h8M2 9h12M5 12h6"
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-width="1.5"
+                  />
                 </svg>
               </button>
               <button
@@ -106,7 +129,12 @@ import {
                 (click)="alignment.set('right')"
               >
                 <svg viewBox="0 0 16 16" width="16" height="16">
-                  <path d="M2 3h12M6 6h8M2 9h12M8 12h6" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                  <path
+                    d="M2 3h12M6 6h8M2 9h12M8 12h6"
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-width="1.5"
+                  />
                 </svg>
               </button>
             </div>
@@ -116,14 +144,19 @@ import {
             <!-- Action buttons -->
             <button baseUiToolbarButton class="demo-toolbar-btn" (click)="handleAction('link')">
               <svg viewBox="0 0 16 16" width="16" height="16">
-                <path d="M6.5 9.5l3-3M9 5h2a2 2 0 0 1 0 4h-1M7 7H5a2 2 0 0 0 0 4h2" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                <path
+                  d="M6.5 9.5l3-3M9 5h2a2 2 0 0 1 0 4h-1M7 7H5a2 2 0 0 0 0 4h2"
+                  stroke="currentColor"
+                  fill="none"
+                  stroke-width="1.5"
+                />
               </svg>
             </button>
             <button baseUiToolbarButton class="demo-toolbar-btn" (click)="handleAction('image')">
               <svg viewBox="0 0 16 16" width="16" height="16">
-                <rect x="2" y="3" width="12" height="10" rx="1" stroke="currentColor" fill="none"/>
-                <circle cx="5.5" cy="6.5" r="1.5" fill="currentColor"/>
-                <path d="M2 11l3-3 2 2 4-4 3 3" stroke="currentColor" fill="none"/>
+                <rect x="2" y="3" width="12" height="10" rx="1" stroke="currentColor" fill="none" />
+                <circle cx="5.5" cy="6.5" r="1.5" fill="currentColor" />
+                <path d="M2 11l3-3 2 2 4-4 3 3" stroke="currentColor" fill="none" />
               </svg>
             </button>
           </div>
@@ -140,8 +173,7 @@ import {
       <section class="docs-section">
         <h2 class="docs-section-title">Anatomy</h2>
         <p class="docs-paragraph">
-          The Toolbar can contain buttons, groups, separators, links, and
-          inputs:
+          The Toolbar can contain buttons, groups, separators, links, and inputs:
         </p>
         <docs-code-block [code]="anatomyCode" language="html" />
       </section>
@@ -151,60 +183,42 @@ import {
         <h2 class="docs-section-title">Examples</h2>
 
         <h3 class="docs-section-subtitle">Basic toolbar</h3>
-        <p class="docs-paragraph">
-          A simple toolbar with action buttons.
-        </p>
+        <p class="docs-paragraph">A simple toolbar with action buttons.</p>
         <docs-code-block [code]="basicDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">Text editor toolbar</h3>
-        <p class="docs-paragraph">
-          A rich text editor toolbar with formatting options.
-        </p>
+        <p class="docs-paragraph">A rich text editor toolbar with formatting options.</p>
         <docs-code-block [code]="editorDemoCode" language="typescript" />
 
         <h3 class="docs-section-subtitle">With toggle groups</h3>
-        <p class="docs-paragraph">
-          Combine toolbar with toggle groups for exclusive selections.
-        </p>
+        <p class="docs-paragraph">Combine toolbar with toggle groups for exclusive selections.</p>
         <docs-code-block [code]="toggleDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">With groups</h3>
-        <p class="docs-paragraph">
-          Group related buttons together with separators.
-        </p>
+        <p class="docs-paragraph">Group related buttons together with separators.</p>
         <docs-code-block [code]="groupDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">Vertical orientation</h3>
-        <p class="docs-paragraph">
-          Create a vertical toolbar for sidebars or floating panels.
-        </p>
+        <p class="docs-paragraph">Create a vertical toolbar for sidebars or floating panels.</p>
         <docs-code-block [code]="verticalDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">With inputs</h3>
-        <p class="docs-paragraph">
-          Include input fields in the toolbar.
-        </p>
+        <p class="docs-paragraph">Include input fields in the toolbar.</p>
         <docs-code-block [code]="inputDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">Disabled state</h3>
-        <p class="docs-paragraph">
-          Disable the entire toolbar or individual items.
-        </p>
+        <p class="docs-paragraph">Disable the entire toolbar or individual items.</p>
         <docs-code-block [code]="disabledDemoCode" language="html" />
       </section>
 
       <!-- Styling -->
       <section class="docs-section">
         <h2 class="docs-section-title">Styling</h2>
-        <p class="docs-paragraph">
-          Style the Toolbar and its elements using CSS:
-        </p>
+        <p class="docs-paragraph">Style the Toolbar and its elements using CSS:</p>
         <docs-code-block [code]="stylingCode" language="css" />
 
         <h3 class="docs-section-subtitle">Tailwind CSS</h3>
-        <p class="docs-paragraph">
-          Style with Tailwind utilities:
-        </p>
+        <p class="docs-paragraph">Style with Tailwind utilities:</p>
         <docs-code-block [code]="tailwindCode" language="html" />
       </section>
 
@@ -236,9 +250,7 @@ import {
       <!-- Accessibility -->
       <section class="docs-section">
         <h2 class="docs-section-title">Accessibility</h2>
-        <p class="docs-paragraph">
-          Toolbar follows WAI-ARIA guidelines for toolbars:
-        </p>
+        <p class="docs-paragraph">Toolbar follows WAI-ARIA guidelines for toolbars:</p>
         <ul class="docs-list">
           <li>
             Uses <code>role="toolbar"</code> with proper
@@ -246,17 +258,14 @@ import {
           </li>
           <li>Arrow keys navigate between focusable items</li>
           <li>Home/End keys navigate to first/last item</li>
-          <li>
-            <code>aria-disabled</code> set on toolbar when disabled
-          </li>
+          <li><code>aria-disabled</code> set on toolbar when disabled</li>
           <li>Focus is managed using roving tabindex</li>
           <li>
-            <strong>Loop behavior:</strong> By default, navigation wraps from
-            last to first and vice versa
+            <strong>Loop behavior:</strong> By default, navigation wraps from last to first and vice
+            versa
           </li>
         </ul>
       </section>
-    
 
       <footer class="docs-footer">
         <docs-edit-on-github
@@ -849,8 +858,7 @@ export class EditorToolbarComponent {
       name: 'loop',
       type: 'boolean',
       default: 'true',
-      description:
-        'Whether to loop focus when navigating with keyboard (wrap from last to first).',
+      description: 'Whether to loop focus when navigating with keyboard (wrap from last to first).',
     },
   ];
 
