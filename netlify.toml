@@ -1,0 +1,8 @@
+[build]
+  command = "npx ng build @base-ng/docs --configuration=production"
+  publish = "dist/@base-ng/docs/browser"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

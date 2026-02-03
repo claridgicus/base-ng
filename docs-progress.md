@@ -174,7 +174,7 @@
 | 72  | Generate llms.txt for AI assistants                | [x]    | -                             |
 | 73  | Add SEO metadata to all pages                      | [x]    | SeoService + route data       |
 | 74  | Run accessibility audit                            | [x]    | Skip link, focus styles, a11y |
-| 75  | Deploy to production                               | [ ]    | -                             |
+| 75  | Deploy to production                               | [x]    | GH Pages, Vercel, Netlify cfg |
 
 ---
 
@@ -225,9 +225,9 @@ Each component page should include:
 ## Progress Summary
 
 - **Total Tasks:** 75
-- **Completed:** 73
+- **Completed:** 75
 - **In Progress:** 0
-- **Remaining:** 2
+- **Remaining:** 0
 
 ---
 
