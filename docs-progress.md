@@ -81,7 +81,7 @@
 | 35  | Document Toggle component                          | [x]    | `components/toggle`           |
 | 36  | Document Toggle Group component                    | [x]    | `components/toggle-group`     |
 | 37  | Document Avatar component                          | [x]    | `components/avatar`           |
-| 38  | Document Input component                           | [ ]    | `components/input`            |
+| 38  | Document Input component                           | [x]    | `components/input`            |
 
 ---
 
@@ -225,9 +225,9 @@ Each component page should include:
 ## Progress Summary
 
 - **Total Tasks:** 75
-- **Completed:** 33
+- **Completed:** 34
 - **In Progress:** 0
-- **Remaining:** 42
+- **Remaining:** 41
 
 ---
 
