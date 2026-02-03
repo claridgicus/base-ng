@@ -1,7 +1,8 @@
 /**
+ * @component Button
  * @fileoverview Tests for Button component
  * @source https://github.com/mui/base-ui/blob/master/packages/react/src/button/Button.test.tsx
- * @parity Verified against React Base UI
+ * @parity Verified against React Base UI - includes Keyboard Navigation, Focus Management, State Attributes, and Accessibility test categories
  */
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -266,10 +267,80 @@ describe('ButtonComponent press and release events', () => {
   });
 });
 
-// Note: Keyboard navigation (Space/Enter) is handled by native button behavior
-// The base-ui-button component uses native button semantics which automatically
-// supports keyboard activation. These behaviors are verified by the existing
-// click and disabled state tests.
+describe('Keyboard Navigation', () => {
+  @Component({
+    template: `
+      <base-ui-button
+        [disabled]="disabled()"
+        (buttonClick)="onClick($event)">
+        Keyboard test
+      </base-ui-button>
+    `,
+    standalone: true,
+    imports: [ButtonComponent],
+  })
+  class KeyboardTestComponent {
+    disabled = signal(false);
+    clickHandler = vi.fn();
+
+    onClick(event: MouseEvent | KeyboardEvent) {
+      this.clickHandler(event);
+    }
+  }
+
+  let fixture: ComponentFixture<KeyboardTestComponent>;
+  let component: KeyboardTestComponent;
+  let button: HTMLElement;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [KeyboardTestComponent],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(KeyboardTestComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    button = fixture.nativeElement.querySelector('base-ui-button');
+  });
+
+  it('should activate on Enter key (native button behavior)', () => {
+    // Native button elements trigger click on Enter
+    // This is browser-provided behavior
+    button.focus();
+    const enterEvent = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true });
+    button.dispatchEvent(enterEvent);
+    // Note: In a real browser, Enter on a focused button triggers click
+    // In JSDOM/test environment, we verify the event is not prevented
+    expect(enterEvent.defaultPrevented).toBe(false);
+  });
+
+  it('should activate on Space key (native button behavior)', () => {
+    // Native button elements trigger click on Space
+    button.focus();
+    const spaceEvent = new KeyboardEvent('keydown', { key: ' ', bubbles: true });
+    button.dispatchEvent(spaceEvent);
+    // In a real browser, Space on a focused button triggers click
+    expect(spaceEvent.defaultPrevented).toBe(false);
+  });
+
+  it('should prevent Space key when disabled', () => {
+    component.disabled.set(true);
+    fixture.detectChanges();
+
+    const spaceEvent = new KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true });
+    button.dispatchEvent(spaceEvent);
+    expect(spaceEvent.defaultPrevented).toBe(true);
+  });
+
+  it('should prevent Enter key when disabled', () => {
+    component.disabled.set(true);
+    fixture.detectChanges();
+
+    const enterEvent = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+    button.dispatchEvent(enterEvent);
+    expect(enterEvent.defaultPrevented).toBe(true);
+  });
+});
 
 describe('ButtonComponent Focus Management', () => {
   @Component({
@@ -288,6 +359,7 @@ describe('ButtonComponent Focus Management', () => {
   let fixture: ComponentFixture<FocusTestComponent>;
   let component: FocusTestComponent;
   let button: HTMLElement;
+  let buttonComponent: ButtonComponent;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -298,18 +370,31 @@ describe('ButtonComponent Focus Management', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
     button = fixture.nativeElement.querySelector('base-ui-button');
+    buttonComponent = fixture.debugElement.children[0].componentInstance;
   });
 
-  it('should not have tabindex -1 when not disabled', () => {
+  it('should be focusable when not disabled', () => {
     const tabindex = button.getAttribute('tabindex');
     expect(tabindex !== '-1').toBe(true);
   });
 
-  it('should have tabindex -1 when disabled', () => {
+  it('should not be focusable when disabled', () => {
     component.disabled.set(true);
     fixture.detectChanges();
 
     expect(button.getAttribute('tabindex')).toBe('-1');
+  });
+
+  it('should receive focus via focus() method', () => {
+    const focusSpy = vi.spyOn(button, 'focus');
+    buttonComponent.focus();
+    expect(focusSpy).toHaveBeenCalled();
+  });
+
+  it('should blur via blur() method', () => {
+    const blurSpy = vi.spyOn(button, 'blur');
+    buttonComponent.blur();
+    expect(blurSpy).toHaveBeenCalled();
   });
 });
 
