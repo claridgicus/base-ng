@@ -1,214 +1,193 @@
 <div class="page">
   <!-- Header -->
   <header class="header">
-    <div class="header-inner">
-      <a href="/" class="logo-link" aria-label="Base UI Home">
-        <svg
-          class="logo"
-          width="17"
-          height="24"
-          viewBox="0 0 17 24"
-          fill="currentColor"
-          aria-hidden="true"
-        >
-          <path d="M9.5001 7.01537C9.2245 6.99837 9 7.22385 9 7.49999V23C13.4183 23 17 19.4183 17 15C17 10.7497 13.6854 7.27351 9.5001 7.01537Z" />
-          <path d="M8 9.8V12V23C3.58172 23 0 19.0601 0 14.2V12V1C4.41828 1 8 4.93989 8 9.8Z" />
-        </svg>
-      </a>
-
-      <nav class="header-nav">
-        <a href="/angular/overview/quick-start" class="nav-link">
-          Components
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-            <path d="M2.5 6H9.5M9.5 6L6 2.5M9.5 6L6 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-        <div class="header-links">
-          <a
-            href="https://x.com/base_ui"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="icon-link"
-            aria-label="X (Twitter)"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-            </svg>
-          </a>
-          <a
-            href="https://github.com/anthropics/base-ng"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="icon-link"
-            aria-label="GitHub"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-            </svg>
-          </a>
-          <a
-            href="https://discord.gg/base-ui"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="icon-link"
-            aria-label="Discord"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/>
-            </svg>
-          </a>
-        </div>
-      </nav>
-    </div>
+    <a href="/" class="logo-link" aria-label="Base UI Home">
+      <svg
+        class="logo"
+        width="17"
+        height="24"
+        viewBox="0 0 17 24"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <path d="M9.5001 7.01537C9.2245 6.99837 9 7.22385 9 7.49999V23C13.4183 23 17 19.4183 17 15C17 10.7497 13.6854 7.27351 9.5001 7.01537Z" />
+        <path d="M8 9.8V12V23C3.58172 23 0 19.0601 0 14.2V12V1C4.41828 1 8 4.93989 8 9.8Z" />
+      </svg>
+    </a>
+    <nav class="header-nav">
+      <a href="https://x.com/base_ui" target="_blank" rel="noopener noreferrer" class="header-link">X</a>
+      <a href="https://github.com/claridgicus/base-ng" target="_blank" rel="noopener noreferrer" class="header-link">GitHub</a>
+      <a href="https://discord.gg/base-ui" target="_blank" rel="noopener noreferrer" class="header-link">Discord</a>
+    </nav>
+    <a href="/docs/overview/quick-start" class="components-link">
+      Components
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M2.5 6H9.5M9.5 6L6 2.5M9.5 6L6 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
   </header>
 
   <!-- Main Content -->
   <main class="main">
     <!-- Hero Section -->
     <section class="hero">
-      <div class="hero-content">
-        <h1 class="hero-title">
-          Unstyled UI components for building accessible user interfaces
-        </h1>
-        <p class="hero-description">
-          From the creators of Radix, Floating UI, and Material UI. A comprehensive
-          UI component library for building accessible user interfaces with React.
-          Meticulously designed for composability, consistency, and craft.
-        </p>
-        <p class="hero-description">
-          Prioritizes flexibility&#8212;without imposing visual opinions. Built to last,
-          with care, and maintained with intent.
-        </p>
-        <a href="/angular/overview/quick-start" class="cta-button">
-          Documentation
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M3 8H13M13 8L8 3M13 8L8 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <div class="badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+        </svg>
+        Unofficial Angular Port
+      </div>
+      <h1 class="hero-title">Unstyled UI components for building accessible user interfaces</h1>
+      <div class="hero-text">
+        <p>From the creators of Radix, Floating UI, and Material UI, Base UI is a comprehensive UI component library for building accessible user interfaces with React.</p>
+        <p>Each Base UI component is meticulously designed for composability, consistency, and craft. The library's architecture prioritizes flexibility—without imposing visual opinions—helping teams craft distinctive interfaces that are fundamentally accessible and reliable.</p>
+        <p>Collectively, we've been building component libraries for multiple decades. We've learned what works, what lasts, and what doesn't. And we really, really sweat the details.</p>
+        <p>Base UI is built to last. It is designed with care and maintained with intent. Our mission is to provide a future-proof foundation for professional interface design on the Web.</p>
+      </div>
+      <a href="/docs/overview/quick-start" class="cta-link">
+        Documentation
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+          <path d="M2.5 6H9.5M9.5 6L6 2.5M9.5 6L6 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </section>
+
+    <!-- Separator -->
+    <hr class="separator" aria-hidden="true" />
+
+    <!-- Companies Section -->
+    <section class="section">
+      <h2 class="section-title">Made for the makers</h2>
+      <div class="companies-grid">
+        <figure class="company">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+            <rect x="4" y="4" width="10" height="10" />
+            <rect x="18" y="4" width="10" height="10" />
+            <rect x="4" y="18" width="10" height="10" />
           </svg>
-        </a>
+          <figcaption>Paper</figcaption>
+        </figure>
+        <figure class="company">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+            <path d="M16 2C8.27 2 2 8.27 2 16c0 6.18 4.01 11.42 9.57 13.27.7.13.96-.3.96-.67 0-.33-.01-1.2-.02-2.36-3.9.85-4.72-1.88-4.72-1.88-.64-1.62-1.56-2.05-1.56-2.05-1.27-.87.1-.85.1-.85 1.41.1 2.15 1.45 2.15 1.45 1.25 2.14 3.28 1.52 4.08 1.16.13-.91.49-1.52.89-1.87-3.11-.35-6.38-1.56-6.38-6.94 0-1.53.55-2.79 1.44-3.77-.14-.35-.63-1.78.14-3.72 0 0 1.18-.38 3.86 1.44a13.4 13.4 0 017.02 0c2.68-1.82 3.86-1.44 3.86-1.44.77 1.94.28 3.37.14 3.72.9.98 1.44 2.24 1.44 3.77 0 5.4-3.28 6.58-6.4 6.93.5.43.95 1.29.95 2.6 0 1.88-.02 3.39-.02 3.85 0 .37.25.81.97.67C25.99 27.42 30 22.18 30 16c0-7.73-6.27-14-14-14z"/>
+          </svg>
+          <figcaption>GitHub</figcaption>
+        </figure>
+        <figure class="company">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+            <path d="M6 6h8v8H6V6zm12 0h8v8h-8V6zM6 18h8v8H6v-8zm12 6h8v2h-8v-2z"/>
+          </svg>
+          <figcaption>Zed</figcaption>
+        </figure>
+        <figure class="company">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+            <path d="M8 6h16v4H8V6zm0 8h16v4H8v-4zm0 8h16v4H8v-4z"/>
+          </svg>
+          <figcaption>Unsplash</figcaption>
+        </figure>
+        <figure class="company">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+            <circle cx="16" cy="16" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+            <circle cx="16" cy="16" r="4"/>
+          </svg>
+          <figcaption>Operate</figcaption>
+        </figure>
+        <figure class="company">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+            <rect x="4" y="4" width="6" height="6"/>
+            <rect x="13" y="4" width="6" height="6"/>
+            <rect x="22" y="4" width="6" height="6"/>
+            <rect x="4" y="13" width="6" height="6"/>
+            <rect x="13" y="13" width="6" height="6"/>
+            <rect x="22" y="13" width="6" height="6"/>
+            <rect x="4" y="22" width="6" height="6"/>
+            <rect x="13" y="22" width="6" height="6"/>
+            <rect x="22" y="22" width="6" height="6"/>
+          </svg>
+          <figcaption>Interfere</figcaption>
+        </figure>
       </div>
     </section>
 
-    <!-- Company Showcase Section -->
-    <section class="section companies-section">
-      <div class="section-inner">
-        <h2 class="section-title">Made for the makers</h2>
-        <div class="companies-grid">
-          @for (company of companies; track company) {
-            <div class="company-logo">{{ company }}</div>
-          }
-        </div>
-      </div>
-    </section>
+    <!-- Separator -->
+    <hr class="separator" aria-hidden="true" />
 
     <!-- Team Section -->
-    <section class="section team-section">
-      <div class="section-inner">
-        <h2 class="section-title">So you know who to blame</h2>
-        <div class="team-grid">
-          @for (member of team; track member.name) {
-            <div class="team-member">
-              <div class="member-avatar">
-                <span class="avatar-initials">{{ member.initials }}</span>
-              </div>
-              <div class="member-info">
-                <span class="member-name">{{ member.name }}</span>
-                <span class="member-role">{{ member.role }}</span>
-              </div>
-            </div>
-          }
-        </div>
+    <section class="section">
+      <h2 class="section-title">So you know who to blame</h2>
+      <div class="team-list">
+        @for (member of team; track member.name) {
+          <div class="team-member">
+            <span class="member-name">{{ member.name }}</span>
+            <span class="member-role">{{ member.role }}</span>
+          </div>
+        }
       </div>
     </section>
 
+    <!-- Separator -->
+    <hr class="separator" aria-hidden="true" />
+
     <!-- FAQ Section -->
-    <section class="section faq-section">
-      <div class="section-inner">
-        <h2 class="section-title">The fine print</h2>
-        <div class="faq-list">
-          @for (item of faqItems(); track item.question; let i = $index) {
-            <div class="faq-item" [class.open]="item.open">
-              <button
-                class="faq-trigger"
-                (click)="toggleFaq(i)"
-                [attr.aria-expanded]="item.open"
-                type="button"
+    <section class="section">
+      <h2 class="section-title">The fine print</h2>
+      <div class="faq-list">
+        @for (item of faqItems(); track item.question; let i = $index) {
+          <div class="faq-item">
+            <button
+              class="faq-trigger"
+              (click)="toggleFaq(i)"
+              [attr.aria-expanded]="item.open"
+              type="button"
+            >
+              <span>{{ item.question }}</span>
+              <svg
+                class="faq-icon"
+                width="15"
+                height="15"
+                viewBox="0 0 15 15"
+                fill="none"
+                aria-hidden="true"
               >
-                <span class="faq-question">{{ item.question }}</span>
-                <svg
-                  class="faq-icon"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  aria-hidden="true"
-                >
-                  @if (!item.open) {
-                    <path d="M8 3V13M3 8H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                  } @else {
-                    <path d="M3 8H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                  }
-                </svg>
-              </button>
-              @if (item.open) {
-                <div class="faq-content">
-                  <p class="faq-answer">{{ item.answer }}</p>
-                </div>
-              }
-            </div>
-          }
-        </div>
+                @if (!item.open) {
+                  <path d="M7.5 1V14M1 7.5H14" stroke="currentColor" stroke-width="1.25"/>
+                } @else {
+                  <path d="M1 7.5H14" stroke="currentColor" stroke-width="1.25"/>
+                }
+              </svg>
+            </button>
+            @if (item.open) {
+              <div class="faq-content">
+                <p>{{ item.answer }}</p>
+              </div>
+            }
+          </div>
+        }
       </div>
     </section>
   </main>
 
   <!-- Footer -->
   <footer class="footer">
-    <div class="footer-inner">
-      <div class="footer-left">
-        <span class="copyright">&copy; 2024 Base UI</span>
-      </div>
-      <div class="footer-links">
-        <a
-          href="https://x.com/base_ui"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="footer-link"
-        >
-          X
-        </a>
-        <a
-          href="https://github.com/anthropics/base-ng"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="footer-link"
-        >
-          GitHub
-        </a>
-        <a
-          href="https://discord.gg/base-ui"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="footer-link"
-        >
-          Discord
-        </a>
-        <a
-          href="https://www.npmjs.com/package/@copied/base-ng"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="footer-link"
-        >
-          npm
-        </a>
-        <a
-          href="https://bsky.app/profile/base-ui.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="footer-link"
-        >
-          Bluesky
-        </a>
-      </div>
-    </div>
+    <a href="/" class="footer-logo" aria-label="Base UI Home">
+      <svg
+        width="17"
+        height="24"
+        viewBox="0 0 17 24"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <path d="M9.5001 7.01537C9.2245 6.99837 9 7.22385 9 7.49999V23C13.4183 23 17 19.4183 17 15C17 10.7497 13.6854 7.27351 9.5001 7.01537Z" />
+        <path d="M8 9.8V12V23C3.58172 23 0 19.0601 0 14.2V12V1C4.41828 1 8 4.93989 8 9.8Z" />
+      </svg>
+    </a>
+    <span class="copyright">© Base UI</span>
+    <nav class="footer-nav">
+      <a href="https://x.com/base_ui" target="_blank" rel="noopener noreferrer">X</a>
+      <a href="https://github.com/claridgicus/base-ng" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="https://discord.gg/base-ui" target="_blank" rel="noopener noreferrer">Discord</a>
+      <a href="https://www.npmjs.com/package/@base-ng/ui" target="_blank" rel="noopener noreferrer">npm</a>
+      <a href="https://bsky.app/profile/base-ui.com" target="_blank" rel="noopener noreferrer">Bluesky</a>
+    </nav>
   </footer>
 </div>

@@ -106,15 +106,15 @@ import { RouterLink } from '@angular/router';
         </p>
 
         <div class="next-steps">
-          <a routerLink="/angular/handbook/styling" class="next-step-card">
+          <a routerLink="/handbook/styling" class="next-step-card">
             <h3>Styling guide</h3>
             <p>Learn different approaches to styling Base UI components</p>
           </a>
-          <a routerLink="/angular/components/button" class="next-step-card">
+          <a routerLink="/components/button" class="next-step-card">
             <h3>Components</h3>
             <p>Browse the component library and see examples</p>
           </a>
-          <a routerLink="/angular/overview/accessibility" class="next-step-card">
+          <a routerLink="/overview/accessibility" class="next-step-card">
             <h3>Accessibility</h3>
             <p>Understand how Base UI handles accessibility</p>
           </a>

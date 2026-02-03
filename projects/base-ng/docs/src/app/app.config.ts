@@ -1,8 +1,15 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection, APP_INITIALIZER, inject } from '@angular/core';
+import { APP_BASE_HREF } from '@angular/common';
+import {
+  APP_INITIALIZER,
+  ApplicationConfig,
+  inject,
+  provideBrowserGlobalErrorListeners,
+  provideZonelessChangeDetection,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 
-import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { routes } from './app.routes';
 import { SeoService } from './services/seo.service';
 
 function initSeo(): () => void {
@@ -16,10 +23,11 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
+    { provide: APP_BASE_HREF, useValue: '/docs' },
     {
       provide: APP_INITIALIZER,
       useFactory: initSeo,
       multi: true,
     },
-  ]
+  ],
 };

@@ -42,9 +42,9 @@ fs.mkdirSync(COMBINED_DIR, { recursive: true });
 console.log('Copying lander to root...');
 copyRecursive(LANDER_DIR, COMBINED_DIR);
 
-// Copy docs to /angular subdirectory
-console.log('Copying docs to /angular...');
-const docsDestDir = path.join(COMBINED_DIR, 'angular');
+// Copy docs to /docs subdirectory
+console.log('Copying docs to /docs...');
+const docsDestDir = path.join(COMBINED_DIR, 'docs');
 copyRecursive(DOCS_DIR, docsDestDir);
 
 console.log('Build combination complete!');

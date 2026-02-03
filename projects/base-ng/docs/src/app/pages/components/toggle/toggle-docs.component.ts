@@ -1,16 +1,18 @@
 import { Component, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { ToggleDirective } from '@copied/base-ng';
 import {
-  EditOnGitHubComponent,
   CodeBlockComponent,
   DemoComponent,
+  EditOnGitHubComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
-import { ToggleDirective } from '@copied/base-ng';
 
 @Component({
   selector: 'docs-toggle',
   imports: [
+    RouterLink,
     EditOnGitHubComponent,
     CodeBlockComponent,
     DemoComponent,
@@ -22,8 +24,8 @@ import { ToggleDirective } from '@copied/base-ng';
       <header class="docs-header-section">
         <h1 class="docs-title">Toggle</h1>
         <p class="docs-description">
-          A two-state button that can be pressed or unpressed. Use Toggle for
-          binary options like bold text, favorite status, or feature toggles.
+          A two-state button that can be pressed or unpressed. Use Toggle for binary options like
+          bold text, favorite status, or feature toggles.
         </p>
       </header>
 
@@ -31,16 +33,10 @@ import { ToggleDirective } from '@copied/base-ng';
       <section class="docs-section">
         <docs-demo [code]="basicDemoCode" language="html">
           <div class="demo-toggle-container">
-            <button
-              baseUiToggle
-              [(pressed)]="isBold"
-              class="demo-toggle"
-            >
+            <button baseUiToggle [(pressed)]="isBold" class="demo-toggle">
               <strong>B</strong>
             </button>
-            <span class="demo-toggle-label">
-              Bold: {{ isBold() ? 'On' : 'Off' }}
-            </span>
+            <span class="demo-toggle-label"> Bold: {{ isBold() ? 'On' : 'Off' }} </span>
           </div>
         </docs-demo>
       </section>
@@ -54,9 +50,7 @@ import { ToggleDirective } from '@copied/base-ng';
       <!-- Anatomy -->
       <section class="docs-section">
         <h2 class="docs-section-title">Anatomy</h2>
-        <p class="docs-paragraph">
-          The Toggle is a single directive applied to a button element:
-        </p>
+        <p class="docs-paragraph">The Toggle is a single directive applied to a button element:</p>
         <docs-code-block [code]="anatomyCode" language="html" />
       </section>
 
@@ -65,9 +59,7 @@ import { ToggleDirective } from '@copied/base-ng';
         <h2 class="docs-section-title">Examples</h2>
 
         <h3 class="docs-section-subtitle">Text formatting toolbar</h3>
-        <p class="docs-paragraph">
-          Multiple toggle buttons for text formatting options:
-        </p>
+        <p class="docs-paragraph">Multiple toggle buttons for text formatting options:</p>
         <docs-demo [code]="toolbarDemoCode" language="html">
           <div class="demo-toolbar">
             <button baseUiToggle [(pressed)]="isBold" aria-label="Bold" class="demo-toggle">
@@ -76,7 +68,12 @@ import { ToggleDirective } from '@copied/base-ng';
             <button baseUiToggle [(pressed)]="isItalic" aria-label="Italic" class="demo-toggle">
               <em>I</em>
             </button>
-            <button baseUiToggle [(pressed)]="isUnderline" aria-label="Underline" class="demo-toggle">
+            <button
+              baseUiToggle
+              [(pressed)]="isUnderline"
+              aria-label="Underline"
+              class="demo-toggle"
+            >
               <u>U</u>
             </button>
           </div>
@@ -98,9 +95,7 @@ import { ToggleDirective } from '@copied/base-ng';
         </docs-demo>
 
         <h3 class="docs-section-subtitle">Favorite toggle</h3>
-        <p class="docs-paragraph">
-          Common pattern using icons that change based on state:
-        </p>
+        <p class="docs-paragraph">Common pattern using icons that change based on state:</p>
         <docs-demo [code]="iconToggleDemoCode" language="html">
           <button
             baseUiToggle
@@ -117,15 +112,13 @@ import { ToggleDirective } from '@copied/base-ng';
       <section class="docs-section">
         <h2 class="docs-section-title">Styling</h2>
         <p class="docs-paragraph">
-          The Toggle directive is unstyled by default. Use CSS to style based
-          on data attributes or CSS classes:
+          The Toggle directive is unstyled by default. Use CSS to style based on data attributes or
+          CSS classes:
         </p>
         <docs-code-block [code]="stylingCode" language="css" />
 
         <h3 class="docs-section-subtitle">Tailwind CSS</h3>
-        <p class="docs-paragraph">
-          Style the Toggle with Tailwind utilities:
-        </p>
+        <p class="docs-paragraph">Style the Toggle with Tailwind utilities:</p>
         <docs-code-block [code]="tailwindCode" language="html" />
       </section>
 
@@ -153,12 +146,12 @@ import { ToggleDirective } from '@copied/base-ng';
       <section class="docs-section">
         <h2 class="docs-section-title">Toggle Group</h2>
         <p class="docs-paragraph">
-          For multiple related toggles, use the Toggle Group component for
-          coordinated state management:
+          For multiple related toggles, use the Toggle Group component for coordinated state
+          management:
         </p>
         <docs-code-block [code]="toggleGroupDemoCode" language="html" />
         <p class="docs-paragraph">
-          See the <a href="/angular/components/toggle-group">Toggle Group</a>
+          See the <a routerLink="/components/toggle-group">Toggle Group</a>
           documentation for more details.
         </p>
       </section>
@@ -166,26 +159,15 @@ import { ToggleDirective } from '@copied/base-ng';
       <!-- Accessibility -->
       <section class="docs-section">
         <h2 class="docs-section-title">Accessibility</h2>
-        <p class="docs-paragraph">
-          The Toggle component follows WAI-ARIA guidelines:
-        </p>
+        <p class="docs-paragraph">The Toggle component follows WAI-ARIA guidelines:</p>
         <ul class="docs-list">
           <li>Uses native <code>&lt;button&gt;</code> element by default</li>
-          <li>
-            Sets <code>aria-pressed</code> to communicate toggle state to
-            screen readers
-          </li>
+          <li>Sets <code>aria-pressed</code> to communicate toggle state to screen readers</li>
           <li>Supports keyboard activation with Enter and Space keys</li>
-          <li>
-            Sets <code>disabled</code> attribute when disabled for proper
-            accessibility
-          </li>
-          <li>
-            Consider adding <code>aria-label</code> for icon-only toggles
-          </li>
+          <li>Sets <code>disabled</code> attribute when disabled for proper accessibility</li>
+          <li>Consider adding <code>aria-label</code> for icon-only toggles</li>
         </ul>
       </section>
-    
 
       <footer class="docs-footer">
         <docs-edit-on-github
@@ -415,8 +397,7 @@ onToggle(pressed: boolean): void {
       name: 'pressed',
       type: 'boolean',
       default: 'false',
-      description:
-        'Whether the toggle is pressed. Supports two-way binding with [(pressed)].',
+      description: 'Whether the toggle is pressed. Supports two-way binding with [(pressed)].',
     },
     {
       name: 'disabled',
@@ -428,8 +409,7 @@ onToggle(pressed: boolean): void {
       name: 'value',
       type: 'string',
       default: 'undefined',
-      description:
-        'Value identifier for use with toggle groups. Required when used in a group.',
+      description: 'Value identifier for use with toggle groups. Required when used in a group.',
     },
   ];
 
@@ -442,8 +422,7 @@ onToggle(pressed: boolean): void {
     {
       name: 'pressedChangeDetails',
       type: 'EventEmitter<{pressed: boolean, details: ToggleChangeEventDetails}>',
-      description:
-        'Emitted with full event details. Use details.cancel() to prevent state change.',
+      description: 'Emitted with full event details. Use details.cancel() to prevent state change.',
     },
   ];
 
@@ -464,14 +443,12 @@ onToggle(pressed: boolean): void {
     {
       name: 'data-pressed',
       type: 'string',
-      description:
-        'Present when the toggle is pressed. Use for CSS styling of pressed state.',
+      description: 'Present when the toggle is pressed. Use for CSS styling of pressed state.',
     },
     {
       name: 'data-disabled',
       type: 'string',
-      description:
-        'Present when the toggle is disabled. Use for CSS styling of disabled state.',
+      description: 'Present when the toggle is disabled. Use for CSS styling of disabled state.',
     },
   ];
 

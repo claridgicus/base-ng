@@ -4,7 +4,7 @@
   "outputDirectory": "dist/combined",
   "framework": null,
   "rewrites": [
-    { "source": "/angular/:path*", "destination": "/angular/index.html" },
-    { "source": "/((?!angular/).*)", "destination": "/index.html" }
+    { "source": "/docs/:path*", "destination": "/docs/index.html" },
+    { "source": "/((?!docs/).*)", "destination": "/index.html" }
   ]
 }

@@ -263,7 +263,7 @@ const merged = mergeProps(
 ## Links
 
 - Documentation: https://base-ng.com
-- GitHub: https://github.com/anthropics/base-ng
+- GitHub: https://github.com/claridgicus/base-ng
 - npm: https://npmjs.com/package/@copied/base-ng
 - Base UI (React): https://base-ui.com
 

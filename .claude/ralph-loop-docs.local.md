@@ -369,7 +369,7 @@ Each spec must include the React source reference:
 ### Visual Comparison Process
 
 1. Open React demo: `https://base-ui.com/react/components/[component]`
-2. Open Angular demo: `http://localhost:4200/angular/components/[component]`
+2. Open Angular demo: `http://localhost:4200/docs/components/[component]`
 3. Compare side-by-side:
    - Take screenshots if helpful
    - Check all interactive states

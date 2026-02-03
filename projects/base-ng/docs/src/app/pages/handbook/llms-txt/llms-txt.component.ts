@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-import {
-  EditOnGitHubComponent,
-  CodeBlockComponent
-} from '../../../shared';
+import { CodeBlockComponent, EditOnGitHubComponent } from '../../../shared';
 
 @Component({
   selector: 'docs-llms-txt',
@@ -12,8 +9,8 @@ import {
       <header class="docs-header-section">
         <h1 class="docs-title">llms.txt</h1>
         <p class="docs-description">
-          AI-friendly documentation for Large Language Models. Access Base NG
-          documentation in a format optimized for AI assistants.
+          AI-friendly documentation for Large Language Models. Access Base NG documentation in a
+          format optimized for AI assistants.
         </p>
       </header>
 
@@ -21,10 +18,9 @@ import {
       <section class="docs-section">
         <h2 class="docs-section-title">Overview</h2>
         <p class="docs-paragraph">
-          The <code>llms.txt</code> file provides a standardized way to share
-          documentation with AI assistants and Large Language Models. This
-          enables tools like Claude, GPT, and Copilot to better understand
-          Base NG and provide more accurate code suggestions.
+          The <code>llms.txt</code> file provides a standardized way to share documentation with AI
+          assistants and Large Language Models. This enables tools like Claude, GPT, and Copilot to
+          better understand Base NG and provide more accurate code suggestions.
         </p>
         <p class="docs-paragraph">
           Learn more about the <code>llms.txt</code> standard at
@@ -40,17 +36,15 @@ import {
         </p>
         <docs-code-block [code]="urlCode" language="text" />
         <p class="docs-paragraph">
-          You can reference this URL when working with AI assistants to give
-          them context about Base NG.
+          You can reference this URL when working with AI assistants to give them context about Base
+          NG.
         </p>
       </section>
 
       <!-- File Format -->
       <section class="docs-section">
         <h2 class="docs-section-title">File Format</h2>
-        <p class="docs-paragraph">
-          The <code>llms.txt</code> file contains:
-        </p>
+        <p class="docs-paragraph">The <code>llms.txt</code> file contains:</p>
         <ul class="docs-list">
           <li><strong>Project description</strong> - What Base NG is and does</li>
           <li><strong>Component list</strong> - All available components</li>
@@ -73,18 +67,14 @@ import {
         <docs-code-block [code]="claudeExampleCode" language="text" />
 
         <h3 class="docs-section-subtitle">In your project</h3>
-        <p class="docs-paragraph">
-          Add the URL to your project's documentation or README:
-        </p>
+        <p class="docs-paragraph">Add the URL to your project's documentation or README:</p>
         <docs-code-block [code]="projectExampleCode" language="markdown" />
       </section>
 
       <!-- Full Content -->
       <section class="docs-section">
         <h2 class="docs-section-title">Full Content</h2>
-        <p class="docs-paragraph">
-          Here's the complete <code>llms.txt</code> content:
-        </p>
+        <p class="docs-paragraph">Here's the complete <code>llms.txt</code> content:</p>
         <docs-code-block [code]="fullContentCode" language="markdown" />
       </section>
 
@@ -93,24 +83,22 @@ import {
         <h2 class="docs-section-title">Benefits</h2>
         <ul class="docs-list">
           <li>
-            <strong>Better code generation</strong> - AI assistants generate
-            more accurate Base NG code with proper patterns.
+            <strong>Better code generation</strong> - AI assistants generate more accurate Base NG
+            code with proper patterns.
           </li>
           <li>
-            <strong>Consistent examples</strong> - Get code that follows Base NG
-            conventions and best practices.
+            <strong>Consistent examples</strong> - Get code that follows Base NG conventions and
+            best practices.
           </li>
           <li>
-            <strong>Reduced errors</strong> - AI understands component APIs and
-            avoids common mistakes.
+            <strong>Reduced errors</strong> - AI understands component APIs and avoids common
+            mistakes.
           </li>
           <li>
-            <strong>Faster development</strong> - Spend less time correcting
-            AI-generated code.
+            <strong>Faster development</strong> - Spend less time correcting AI-generated code.
           </li>
         </ul>
       </section>
-    
 
       <footer class="docs-footer">
         <docs-edit-on-github
@@ -130,13 +118,13 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+  `,
 })
 export class LlmsTxtComponent {
   protected readonly urlCode = `https://base-ng.com/llms.txt`;
@@ -259,6 +247,6 @@ npm install @copied/base-ng
 ## Links
 
 - Documentation: https://base-ng.com
-- GitHub: https://github.com/anthropics/base-ng
+- GitHub: https://github.com/claridgicus/base-ng
 - npm: https://npmjs.com/package/@copied/base-ng`;
 }

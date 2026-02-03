@@ -44,10 +44,10 @@ import { Component, computed, input } from '@angular/core';
 })
 export class EditOnGitHubComponent {
   readonly path = input.required<string>();
-  readonly repo = input('https://github.com/anthropics/base-ng');
+  readonly repo = input('https://github.com/claridgicus/base-ng');
   readonly branch = input('master');
 
   protected readonly githubUrl = computed(
-    () => `${this.repo()}/edit/${this.branch()}/${this.path()}`
+    () => `${this.repo()}/edit/${this.branch()}/${this.path()}`,
   );
 }

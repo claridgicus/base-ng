@@ -20,11 +20,7 @@ interface SearchItem {
 @Component({
   selector: 'docs-search',
   template: `
-    <button
-      class="search-trigger"
-      (click)="open()"
-      aria-label="Search documentation"
-    >
+    <button class="search-trigger" (click)="open()" aria-label="Search documentation">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"
@@ -48,12 +44,7 @@ interface SearchItem {
 
     @if (isOpen()) {
       <div class="search-backdrop" (click)="close()" aria-hidden="true"></div>
-      <div
-        class="search-dialog"
-        role="dialog"
-        aria-modal="true"
-        aria-label="Search documentation"
-      >
+      <div class="search-dialog" role="dialog" aria-modal="true" aria-label="Search documentation">
         <div class="search-input-wrapper">
           <svg
             class="search-input-icon"
@@ -84,11 +75,7 @@ interface SearchItem {
             spellcheck="false"
           />
           @if (query()) {
-            <button
-              class="search-clear"
-              (click)="clearQuery()"
-              aria-label="Clear search"
-            >
+            <button class="search-clear" (click)="clearQuery()" aria-label="Clear search">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -165,15 +152,9 @@ interface SearchItem {
         </div>
 
         <div class="search-footer">
-          <div class="search-footer-hint">
-            <kbd>↑</kbd><kbd>↓</kbd> to navigate
-          </div>
-          <div class="search-footer-hint">
-            <kbd>↵</kbd> to select
-          </div>
-          <div class="search-footer-hint">
-            <kbd>esc</kbd> to close
-          </div>
+          <div class="search-footer-hint"><kbd>↑</kbd><kbd>↓</kbd> to navigate</div>
+          <div class="search-footer-hint"><kbd>↵</kbd> to select</div>
+          <div class="search-footer-hint"><kbd>esc</kbd> to close</div>
         </div>
       </div>
     }
@@ -410,8 +391,12 @@ interface SearchItem {
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
     }
 
     @keyframes scaleIn {
@@ -437,69 +422,317 @@ export class SearchComponent {
   protected readonly selectedIndex = signal(0);
 
   protected readonly modKey =
-    typeof navigator !== 'undefined' && navigator.platform?.includes('Mac')
-      ? '⌘'
-      : 'Ctrl';
+    typeof navigator !== 'undefined' && navigator.platform?.includes('Mac') ? '⌘' : 'Ctrl';
 
   private readonly searchItems: SearchItem[] = [
     // Overview
-    { title: 'Quick start', path: '/angular/overview/quick-start', section: 'Overview', keywords: ['getting started', 'install'] },
-    { title: 'Accessibility', path: '/angular/overview/accessibility', section: 'Overview', keywords: ['a11y', 'aria', 'wcag'] },
-    { title: 'Releases', path: '/angular/overview/releases', section: 'Overview', keywords: ['changelog', 'version'] },
-    { title: 'About', path: '/angular/overview/about', section: 'Overview' },
+    {
+      title: 'Quick start',
+      path: '/overview/quick-start',
+      section: 'Overview',
+      keywords: ['getting started', 'install'],
+    },
+    {
+      title: 'Accessibility',
+      path: '/overview/accessibility',
+      section: 'Overview',
+      keywords: ['a11y', 'aria', 'wcag'],
+    },
+    {
+      title: 'Releases',
+      path: '/overview/releases',
+      section: 'Overview',
+      keywords: ['changelog', 'version'],
+    },
+    { title: 'About', path: '/overview/about', section: 'Overview' },
 
     // Handbook
-    { title: 'Styling', path: '/angular/handbook/styling', section: 'Handbook', keywords: ['css', 'tailwind', 'scss'] },
-    { title: 'Animation', path: '/angular/handbook/animation', section: 'Handbook', keywords: ['transition', 'motion'] },
-    { title: 'Composition', path: '/angular/handbook/composition', section: 'Handbook', keywords: ['slots', 'render'] },
-    { title: 'Customization', path: '/angular/handbook/customization', section: 'Handbook', keywords: ['theme', 'custom'] },
-    { title: 'Forms', path: '/angular/handbook/forms', section: 'Handbook', keywords: ['reactive', 'validation'] },
-    { title: 'TypeScript', path: '/angular/handbook/typescript', section: 'Handbook', keywords: ['types', 'generics'] },
-    { title: 'llms.txt', path: '/angular/handbook/llms-txt', section: 'Handbook', keywords: ['ai', 'llm'] },
+    {
+      title: 'Styling',
+      path: '/handbook/styling',
+      section: 'Handbook',
+      keywords: ['css', 'tailwind', 'scss'],
+    },
+    {
+      title: 'Animation',
+      path: '/handbook/animation',
+      section: 'Handbook',
+      keywords: ['transition', 'motion'],
+    },
+    {
+      title: 'Composition',
+      path: '/handbook/composition',
+      section: 'Handbook',
+      keywords: ['slots', 'render'],
+    },
+    {
+      title: 'Customization',
+      path: '/handbook/customization',
+      section: 'Handbook',
+      keywords: ['theme', 'custom'],
+    },
+    {
+      title: 'Forms',
+      path: '/handbook/forms',
+      section: 'Handbook',
+      keywords: ['reactive', 'validation'],
+    },
+    {
+      title: 'TypeScript',
+      path: '/handbook/typescript',
+      section: 'Handbook',
+      keywords: ['types', 'generics'],
+    },
+    {
+      title: 'llms.txt',
+      path: '/handbook/llms-txt',
+      section: 'Handbook',
+      keywords: ['ai', 'llm'],
+    },
 
     // Components
-    { title: 'Accordion', path: '/angular/components/accordion', section: 'Components', keywords: ['expand', 'collapse', 'panel'] },
-    { title: 'Alert Dialog', path: '/angular/components/alert-dialog', section: 'Components', keywords: ['modal', 'confirm'] },
-    { title: 'Autocomplete', path: '/angular/components/autocomplete', section: 'Components', keywords: ['suggest', 'typeahead'] },
-    { title: 'Avatar', path: '/angular/components/avatar', section: 'Components', keywords: ['image', 'profile'] },
-    { title: 'Button', path: '/angular/components/button', section: 'Components', keywords: ['click', 'action'] },
-    { title: 'Checkbox', path: '/angular/components/checkbox', section: 'Components', keywords: ['check', 'tick', 'form'] },
-    { title: 'Checkbox Group', path: '/angular/components/checkbox-group', section: 'Components', keywords: ['multiple', 'selection'] },
-    { title: 'Collapsible', path: '/angular/components/collapsible', section: 'Components', keywords: ['expand', 'toggle'] },
-    { title: 'Combobox', path: '/angular/components/combobox', section: 'Components', keywords: ['select', 'search'] },
-    { title: 'Context Menu', path: '/angular/components/context-menu', section: 'Components', keywords: ['right-click', 'menu'] },
-    { title: 'Dialog', path: '/angular/components/dialog', section: 'Components', keywords: ['modal', 'popup'] },
-    { title: 'Field', path: '/angular/components/field', section: 'Components', keywords: ['form', 'input', 'label'] },
-    { title: 'Fieldset', path: '/angular/components/fieldset', section: 'Components', keywords: ['form', 'group'] },
-    { title: 'Form', path: '/angular/components/form', section: 'Components', keywords: ['submit', 'validation'] },
-    { title: 'Input', path: '/angular/components/input', section: 'Components', keywords: ['text', 'form'] },
-    { title: 'Menu', path: '/angular/components/menu', section: 'Components', keywords: ['dropdown', 'actions'] },
-    { title: 'Menubar', path: '/angular/components/menubar', section: 'Components', keywords: ['navigation', 'horizontal'] },
-    { title: 'Meter', path: '/angular/components/meter', section: 'Components', keywords: ['gauge', 'measurement'] },
-    { title: 'Navigation Menu', path: '/angular/components/navigation-menu', section: 'Components', keywords: ['nav', 'links'] },
-    { title: 'Number Field', path: '/angular/components/number-field', section: 'Components', keywords: ['input', 'numeric'] },
-    { title: 'Popover', path: '/angular/components/popover', section: 'Components', keywords: ['tooltip', 'popup', 'float'] },
-    { title: 'Preview Card', path: '/angular/components/preview-card', section: 'Components', keywords: ['hover', 'preview'] },
-    { title: 'Progress', path: '/angular/components/progress', section: 'Components', keywords: ['loading', 'bar'] },
-    { title: 'Radio', path: '/angular/components/radio', section: 'Components', keywords: ['option', 'form'] },
-    { title: 'Radio Group', path: '/angular/components/radio-group', section: 'Components', keywords: ['select', 'single'] },
-    { title: 'Scroll Area', path: '/angular/components/scroll-area', section: 'Components', keywords: ['scrollbar', 'overflow'] },
-    { title: 'Select', path: '/angular/components/select', section: 'Components', keywords: ['dropdown', 'picker'] },
-    { title: 'Separator', path: '/angular/components/separator', section: 'Components', keywords: ['divider', 'line'] },
-    { title: 'Slider', path: '/angular/components/slider', section: 'Components', keywords: ['range', 'input'] },
-    { title: 'Switch', path: '/angular/components/switch', section: 'Components', keywords: ['toggle', 'on/off'] },
-    { title: 'Tabs', path: '/angular/components/tabs', section: 'Components', keywords: ['panel', 'navigation'] },
-    { title: 'Toast', path: '/angular/components/toast', section: 'Components', keywords: ['notification', 'alert'] },
-    { title: 'Toggle', path: '/angular/components/toggle', section: 'Components', keywords: ['button', 'pressed'] },
-    { title: 'Toggle Group', path: '/angular/components/toggle-group', section: 'Components', keywords: ['button', 'selection'] },
-    { title: 'Toolbar', path: '/angular/components/toolbar', section: 'Components', keywords: ['actions', 'buttons'] },
-    { title: 'Tooltip', path: '/angular/components/tooltip', section: 'Components', keywords: ['hint', 'hover'] },
+    {
+      title: 'Accordion',
+      path: '/components/accordion',
+      section: 'Components',
+      keywords: ['expand', 'collapse', 'panel'],
+    },
+    {
+      title: 'Alert Dialog',
+      path: '/components/alert-dialog',
+      section: 'Components',
+      keywords: ['modal', 'confirm'],
+    },
+    {
+      title: 'Autocomplete',
+      path: '/components/autocomplete',
+      section: 'Components',
+      keywords: ['suggest', 'typeahead'],
+    },
+    {
+      title: 'Avatar',
+      path: '/components/avatar',
+      section: 'Components',
+      keywords: ['image', 'profile'],
+    },
+    {
+      title: 'Button',
+      path: '/components/button',
+      section: 'Components',
+      keywords: ['click', 'action'],
+    },
+    {
+      title: 'Checkbox',
+      path: '/components/checkbox',
+      section: 'Components',
+      keywords: ['check', 'tick', 'form'],
+    },
+    {
+      title: 'Checkbox Group',
+      path: '/components/checkbox-group',
+      section: 'Components',
+      keywords: ['multiple', 'selection'],
+    },
+    {
+      title: 'Collapsible',
+      path: '/components/collapsible',
+      section: 'Components',
+      keywords: ['expand', 'toggle'],
+    },
+    {
+      title: 'Combobox',
+      path: '/components/combobox',
+      section: 'Components',
+      keywords: ['select', 'search'],
+    },
+    {
+      title: 'Context Menu',
+      path: '/components/context-menu',
+      section: 'Components',
+      keywords: ['right-click', 'menu'],
+    },
+    {
+      title: 'Dialog',
+      path: '/components/dialog',
+      section: 'Components',
+      keywords: ['modal', 'popup'],
+    },
+    {
+      title: 'Field',
+      path: '/components/field',
+      section: 'Components',
+      keywords: ['form', 'input', 'label'],
+    },
+    {
+      title: 'Fieldset',
+      path: '/components/fieldset',
+      section: 'Components',
+      keywords: ['form', 'group'],
+    },
+    {
+      title: 'Form',
+      path: '/components/form',
+      section: 'Components',
+      keywords: ['submit', 'validation'],
+    },
+    {
+      title: 'Input',
+      path: '/components/input',
+      section: 'Components',
+      keywords: ['text', 'form'],
+    },
+    {
+      title: 'Menu',
+      path: '/components/menu',
+      section: 'Components',
+      keywords: ['dropdown', 'actions'],
+    },
+    {
+      title: 'Menubar',
+      path: '/components/menubar',
+      section: 'Components',
+      keywords: ['navigation', 'horizontal'],
+    },
+    {
+      title: 'Meter',
+      path: '/components/meter',
+      section: 'Components',
+      keywords: ['gauge', 'measurement'],
+    },
+    {
+      title: 'Navigation Menu',
+      path: '/components/navigation-menu',
+      section: 'Components',
+      keywords: ['nav', 'links'],
+    },
+    {
+      title: 'Number Field',
+      path: '/components/number-field',
+      section: 'Components',
+      keywords: ['input', 'numeric'],
+    },
+    {
+      title: 'Popover',
+      path: '/components/popover',
+      section: 'Components',
+      keywords: ['tooltip', 'popup', 'float'],
+    },
+    {
+      title: 'Preview Card',
+      path: '/components/preview-card',
+      section: 'Components',
+      keywords: ['hover', 'preview'],
+    },
+    {
+      title: 'Progress',
+      path: '/components/progress',
+      section: 'Components',
+      keywords: ['loading', 'bar'],
+    },
+    {
+      title: 'Radio',
+      path: '/components/radio',
+      section: 'Components',
+      keywords: ['option', 'form'],
+    },
+    {
+      title: 'Radio Group',
+      path: '/components/radio-group',
+      section: 'Components',
+      keywords: ['select', 'single'],
+    },
+    {
+      title: 'Scroll Area',
+      path: '/components/scroll-area',
+      section: 'Components',
+      keywords: ['scrollbar', 'overflow'],
+    },
+    {
+      title: 'Select',
+      path: '/components/select',
+      section: 'Components',
+      keywords: ['dropdown', 'picker'],
+    },
+    {
+      title: 'Separator',
+      path: '/components/separator',
+      section: 'Components',
+      keywords: ['divider', 'line'],
+    },
+    {
+      title: 'Slider',
+      path: '/components/slider',
+      section: 'Components',
+      keywords: ['range', 'input'],
+    },
+    {
+      title: 'Switch',
+      path: '/components/switch',
+      section: 'Components',
+      keywords: ['toggle', 'on/off'],
+    },
+    {
+      title: 'Tabs',
+      path: '/components/tabs',
+      section: 'Components',
+      keywords: ['panel', 'navigation'],
+    },
+    {
+      title: 'Toast',
+      path: '/components/toast',
+      section: 'Components',
+      keywords: ['notification', 'alert'],
+    },
+    {
+      title: 'Toggle',
+      path: '/components/toggle',
+      section: 'Components',
+      keywords: ['button', 'pressed'],
+    },
+    {
+      title: 'Toggle Group',
+      path: '/components/toggle-group',
+      section: 'Components',
+      keywords: ['button', 'selection'],
+    },
+    {
+      title: 'Toolbar',
+      path: '/components/toolbar',
+      section: 'Components',
+      keywords: ['actions', 'buttons'],
+    },
+    {
+      title: 'Tooltip',
+      path: '/components/tooltip',
+      section: 'Components',
+      keywords: ['hint', 'hover'],
+    },
 
     // Utils
-    { title: 'CSP Provider', path: '/angular/utils/csp-provider', section: 'Utils', keywords: ['security', 'nonce'] },
-    { title: 'Direction Provider', path: '/angular/utils/direction-provider', section: 'Utils', keywords: ['rtl', 'ltr'] },
-    { title: 'mergeProps', path: '/angular/utils/merge-props', section: 'Utils', keywords: ['combine', 'utility'] },
-    { title: 'useRender', path: '/angular/utils/use-render', section: 'Utils', keywords: ['custom', 'element'] },
+    {
+      title: 'CSP Provider',
+      path: '/utils/csp-provider',
+      section: 'Utils',
+      keywords: ['security', 'nonce'],
+    },
+    {
+      title: 'Direction Provider',
+      path: '/utils/direction-provider',
+      section: 'Utils',
+      keywords: ['rtl', 'ltr'],
+    },
+    {
+      title: 'mergeProps',
+      path: '/utils/merge-props',
+      section: 'Utils',
+      keywords: ['combine', 'utility'],
+    },
+    {
+      title: 'useRender',
+      path: '/utils/use-render',
+      section: 'Utils',
+      keywords: ['custom', 'element'],
+    },
   ];
 
   protected readonly results = computed(() => {
@@ -622,7 +855,7 @@ export class SearchComponent {
 
   protected getGlobalIndex(
     group: { section: string; items: SearchItem[] },
-    item: SearchItem
+    item: SearchItem,
   ): number {
     const groups = this.groupedResults();
     let index = 0;

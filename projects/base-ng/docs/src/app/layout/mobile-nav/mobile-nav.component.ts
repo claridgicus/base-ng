@@ -1,12 +1,6 @@
-import {
-  Component,
-  DestroyRef,
-  afterNextRender,
-  inject,
-  signal,
-} from '@angular/core';
-import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, DestroyRef, afterNextRender, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { filter } from 'rxjs';
 
 interface NavItem {
@@ -55,19 +49,10 @@ interface NavSection {
 
     @if (isOpen()) {
       <div class="backdrop" (click)="close()" aria-hidden="true"></div>
-      <nav
-        id="mobile-nav-drawer"
-        class="drawer"
-        role="navigation"
-        aria-label="Mobile navigation"
-      >
+      <nav id="mobile-nav-drawer" class="drawer" role="navigation" aria-label="Mobile navigation">
         <div class="drawer-header">
           <span class="drawer-title">Navigation</span>
-          <button
-            class="close-btn"
-            (click)="close()"
-            aria-label="Close navigation menu"
-          >
+          <button class="close-btn" (click)="close()" aria-label="Close navigation menu">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
@@ -294,72 +279,72 @@ export class MobileNavComponent {
     {
       title: 'Overview',
       items: [
-        { label: 'Quick start', path: '/angular/overview/quick-start' },
-        { label: 'Accessibility', path: '/angular/overview/accessibility' },
-        { label: 'Releases', path: '/angular/overview/releases' },
-        { label: 'About', path: '/angular/overview/about' },
+        { label: 'Quick start', path: '/overview/quick-start' },
+        { label: 'Accessibility', path: '/overview/accessibility' },
+        { label: 'Releases', path: '/overview/releases' },
+        { label: 'About', path: '/overview/about' },
       ],
     },
     {
       title: 'Handbook',
       items: [
-        { label: 'Styling', path: '/angular/handbook/styling' },
-        { label: 'Animation', path: '/angular/handbook/animation' },
-        { label: 'Composition', path: '/angular/handbook/composition' },
-        { label: 'Customization', path: '/angular/handbook/customization' },
-        { label: 'Forms', path: '/angular/handbook/forms' },
-        { label: 'TypeScript', path: '/angular/handbook/typescript' },
-        { label: 'llms.txt', path: '/angular/handbook/llms-txt' },
+        { label: 'Styling', path: '/handbook/styling' },
+        { label: 'Animation', path: '/handbook/animation' },
+        { label: 'Composition', path: '/handbook/composition' },
+        { label: 'Customization', path: '/handbook/customization' },
+        { label: 'Forms', path: '/handbook/forms' },
+        { label: 'TypeScript', path: '/handbook/typescript' },
+        { label: 'llms.txt', path: '/handbook/llms-txt' },
       ],
     },
     {
       title: 'Components',
       items: [
-        { label: 'Accordion', path: '/angular/components/accordion' },
-        { label: 'Alert Dialog', path: '/angular/components/alert-dialog' },
-        { label: 'Autocomplete', path: '/angular/components/autocomplete' },
-        { label: 'Avatar', path: '/angular/components/avatar' },
-        { label: 'Button', path: '/angular/components/button' },
-        { label: 'Checkbox', path: '/angular/components/checkbox' },
-        { label: 'Checkbox Group', path: '/angular/components/checkbox-group' },
-        { label: 'Collapsible', path: '/angular/components/collapsible' },
-        { label: 'Combobox', path: '/angular/components/combobox' },
-        { label: 'Context Menu', path: '/angular/components/context-menu' },
-        { label: 'Dialog', path: '/angular/components/dialog' },
-        { label: 'Field', path: '/angular/components/field' },
-        { label: 'Fieldset', path: '/angular/components/fieldset' },
-        { label: 'Form', path: '/angular/components/form' },
-        { label: 'Input', path: '/angular/components/input' },
-        { label: 'Menu', path: '/angular/components/menu' },
-        { label: 'Menubar', path: '/angular/components/menubar' },
-        { label: 'Meter', path: '/angular/components/meter' },
-        { label: 'Navigation Menu', path: '/angular/components/navigation-menu' },
-        { label: 'Number Field', path: '/angular/components/number-field' },
-        { label: 'Popover', path: '/angular/components/popover' },
-        { label: 'Preview Card', path: '/angular/components/preview-card' },
-        { label: 'Progress', path: '/angular/components/progress' },
-        { label: 'Radio', path: '/angular/components/radio' },
-        { label: 'Radio Group', path: '/angular/components/radio-group' },
-        { label: 'Scroll Area', path: '/angular/components/scroll-area' },
-        { label: 'Select', path: '/angular/components/select' },
-        { label: 'Separator', path: '/angular/components/separator' },
-        { label: 'Slider', path: '/angular/components/slider' },
-        { label: 'Switch', path: '/angular/components/switch' },
-        { label: 'Tabs', path: '/angular/components/tabs' },
-        { label: 'Toast', path: '/angular/components/toast' },
-        { label: 'Toggle', path: '/angular/components/toggle' },
-        { label: 'Toggle Group', path: '/angular/components/toggle-group' },
-        { label: 'Toolbar', path: '/angular/components/toolbar' },
-        { label: 'Tooltip', path: '/angular/components/tooltip' },
+        { label: 'Accordion', path: '/components/accordion' },
+        { label: 'Alert Dialog', path: '/components/alert-dialog' },
+        { label: 'Autocomplete', path: '/components/autocomplete' },
+        { label: 'Avatar', path: '/components/avatar' },
+        { label: 'Button', path: '/components/button' },
+        { label: 'Checkbox', path: '/components/checkbox' },
+        { label: 'Checkbox Group', path: '/components/checkbox-group' },
+        { label: 'Collapsible', path: '/components/collapsible' },
+        { label: 'Combobox', path: '/components/combobox' },
+        { label: 'Context Menu', path: '/components/context-menu' },
+        { label: 'Dialog', path: '/components/dialog' },
+        { label: 'Field', path: '/components/field' },
+        { label: 'Fieldset', path: '/components/fieldset' },
+        { label: 'Form', path: '/components/form' },
+        { label: 'Input', path: '/components/input' },
+        { label: 'Menu', path: '/components/menu' },
+        { label: 'Menubar', path: '/components/menubar' },
+        { label: 'Meter', path: '/components/meter' },
+        { label: 'Navigation Menu', path: '/components/navigation-menu' },
+        { label: 'Number Field', path: '/components/number-field' },
+        { label: 'Popover', path: '/components/popover' },
+        { label: 'Preview Card', path: '/components/preview-card' },
+        { label: 'Progress', path: '/components/progress' },
+        { label: 'Radio', path: '/components/radio' },
+        { label: 'Radio Group', path: '/components/radio-group' },
+        { label: 'Scroll Area', path: '/components/scroll-area' },
+        { label: 'Select', path: '/components/select' },
+        { label: 'Separator', path: '/components/separator' },
+        { label: 'Slider', path: '/components/slider' },
+        { label: 'Switch', path: '/components/switch' },
+        { label: 'Tabs', path: '/components/tabs' },
+        { label: 'Toast', path: '/components/toast' },
+        { label: 'Toggle', path: '/components/toggle' },
+        { label: 'Toggle Group', path: '/components/toggle-group' },
+        { label: 'Toolbar', path: '/components/toolbar' },
+        { label: 'Tooltip', path: '/components/tooltip' },
       ],
     },
     {
       title: 'Utils',
       items: [
-        { label: 'CSP Provider', path: '/angular/utils/csp-provider', badge: 'New' },
-        { label: 'Direction Provider', path: '/angular/utils/direction-provider' },
-        { label: 'mergeProps', path: '/angular/utils/merge-props', badge: 'New' },
-        { label: 'useRender', path: '/angular/utils/use-render' },
+        { label: 'CSP Provider', path: '/utils/csp-provider', badge: 'New' },
+        { label: 'Direction Provider', path: '/utils/direction-provider' },
+        { label: 'mergeProps', path: '/utils/merge-props', badge: 'New' },
+        { label: 'useRender', path: '/utils/use-render' },
       ],
     },
   ];
@@ -374,7 +359,7 @@ export class MobileNavComponent {
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
-        takeUntilDestroyed(this.destroyRef)
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe(() => {
         this.close();
