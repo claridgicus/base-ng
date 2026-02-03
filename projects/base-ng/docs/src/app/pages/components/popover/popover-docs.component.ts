@@ -1,15 +1,38 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  PopoverRootDirective,
+  PopoverTriggerDirective,
+  PopoverPositionerDirective,
+  PopoverPopupDirective,
+  PopoverArrowDirective,
+  PopoverCloseDirective,
+  PopoverTitleDirective,
+  PopoverDescriptionDirective,
+} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-popover',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    PopoverRootDirective,
+    PopoverTriggerDirective,
+    PopoverPositionerDirective,
+    PopoverPopupDirective,
+    PopoverArrowDirective,
+    PopoverCloseDirective,
+    PopoverTitleDirective,
+    PopoverDescriptionDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,12 +44,43 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <docs-demo [code]="basicDemoCode" language="html">
+          <div class="demo-container">
+            <div baseUiPopoverRoot [(open)]="isOpen">
+              <button baseUiPopoverTrigger class="demo-trigger">
+                Share
+              </button>
+              <div baseUiPopoverPositioner side="bottom" [sideOffset]="8">
+                <div baseUiPopoverPopup class="demo-popover">
+                  <div class="demo-popover-header">
+                    <h3 baseUiPopoverTitle class="demo-popover-title">Share this page</h3>
+                    <button baseUiPopoverClose class="demo-popover-close">
+                      <svg width="14" height="14" viewBox="0 0 14 14">
+                        <path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="2"/>
+                      </svg>
+                    </button>
+                  </div>
+                  <p baseUiPopoverDescription class="demo-popover-desc">
+                    Choose how you want to share
+                  </p>
+                  <div class="demo-share-buttons">
+                    <button class="demo-share-btn">📋 Copy link</button>
+                    <button class="demo-share-btn">✉️ Email</button>
+                    <button class="demo-share-btn">🐦 Twitter</button>
+                  </div>
+                  <div baseUiPopoverArrow class="demo-popover-arrow"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </docs-demo>
+      </section>
 
-        <p class="docs-paragraph">Import the Popover directives:</p>
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -169,15 +223,152 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-container {
+      display: flex;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .demo-trigger {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      background: var(--docs-accent, #0066ff);
+      color: white;
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: background 0.15s;
+
+      &:hover {
+        background: color-mix(in srgb, var(--docs-accent, #0066ff), black 10%);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--docs-accent, #0066ff);
+        outline-offset: 2px;
+      }
+
+      &[data-state='open'] {
+        background: color-mix(in srgb, var(--docs-accent, #0066ff), black 15%);
+      }
+    }
+
+    .demo-popover {
+      position: relative;
+      background: var(--docs-bg, white);
+      border: 1px solid var(--docs-border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      min-width: 200px;
+      animation: popoverIn 0.15s ease;
+    }
+
+    @keyframes popoverIn {
+      from {
+        opacity: 0;
+        transform: scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .demo-popover-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .demo-popover-title {
+      margin: 0;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--docs-text);
+    }
+
+    .demo-popover-close {
+      background: none;
+      border: none;
+      padding: 0.25rem;
+      cursor: pointer;
+      color: var(--docs-text-secondary);
+      border-radius: 0.25rem;
+
+      &:hover {
+        background: var(--docs-bg-hover, rgba(0, 0, 0, 0.05));
+        color: var(--docs-text);
+      }
+    }
+
+    .demo-popover-desc {
+      margin: 0 0 0.75rem;
+      font-size: 0.8125rem;
+      color: var(--docs-text-secondary);
+    }
+
+    .demo-share-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .demo-share-btn {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8125rem;
+      background: none;
+      border: none;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      text-align: left;
+      color: var(--docs-text);
+
+      &:hover {
+        background: var(--docs-bg-hover, rgba(0, 0, 0, 0.05));
+      }
+    }
+
+    .demo-popover-arrow {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: inherit;
+      border: inherit;
+      transform: rotate(45deg);
+
+      [data-side='top'] & {
+        bottom: -6px;
+        left: 50%;
+        margin-left: -5px;
+        border-top: none;
+        border-left: none;
+      }
+
+      [data-side='bottom'] & {
+        top: -6px;
+        left: 50%;
+        margin-left: -5px;
+        border-bottom: none;
+        border-right: none;
+      }
+    }
+  `,
 })
 export class PopoverDocsComponent {
+  // Demo state
+  protected readonly isOpen = signal(false);
+
   protected readonly importCode = `import {
   PopoverRootDirective,
   PopoverTriggerDirective,
@@ -186,8 +377,8 @@ export class PopoverDocsComponent {
   PopoverArrowDirective,
   PopoverCloseDirective,
   PopoverTitleDirective,
-  PopoverDescriptionDirective
-} from '@base-ng/ui/popover';
+  PopoverDescriptionDirective,
+} from '@base-ng/ui';
 
 @Component({
   imports: [
@@ -198,7 +389,7 @@ export class PopoverDocsComponent {
     PopoverArrowDirective,
     PopoverCloseDirective,
     PopoverTitleDirective,
-    PopoverDescriptionDirective
+    PopoverDescriptionDirective,
   ],
   // ...
 })`;
