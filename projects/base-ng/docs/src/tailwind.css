@@ -1,0 +1,20 @@
+@import 'tailwindcss';
+
+/* Scan docs app for Tailwind classes */
+@source "./app";
+
+/* Scan component library for Tailwind classes */
+@source "../../ui/src";
+
+/* Force generate common utility classes for component demos */
+@source inline("
+  flex items-center gap-2 p-4 rounded-lg rounded-sm bg-gray-100 text-sm font-medium
+  px-2 px-3 px-4 px-5 py-1 py-2 py-3 py-4 pl-7 mt-1
+  hover:bg-gray-200 hover:bg-gray-100
+  focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500
+  group size-3 transition-all ease-out duration-150
+  group-data-[panel-open]:rotate-90
+  h-[var(--collapsible-panel-height)] overflow-hidden data-[closed]:h-0
+  data-[disabled]:opacity-50 data-[disabled]:cursor-not-allowed data-[disabled]:hover:bg-gray-100
+  flex-col justify-center justify-end min-h-36 min-w-48 w-56 w-fit w-full text-gray-700 text-gray-900 dark:text-gray-100 cursor-pointer cursor-text
+");

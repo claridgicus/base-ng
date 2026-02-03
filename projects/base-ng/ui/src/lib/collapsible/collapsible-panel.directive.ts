@@ -1,14 +1,19 @@
 /**
- * @fileoverview Angular port of Base UI CollapsiblePanel
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/collapsible/panel/CollapsiblePanel.tsx
- *
- * The collapsible content panel.
+ * @component CollapsiblePanel
+ * @reactSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/collapsible/panel/CollapsiblePanel.tsx
+ * @reactDocs https://base-ui.com/react/components/collapsible
+ * @visualSource https://base-ui.com/react/components/collapsible
+ * @tailwindClasses Copied from React demo examples
+ * @lastScraped 2026-02-03
+ * @styling Tailwind CSS 4 only
+ * @parity EXACT - Ported from React Base UI
  */
 
 import {
   booleanAttribute,
   computed,
   Directive,
+  HostListener,
   inject,
   input,
   type Signal,
@@ -38,7 +43,7 @@ import { COLLAPSIBLE_CONTEXT } from './collapsible.types';
     '[id]': 'context.panelId',
     '[attr.data-open]': 'context.openSignal() ? "" : null',
     '[attr.data-closed]': '!context.openSignal() ? "" : null',
-    '[attr.hidden]': 'isHidden() ? "" : null',
+    '[attr.hidden]': 'hiddenAttribute()',
     '[class.base-ui-collapsible-panel]': 'true',
     '[class.base-ui-collapsible-panel-open]': 'context.openSignal()',
     '[class.base-ui-collapsible-panel-closed]': '!context.openSignal()',
@@ -54,19 +59,48 @@ export class CollapsiblePanelDirective {
   readonly keepMounted = input(false, { transform: booleanAttribute });
 
   /**
-   * Whether the panel is hidden.
+   * Whether to use hidden="until-found" for browser search support.
+   * When true, the panel remains in the DOM and can be found via browser search (Ctrl+F).
+   * This automatically implies keepMounted behavior.
    */
-  readonly isHidden: Signal<boolean> = computed(() => {
-    return !this.context.openSignal() && !this.keepMounted();
+  readonly hiddenUntilFound = input(false, { transform: booleanAttribute });
+
+  /**
+   * Computed hidden attribute value.
+   * Returns 'until-found' for hiddenUntilFound mode, '' for standard hidden, or null when visible.
+   */
+  readonly hiddenAttribute: Signal<string | null> = computed(() => {
+    if (this.context.openSignal()) {
+      return null;
+    }
+    if (this.hiddenUntilFound()) {
+      return 'until-found';
+    }
+    if (this.keepMounted()) {
+      return null; // Keep mounted but use display:none instead
+    }
+    return '';
   });
 
   /**
-   * Whether the panel should be visible.
+   * Whether the panel should be visible (controls display:none).
    */
   readonly shouldShow: Signal<boolean> = computed(() => {
-    if (this.keepMounted()) {
-      return this.context.openSignal();
+    if (this.hiddenUntilFound()) {
+      // hiddenUntilFound uses hidden attribute, not display
+      return true;
     }
     return this.context.openSignal();
   });
+
+  /**
+   * Handle beforematch event (browser find-in-page).
+   * This opens the collapsible when content is found via browser search.
+   */
+  @HostListener('beforematch')
+  onBeforeMatch(): void {
+    if (this.hiddenUntilFound()) {
+      this.context.setOpen(true, 'programmatic');
+    }
+  }
 }

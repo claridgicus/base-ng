@@ -1,8 +1,12 @@
 /**
- * @fileoverview Angular port of Base UI CollapsibleTrigger
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/collapsible/trigger/CollapsibleTrigger.tsx
- *
- * A button that toggles the collapsible panel.
+ * @component CollapsibleTrigger
+ * @reactSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/collapsible/trigger/CollapsibleTrigger.tsx
+ * @reactDocs https://base-ui.com/react/components/collapsible
+ * @visualSource https://base-ui.com/react/components/collapsible
+ * @tailwindClasses Copied from React demo examples
+ * @lastScraped 2026-02-03
+ * @styling Tailwind CSS 4 only
+ * @parity EXACT - Ported from React Base UI
  */
 
 import {
@@ -37,6 +41,7 @@ import { COLLAPSIBLE_CONTEXT } from './collapsible.types';
     '[attr.disabled]': 'context.disabledSignal() ? "" : null',
     '[attr.data-open]': 'context.openSignal() ? "" : null',
     '[attr.data-closed]': '!context.openSignal() ? "" : null',
+    '[attr.data-panel-open]': 'context.openSignal() ? "" : null',
     '[attr.data-disabled]': 'context.disabledSignal() ? "" : null',
     '[class.base-ui-collapsible-trigger]': 'true',
     '[class.base-ui-collapsible-trigger-open]': 'context.openSignal()',

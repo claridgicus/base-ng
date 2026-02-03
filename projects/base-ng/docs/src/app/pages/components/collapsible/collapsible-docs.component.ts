@@ -37,21 +37,38 @@ import {
       <!-- Live Demo -->
       <section class="docs-section">
         <docs-demo [code]="basicDemoCode" language="html">
-          <div
-            baseUiCollapsibleRoot
-            [(open)]="isOpen"
-            class="demo-collapsible"
-          >
-            <button baseUiCollapsibleTrigger class="demo-trigger">
-              <span>Show more details</span>
-              <svg class="demo-chevron" viewBox="0 0 24 24" width="16" height="16">
-                <path d="M6 9l6 6 6-6" stroke="currentColor" fill="none" stroke-width="2"/>
-              </svg>
-            </button>
-            <div baseUiCollapsiblePanel [keepMounted]="true" class="demo-panel">
-              <div class="demo-panel-content">
-                <p>This content can be shown or hidden by clicking the button above.</p>
-                <p>Use collapsibles for FAQ sections, additional details, or any content that doesn't need to be visible by default.</p>
+          <div class="flex min-h-36 flex-col justify-center">
+            <div
+              baseUiCollapsibleRoot
+              [(open)]="isOpen"
+              class="min-w-48"
+            >
+              <button
+                baseUiCollapsibleTrigger
+                class="group flex w-full items-center gap-2 rounded-sm bg-gray-100 px-2 py-1 text-sm font-medium hover:bg-gray-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500"
+              >
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 10 10"
+                  fill="none"
+                  class="size-3 transition-all ease-out group-data-[panel-open]:rotate-90"
+                >
+                  <path d="M3.5 9L7.5 5L3.5 1" stroke="currentColor" />
+                </svg>
+                Recovery keys
+              </button>
+              <div
+                baseUiCollapsiblePanel
+                [keepMounted]="true"
+                class="flex h-[var(--collapsible-panel-height)] flex-col justify-end overflow-hidden text-sm transition-all duration-150 ease-out data-[closed]:h-0"
+                style="--collapsible-panel-height: auto;"
+              >
+                <div class="mt-1 flex w-full cursor-text flex-col gap-2 rounded-sm bg-gray-100 py-2 pl-7">
+                  <div class="text-gray-900 dark:text-gray-100">alien-bean-pasta</div>
+                  <div class="text-gray-900 dark:text-gray-100">wild-irish-burrito</div>
+                  <div class="text-gray-900 dark:text-gray-100">horse-battery-staple</div>
+                </div>
               </div>
             </div>
           </div>
@@ -94,26 +111,42 @@ import {
           Use <code>disabled</code> to prevent the collapsible from toggling:
         </p>
         <docs-demo [code]="disabledDemoCode" language="html">
-          <div class="demo-container">
-            <div
-              baseUiCollapsibleRoot
-              [(open)]="disabledOpen"
-              [disabled]="isDisabled()"
-              class="demo-collapsible"
-            >
-              <button baseUiCollapsibleTrigger class="demo-trigger">
-                <span>Toggle content</span>
-                <svg class="demo-chevron" viewBox="0 0 24 24" width="16" height="16">
-                  <path d="M6 9l6 6 6-6" stroke="currentColor" fill="none" stroke-width="2"/>
-                </svg>
-              </button>
-              <div baseUiCollapsiblePanel [keepMounted]="true" class="demo-panel">
-                <div class="demo-panel-content">
-                  This content cannot be toggled when disabled.
+          <div class="flex flex-col gap-3">
+            <div class="flex w-56 flex-col justify-center">
+              <div
+                baseUiCollapsibleRoot
+                [(open)]="disabledOpen"
+                [disabled]="isDisabled()"
+                class="data-[disabled]:opacity-50"
+              >
+                <button
+                  baseUiCollapsibleTrigger
+                  class="group flex items-center gap-2 rounded-sm bg-gray-100 px-2 py-1 text-sm font-medium hover:bg-gray-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 data-[disabled]:cursor-not-allowed data-[disabled]:hover:bg-gray-100"
+                >
+                  <svg
+                    width="10"
+                    height="10"
+                    viewBox="0 0 10 10"
+                    fill="none"
+                    class="size-3 transition-all ease-out group-data-[panel-open]:rotate-90"
+                  >
+                    <path d="M3.5 9L7.5 5L3.5 1" stroke="currentColor" />
+                  </svg>
+                  Toggle content
+                </button>
+                <div
+                  baseUiCollapsiblePanel
+                  [keepMounted]="true"
+                  class="h-[var(--collapsible-panel-height)] overflow-hidden text-sm transition-all duration-150 ease-out data-[closed]:h-0"
+                  style="--collapsible-panel-height: auto;"
+                >
+                  <div class="py-2 px-5 text-gray-700">
+                    This content cannot be toggled when disabled.
+                  </div>
                 </div>
               </div>
             </div>
-            <label class="demo-toggle">
+            <label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
               <input type="checkbox" [checked]="isDisabled()" (change)="toggleDisabled()" />
               Disabled
             </label>
@@ -219,102 +252,6 @@ import {
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
     }
-
-    /* Demo styles */
-    .demo-container {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-
-    .demo-collapsible {
-      border: 1px solid var(--docs-border);
-      border-radius: 0.5rem;
-      overflow: hidden;
-      width: 100%;
-      max-width: 360px;
-
-      &[data-disabled] {
-        opacity: 0.5;
-      }
-    }
-
-    .demo-trigger {
-      display: flex;
-      width: 100%;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.75rem 1rem;
-      background: var(--docs-bg);
-      border: none;
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--docs-text);
-      cursor: pointer;
-      transition: background 0.15s;
-
-      &:hover:not([data-disabled]) {
-        background: var(--docs-bg-hover, rgba(0, 0, 0, 0.05));
-      }
-
-      &:focus-visible {
-        outline: 2px solid var(--docs-accent, #0066ff);
-        outline-offset: -2px;
-      }
-
-      &[data-disabled] {
-        cursor: not-allowed;
-      }
-    }
-
-    .demo-chevron {
-      transition: transform 0.2s;
-
-      [data-open] & {
-        transform: rotate(180deg);
-      }
-    }
-
-    .demo-panel {
-      display: grid;
-      grid-template-rows: 0fr;
-      transition: grid-template-rows 0.2s ease;
-      background: var(--docs-bg-muted, rgba(0, 0, 0, 0.02));
-      border-top: 1px solid var(--docs-border);
-
-      &[data-open] {
-        grid-template-rows: 1fr;
-      }
-    }
-
-    .demo-panel-content {
-      overflow: hidden;
-      padding: 0 1rem;
-      font-size: 0.875rem;
-      color: var(--docs-text-secondary);
-      line-height: 1.6;
-
-      [data-open] & {
-        padding: 1rem;
-      }
-
-      p {
-        margin: 0 0 0.5rem;
-
-        &:last-child {
-          margin-bottom: 0;
-        }
-      }
-    }
-
-    .demo-toggle {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.875rem;
-      color: var(--docs-text-secondary);
-      cursor: pointer;
-    }
   `,
 })
 export class CollapsibleDocsComponent {
@@ -351,17 +288,35 @@ export class CollapsibleDocsComponent {
   </div>
 </div>`;
 
-  protected readonly basicDemoCode = `<div baseUiCollapsibleRoot [(open)]="isOpen">
-  <button baseUiCollapsibleTrigger class="collapsible-trigger">
-    <span>Show more details</span>
-    <svg class="chevron" viewBox="0 0 24 24" width="16" height="16">
-      <path d="M6 9l6 6 6-6" stroke="currentColor" fill="none" stroke-width="2"/>
-    </svg>
-  </button>
-  <div baseUiCollapsiblePanel class="collapsible-panel">
-    <p>This content can be shown or hidden by clicking the button above.</p>
-    <p>Use collapsibles for FAQ sections, additional details, or any content
-    that doesn't need to be visible by default.</p>
+  protected readonly basicDemoCode = `<div class="flex min-h-36 flex-col justify-center">
+  <div baseUiCollapsibleRoot [(open)]="isOpen" class="w-fit">
+    <button
+      baseUiCollapsibleTrigger
+      class="group flex w-full items-center gap-2 rounded-sm bg-gray-100 px-2 py-1
+             text-sm font-medium hover:bg-gray-200 focus-visible:outline"
+    >
+      <svg
+        width="10" height="10" viewBox="0 0 10 10" fill="none"
+        class="size-3 transition-all ease-out group-data-[panel-open]:rotate-90"
+      >
+        <path d="M3.5 9L7.5 5L3.5 1" stroke="currentColor" />
+      </svg>
+      Recovery keys
+    </button>
+    <div
+      baseUiCollapsiblePanel
+      [keepMounted]="true"
+      class="flex h-[var(--collapsible-panel-height)] flex-col justify-end
+             overflow-hidden text-sm transition-all duration-150 ease-out
+             data-[closed]:h-0"
+      style="--collapsible-panel-height: auto;"
+    >
+      <div class="mt-1 flex w-full cursor-text flex-col gap-2 rounded-sm bg-gray-100 py-2 pl-7">
+        <div class="text-gray-900 dark:text-gray-100">alien-bean-pasta</div>
+        <div class="text-gray-900 dark:text-gray-100">wild-irish-burrito</div>
+        <div class="text-gray-900 dark:text-gray-100">horse-battery-staple</div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -453,79 +408,37 @@ handleOpenChange(event: { open: boolean; reason: string }) {
   this.isExpanded = event.open;
 }`;
 
-  protected readonly stylingCode = `/* Collapsible container */
-[baseUiCollapsibleRoot] {
-  border: 1px solid #e5e5e5;
-  border-radius: 8px;
-  overflow: hidden;
-}
+  protected readonly stylingCode = `<!-- Tailwind CSS 4 Collapsible styling -->
 
-/* Trigger button */
-[baseUiCollapsibleTrigger] {
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  background: white;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.15s;
-}
+<!-- Trigger with icon rotation on open -->
+<button
+  baseUiCollapsibleTrigger
+  class="group flex items-center gap-2 rounded-sm bg-gray-100 px-2 py-1
+         text-sm font-medium hover:bg-gray-200 focus-visible:outline
+         data-[disabled]:opacity-50 data-[disabled]:cursor-not-allowed"
+>
+  <svg class="size-3 transition-all ease-out group-data-[panel-open]:rotate-90">
+    <!-- icon -->
+  </svg>
+  Trigger text
+</button>
 
-[baseUiCollapsibleTrigger]:hover {
-  background: #f5f5f5;
-}
+<!-- Panel with height animation -->
+<div
+  baseUiCollapsiblePanel
+  class="h-[var(--collapsible-panel-height)] overflow-hidden
+         transition-all duration-150 ease-out data-[closed]:h-0"
+  style="--collapsible-panel-height: auto;"
+>
+  <!-- Content -->
+</div>
 
-/* Chevron rotation */
-[baseUiCollapsibleTrigger] .chevron {
-  transition: transform 0.2s;
-}
-
-[baseUiCollapsibleTrigger][data-open] .chevron {
-  transform: rotate(180deg);
-}
-
-/* Disabled state */
-[baseUiCollapsibleTrigger][data-disabled] {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* Focus state */
-[baseUiCollapsibleTrigger]:focus-visible {
-  outline: 2px solid #0066ff;
-  outline-offset: -2px;
-}
-
-/* Panel content */
-[baseUiCollapsiblePanel] {
-  padding: 1rem;
-  background: #fafafa;
-  border-top: 1px solid #e5e5e5;
-}
-
-/* Animated panel using CSS Grid */
-[baseUiCollapsiblePanel] {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.2s ease;
-  padding: 0;
-}
-
-[baseUiCollapsiblePanel][data-open] {
-  grid-template-rows: 1fr;
-}
-
-[baseUiCollapsiblePanel] > * {
-  overflow: hidden;
-  padding: 0 1rem;
-}
-
-[baseUiCollapsiblePanel][data-open] > * {
-  padding: 1rem;
-}`;
+<!-- Key Tailwind classes used:
+- group / group-data-[panel-open]:rotate-90 - Icon rotation
+- data-[closed]:h-0 - Collapse animation
+- data-[disabled]:opacity-50 - Disabled state
+- transition-all duration-150 ease-out - Smooth animations
+-->`;
 
   protected readonly rootInputProps: PropDefinition[] = [
     {
