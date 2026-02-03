@@ -1,15 +1,33 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  FormRootDirective,
+  FieldRootDirective,
+  FieldLabelDirective,
+  FieldControlDirective,
+  FieldErrorDirective,
+  type FormSubmitEventDetails,
+} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-form',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    FormRootDirective,
+    FieldRootDirective,
+    FieldLabelDirective,
+    FieldControlDirective,
+    FieldErrorDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,14 +39,41 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <docs-demo [code]="basicDemoCode" language="html">
+          <form
+            baseUiFormRoot
+            (formSubmit)="handleSubmit($event)"
+            class="demo-form"
+          >
+            <div baseUiFieldRoot name="email" class="demo-field">
+              <label baseUiFieldLabel class="demo-label">Email</label>
+              <input
+                baseUiFieldControl
+                name="email"
+                type="email"
+                required
+                class="demo-input"
+              />
+              <span baseUiFieldError match="valueMissing" class="demo-error">
+                Email is required.
+              </span>
+              <span baseUiFieldError match="typeMismatch" class="demo-error">
+                Please enter a valid email.
+              </span>
+            </div>
+            <button type="submit" class="demo-submit">Submit</button>
+          </form>
+          @if (submitMessage()) {
+            <span class="demo-status">{{ submitMessage() }}</span>
+          }
+        </docs-demo>
+      </section>
 
-        <p class="docs-paragraph">
-          Import the Form directive from the package:
-        </p>
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -45,40 +90,21 @@ import {
       <section class="docs-section">
         <h2 class="docs-section-title">Examples</h2>
 
-        <h3 class="docs-section-subtitle">Basic usage</h3>
-        <p class="docs-paragraph">
-          Create a form with submit handling.
-        </p>
-        <docs-code-block [code]="basicDemoCode" language="typescript" />
-
         <h3 class="docs-section-subtitle">With Field components</h3>
         <p class="docs-paragraph">
-          Combine Form with Field for complete form structure.
+          Combine Form with Field for complete form structure:
         </p>
         <docs-code-block [code]="fieldsDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">Validation modes</h3>
         <p class="docs-paragraph">
-          Control when validation runs with the
-          <code>validationMode</code> input.
+          Control when validation runs:
         </p>
         <docs-code-block [code]="validationModeDemoCode" language="html" />
 
-        <h3 class="docs-section-subtitle">Server-side errors</h3>
-        <p class="docs-paragraph">
-          Set errors programmatically from server responses.
-        </p>
-        <docs-code-block [code]="serverErrorsDemoCode" language="typescript" />
-
-        <h3 class="docs-section-subtitle">With loading state</h3>
-        <p class="docs-paragraph">
-          Show loading indicators during form submission.
-        </p>
-        <docs-code-block [code]="loadingDemoCode" language="typescript" />
-
         <h3 class="docs-section-subtitle">Programmatic control</h3>
         <p class="docs-paragraph">
-          Submit and reset forms programmatically.
+          Submit and reset forms programmatically:
         </p>
         <docs-code-block [code]="programmaticDemoCode" language="typescript" />
       </section>
@@ -158,16 +184,93 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      width: 100%;
+      max-width: 280px;
+    }
+
+    .demo-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .demo-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--docs-text);
+    }
+
+    .demo-input {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.875rem;
+      background: var(--docs-bg);
+      border: 1px solid var(--docs-border);
+      border-radius: 0.375rem;
+      color: var(--docs-text);
+      transition: border-color 0.15s;
+
+      &:focus {
+        outline: none;
+        border-color: var(--docs-accent, #0066ff);
+        box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+      }
+
+      &[data-invalid] {
+        border-color: #ef4444;
+      }
+    }
+
+    .demo-error {
+      font-size: 0.75rem;
+      color: #ef4444;
+    }
+
+    .demo-submit {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      background: var(--docs-accent, #0066ff);
+      color: white;
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: background 0.15s;
+
+      &:hover {
+        background: color-mix(in srgb, var(--docs-accent, #0066ff), black 10%);
+      }
+    }
+
+    .demo-status {
+      font-size: 0.75rem;
+      color: #22c55e;
+      margin-top: 0.5rem;
+    }
+  `,
 })
 export class FormDocsComponent {
-  protected readonly importCode = `import { FormRootDirective } from '@base-ng/ui/form';
+  protected readonly submitMessage = signal('');
+
+  protected handleSubmit(event: FormSubmitEventDetails): void {
+    event.nativeEvent.preventDefault();
+    this.submitMessage.set(`Submitted: ${JSON.stringify(event.values)}`);
+    setTimeout(() => this.submitMessage.set(''), 3000);
+  }
+
+  protected readonly importCode = `import { FormRootDirective } from '@base-ng/ui';
 
 @Component({
   imports: [FormRootDirective],
