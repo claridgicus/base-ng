@@ -1,15 +1,32 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  MeterRootDirective,
+  MeterTrackDirective,
+  MeterIndicatorDirective,
+  MeterLabelDirective,
+  MeterValueDirective,
+} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-meter',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    MeterRootDirective,
+    MeterTrackDirective,
+    MeterIndicatorDirective,
+    MeterLabelDirective,
+    MeterValueDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,14 +38,36 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <docs-demo [code]="basicDemoCode" language="html">
+          <div class="demo-meter-container">
+            <div baseUiMeterRoot [value]="meterValue()" [max]="100" class="demo-meter">
+              <div class="demo-meter-header">
+                <span baseUiMeterLabel class="demo-meter-label">Disk Usage</span>
+                <span baseUiMeterValue class="demo-meter-value"></span>
+              </div>
+              <div baseUiMeterTrack class="demo-meter-track">
+                <div baseUiMeterIndicator class="demo-meter-indicator"></div>
+              </div>
+            </div>
+            <div class="demo-controls">
+              <input
+                type="range"
+                [value]="meterValue()"
+                (input)="onSliderChange($event)"
+                min="0"
+                max="100"
+                class="demo-slider"
+              />
+            </div>
+          </div>
+        </docs-demo>
+      </section>
 
-        <p class="docs-paragraph">
-          Import the Meter directives from the package:
-        </p>
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -45,35 +84,37 @@ import {
       <section class="docs-section">
         <h2 class="docs-section-title">Examples</h2>
 
-        <h3 class="docs-section-subtitle">Basic usage</h3>
+        <h3 class="docs-section-subtitle">Battery level</h3>
         <p class="docs-paragraph">
-          Create a simple meter showing a value within a range.
+          Display battery level with color coding based on value:
         </p>
-        <docs-code-block [code]="basicDemoCode" language="html" />
+        <docs-demo [code]="batteryDemoCode" language="html">
+          <div baseUiMeterRoot [value]="25" [max]="100" class="demo-meter">
+            <div class="demo-meter-header">
+              <span baseUiMeterLabel class="demo-meter-label">🔋 Battery</span>
+              <span baseUiMeterValue class="demo-meter-value"></span>
+            </div>
+            <div baseUiMeterTrack class="demo-meter-track">
+              <div baseUiMeterIndicator class="demo-meter-indicator demo-battery-low"></div>
+            </div>
+          </div>
+        </docs-demo>
 
-        <h3 class="docs-section-subtitle">With label and value</h3>
+        <h3 class="docs-section-subtitle">Storage usage</h3>
         <p class="docs-paragraph">
-          Add a label for accessibility and display the current value.
+          A practical example showing disk space usage:
         </p>
-        <docs-code-block [code]="labeledDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">Percentage format</h3>
-        <p class="docs-paragraph">
-          Use Intl.NumberFormat options to display the value as a percentage.
-        </p>
-        <docs-code-block [code]="percentDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">Custom value rendering</h3>
-        <p class="docs-paragraph">
-          Use <code>renderValue</code> to customize how the value is displayed.
-        </p>
-        <docs-code-block [code]="customValueDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">Disk usage example</h3>
-        <p class="docs-paragraph">
-          A practical example showing disk space usage with GB formatting.
-        </p>
-        <docs-code-block [code]="diskUsageDemoCode" language="html" />
+        <docs-demo [code]="diskUsageDemoCode" language="html">
+          <div baseUiMeterRoot [value]="75" [max]="100" class="demo-meter">
+            <div class="demo-meter-header">
+              <span baseUiMeterLabel class="demo-meter-label">💾 Storage</span>
+              <span class="demo-meter-usage">75 GB / 100 GB</span>
+            </div>
+            <div baseUiMeterTrack class="demo-meter-track">
+              <div baseUiMeterIndicator class="demo-meter-indicator demo-storage"></div>
+            </div>
+          </div>
+        </docs-demo>
       </section>
 
       <!-- Styling -->
@@ -191,15 +232,88 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-meter-container {
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .demo-meter {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .demo-meter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .demo-meter-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--docs-text);
+    }
+
+    .demo-meter-value {
+      font-size: 0.875rem;
+      color: var(--docs-text-secondary);
+    }
+
+    .demo-meter-usage {
+      font-size: 0.75rem;
+      color: var(--docs-text-secondary);
+    }
+
+    .demo-meter-track {
+      position: relative;
+      width: 100%;
+      height: 8px;
+      background: var(--docs-border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .demo-meter-indicator {
+      height: 100%;
+      background: var(--docs-accent, #0066ff);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    .demo-battery-low {
+      background: #ef4444;
+    }
+
+    .demo-storage {
+      background: #8b5cf6;
+    }
+
+    .demo-controls {
+      margin-top: 1rem;
+    }
+
+    .demo-slider {
+      width: 100%;
+      cursor: pointer;
+    }
+  `,
 })
 export class MeterDocsComponent {
+  protected readonly meterValue = signal(65);
+
+  protected onSliderChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.meterValue.set(parseInt(input.value, 10));
+  }
   protected readonly importCode = `import {
   MeterRootDirective,
   MeterTrackDirective,
@@ -235,6 +349,14 @@ export class MeterDocsComponent {
   protected readonly basicDemoCode = `<div baseUiMeterRoot [value]="75" [min]="0" [max]="100">
   <div baseUiMeterTrack class="meter-track">
     <div baseUiMeterIndicator class="meter-indicator"></div>
+  </div>
+</div>`;
+
+  protected readonly batteryDemoCode = `<div baseUiMeterRoot [value]="25" [max]="100">
+  <span baseUiMeterLabel>🔋 Battery</span>
+  <span baseUiMeterValue></span>
+  <div baseUiMeterTrack>
+    <div baseUiMeterIndicator class="battery-low"></div>
   </div>
 </div>`;
 
