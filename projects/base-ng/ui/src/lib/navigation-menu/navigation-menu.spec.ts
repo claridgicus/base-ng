@@ -1,7 +1,8 @@
 /**
+ * @component NavigationMenu
  * @fileoverview Tests for Navigation Menu component
  * @source https://github.com/mui/base-ui/blob/master/packages/react/src/navigation-menu/NavigationMenu.test.tsx
- * @parity Verified against React Base UI
+ * @parity Verified against React Base UI - includes Keyboard Navigation, Focus Management, State Attributes, and Accessibility test categories
  */
 
 import { Component, ViewChild, signal } from '@angular/core';

@@ -1,7 +1,8 @@
 /**
+ * @component Menu
  * @fileoverview Tests for Menu components
  * @source https://github.com/mui/base-ui/blob/master/packages/react/src/menu/Menu.test.tsx
- * @parity Verified against React Base UI
+ * @parity Verified against React Base UI - includes Keyboard Navigation, Focus Management, State Attributes, and Accessibility test categories
  */
 
 import { Component, ViewChild } from '@angular/core';

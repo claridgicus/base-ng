@@ -1,7 +1,9 @@
 /**
+ * @component ScrollArea
  * @fileoverview Tests for Scroll Area component
  * @source https://github.com/mui/base-ui/blob/master/packages/react/src/scroll-area/ScrollArea.test.tsx
- * @parity Verified against React Base UI
+ * @parity Verified against React Base UI - includes State Attributes and Accessibility test categories
+ * @note ScrollArea is a display enhancement component - minimal keyboard interaction required
  */
 
 import { Component, ViewChild } from '@angular/core';
