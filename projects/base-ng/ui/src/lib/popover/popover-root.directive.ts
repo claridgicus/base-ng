@@ -1,6 +1,11 @@
 /**
- * @fileoverview Angular port of Base UI PopoverRoot
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/popover/root/PopoverRoot.tsx
+ * @directive PopoverRoot
+ * @reactSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/popover/root/PopoverRoot.tsx
+ * @reactDocs https://base-ui.com/react/components/popover
+ * @visualSource https://base-ui.com/react/components/popover
+ * @lastScraped 2026-02-03
+ * @styling Tailwind CSS 4 only
+ * @parity HIGH - Ported from React Base UI
  *
  * Groups all parts of the popover. Manages open state and provides context.
  */

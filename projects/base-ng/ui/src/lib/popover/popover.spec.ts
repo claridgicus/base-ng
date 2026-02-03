@@ -1,8 +1,11 @@
 /**
  * @component Popover
- * @fileoverview Tests for Popover components
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/popover/Popover.test.tsx
- * @parity Verified against React Base UI - includes Focus Management, State Attributes, and Accessibility test categories
+ * @reactTestSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/popover/root/PopoverRoot.test.tsx
+ * @reactTestSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/popover/trigger/PopoverTrigger.test.tsx
+ * @reactTestSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/popover/popup/PopoverPopup.test.tsx
+ * @lastScraped 2026-02-03
+ * @testsPorted 65/80 (81%)
+ * @parity HIGH - Core tests ported, missing nested popup and advanced focus management tests
  */
 
 import { Component, ElementRef, ViewChild } from '@angular/core';
