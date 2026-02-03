@@ -1,15 +1,34 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   CodeBlockComponent,
   EditOnGitHubComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  AutocompleteRootDirective,
+  AutocompleteInputDirective,
+  AutocompletePositionerDirective,
+  AutocompletePopupDirective,
+  AutocompleteListDirective,
+  AutocompleteItemDirective,
+} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-autocomplete',
-  imports: [CodeBlockComponent, EditOnGitHubComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    CodeBlockComponent,
+    EditOnGitHubComponent,
+    DemoComponent,
+    PropsTableComponent,
+    AutocompleteRootDirective,
+    AutocompleteInputDirective,
+    AutocompletePositionerDirective,
+    AutocompletePopupDirective,
+    AutocompleteListDirective,
+    AutocompleteItemDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,12 +40,34 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <h2 class="docs-section-title">Live Demo</h2>
+        <docs-demo [code]="basicCode">
+          <div baseUiAutocompleteRoot [(value)]="searchValue" class="demo-autocomplete">
+            <input
+              baseUiAutocompleteInput
+              class="demo-autocomplete-input"
+              placeholder="Search cities..."
+            />
+            <div baseUiAutocompletePositioner class="demo-autocomplete-positioner">
+              <div baseUiAutocompletePopup class="demo-autocomplete-popup">
+                <div baseUiAutocompleteList class="demo-autocomplete-list">
+                  @for (city of cities; track city) {
+                    <div baseUiAutocompleteItem [value]="city" class="demo-autocomplete-item">
+                      {{ city }}
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </docs-demo>
+      </section>
 
-        <p class="docs-paragraph">Import the Autocomplete directives:</p>
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -389,9 +430,85 @@ import {
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
     }
+
+    /* Demo styles */
+    .demo-autocomplete {
+      position: relative;
+      display: inline-block;
+    }
+
+    .demo-autocomplete-input {
+      width: 250px;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--docs-border);
+      border-radius: 6px;
+      background: var(--docs-bg);
+      font-size: 0.875rem;
+      color: var(--docs-text);
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .demo-autocomplete-input:focus {
+      border-color: var(--docs-accent);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    }
+
+    .demo-autocomplete-positioner {
+      position: absolute;
+      z-index: 50;
+      width: 100%;
+    }
+
+    .demo-autocomplete-popup {
+      margin-top: 0.25rem;
+      background: var(--docs-bg);
+      border: 1px solid var(--docs-border);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      animation: autocompleteIn 0.15s ease;
+    }
+
+    @keyframes autocompleteIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .demo-autocomplete-list {
+      padding: 0.25rem;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .demo-autocomplete-item {
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      color: var(--docs-text);
+    }
+
+    .demo-autocomplete-item:hover,
+    .demo-autocomplete-item[data-highlighted] {
+      background: var(--docs-bg-hover);
+    }
   `,
 })
 export class AutocompleteDocsComponent {
+  protected readonly searchValue = signal<string | null>(null);
+  protected readonly cities = [
+    'New York',
+    'Los Angeles',
+    'Chicago',
+    'Houston',
+    'Phoenix',
+    'Philadelphia',
+    'San Antonio',
+    'San Diego',
+    'Dallas',
+    'San Jose',
+  ];
+
   importCode = `import {
   AutocompleteRootDirective,
   AutocompleteInputDirective,
