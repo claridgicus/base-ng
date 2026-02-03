@@ -1,15 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   CodeBlockComponent,
+  DemoComponent,
   EditOnGitHubComponent,
-  PackageSelectorComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import { ButtonComponent } from '@base-ng/ui';
 
 @Component({
   selector: 'docs-button',
-  imports: [CodeBlockComponent, EditOnGitHubComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [ButtonComponent, CodeBlockComponent, DemoComponent, EditOnGitHubComponent, PropsTableComponent],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -20,14 +21,19 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <docs-demo [code]="basicDemoCode" language="html">
+          <base-ui-button (buttonClick)="handleClick()">
+            Click me
+          </base-ui-button>
+        </docs-demo>
+        <p class="docs-hint">Click the button to see the interaction. Check the console for the event.</p>
+      </section>
 
-        <p class="docs-paragraph">
-          Import the Button component from the package:
-        </p>
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -45,18 +51,16 @@ import {
       <section class="docs-section">
         <h2 class="docs-section-title">Examples</h2>
 
-        <h3 class="docs-section-subtitle">Basic usage</h3>
-        <p class="docs-paragraph">
-          Use the Button component to create a clickable button that emits events.
-        </p>
-        <docs-code-block [code]="basicDemoCode" language="html" />
-
         <h3 class="docs-section-subtitle">Disabled button</h3>
         <p class="docs-paragraph">
           Use the <code>disabled</code> input to disable the button. Disabled
           buttons are not focusable by default.
         </p>
-        <docs-code-block [code]="disabledDemoCode" language="html" />
+        <docs-demo [code]="disabledDemoCode" language="html">
+          <base-ui-button [disabled]="true">
+            Disabled
+          </base-ui-button>
+        </docs-demo>
 
         <h3 class="docs-section-subtitle">Focusable when disabled</h3>
         <p class="docs-paragraph">
@@ -64,14 +68,27 @@ import {
           keep the button in the tab order even when disabled. This prevents
           focus loss during async operations.
         </p>
-        <docs-code-block [code]="focusableDemoCode" language="html" />
+        <docs-demo [code]="focusableDemoCode" language="html">
+          <base-ui-button [disabled]="true" [focusableWhenDisabled]="true">
+            Focusable when disabled
+          </base-ui-button>
+        </docs-demo>
 
-        <h3 class="docs-section-subtitle">Submit button</h3>
+        <h3 class="docs-section-subtitle">Interactive state</h3>
         <p class="docs-paragraph">
-          Use the <code>type</code> input to change the button type for form
-          submission.
+          Toggle the disabled state to see how the button responds dynamically.
         </p>
-        <docs-code-block [code]="submitDemoCode" language="html" />
+        <docs-demo [code]="interactiveDemoCode" language="html">
+          <div class="demo-interactive">
+            <base-ui-button [disabled]="isDisabled()" (buttonClick)="handleClick()">
+              {{ isDisabled() ? 'Disabled' : 'Click me' }}
+            </base-ui-button>
+            <label class="demo-toggle">
+              <input type="checkbox" [checked]="isDisabled()" (change)="toggleDisabled()" />
+              Disabled
+            </label>
+          </div>
+        </docs-demo>
       </section>
 
       <!-- Styling -->
@@ -144,9 +161,68 @@ import {
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
     }
+
+    .docs-hint {
+      font-size: 0.875rem;
+      color: var(--docs-text-secondary);
+      margin-top: 0.5rem;
+    }
+
+    .demo-interactive {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .demo-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--docs-text-secondary);
+      cursor: pointer;
+    }
+
+    base-ui-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      background: var(--docs-accent, #0066ff);
+      color: white;
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: background 0.15s;
+
+      &:hover:not([data-disabled]) {
+        background: #0052cc;
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--docs-accent, #0066ff);
+        outline-offset: 2px;
+      }
+
+      &[data-disabled] {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
   `,
 })
 export class ButtonDocsComponent {
+  protected readonly isDisabled = signal(false);
+
+  protected handleClick(): void {
+    console.log('Button clicked!');
+  }
+
+  protected toggleDisabled(): void {
+    this.isDisabled.update(v => !v);
+  }
   protected readonly importCode = `import { ButtonComponent } from '@base-ng/ui/button';
 
 @Component({
@@ -175,11 +251,28 @@ export class ButtonDocsComponent {
   Focusable when disabled
 </base-ui-button>`;
 
-  protected readonly submitDemoCode = `<form (ngSubmit)="onSubmit()">
-  <base-ui-button type="submit">
-    Submit form
-  </base-ui-button>
-</form>`;
+  protected readonly interactiveDemoCode = `@Component({
+  template: \`
+    <base-ui-button [disabled]="isDisabled()" (buttonClick)="handleClick()">
+      {{ isDisabled() ? 'Disabled' : 'Click me' }}
+    </base-ui-button>
+    <label>
+      <input type="checkbox" [checked]="isDisabled()" (change)="toggleDisabled()" />
+      Disabled
+    </label>
+  \`
+})
+export class ExampleComponent {
+  isDisabled = signal(false);
+
+  handleClick() {
+    console.log('Button clicked!');
+  }
+
+  toggleDisabled() {
+    this.isDisabled.update(v => !v);
+  }
+}`;
 
   protected readonly stylingCode = `/* Base button styles */
 base-ui-button {

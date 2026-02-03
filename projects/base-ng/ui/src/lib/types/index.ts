@@ -5,7 +5,7 @@
 
 // Common types
 export type Orientation = 'horizontal' | 'vertical';
-export type TextDirection = 'ltr' | 'rtl';
+// TextDirection is exported from direction-provider
 
 // Event details types and utilities
 export type {
