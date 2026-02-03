@@ -92,7 +92,7 @@
 | 39  | Document Field component                           | [x]    | `components/field`            |
 | 40  | Document Fieldset component                        | [x]    | `components/fieldset`         |
 | 41  | Document Checkbox component                        | [x]    | `components/checkbox`         |
-| 42  | Document Checkbox Group component                  | [ ]    | `components/checkbox-group`   |
+| 42  | Document Checkbox Group component                  | [x]    | `components/checkbox-group`   |
 | 43  | Document Radio component                           | [x]    | `components/radio`            |
 | 44  | Document Radio Group component                     | [x]    | `components/radio-group`      |
 | 45  | Document Slider component                          | [x]    | `components/slider`           |
@@ -225,9 +225,9 @@ Each component page should include:
 ## Progress Summary
 
 - **Total Tasks:** 75
-- **Completed:** 40
+- **Completed:** 41
 - **In Progress:** 0
-- **Remaining:** 35
+- **Remaining:** 34
 
 ---
 
