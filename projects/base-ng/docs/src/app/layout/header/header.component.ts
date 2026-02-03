@@ -15,6 +15,9 @@ import { SearchComponent } from '../search/search.component';
             <span class="logo-text">Base UI</span>
             <span class="logo-badge">Angular</span>
           </a>
+          <a routerLink="/angular/overview/releases" class="version-badge">
+            v0.1.0
+          </a>
         </div>
 
         <nav class="nav-links">
@@ -142,6 +145,28 @@ import { SearchComponent } from '../search/search.component';
       border-radius: 9999px;
       background-color: var(--docs-accent);
       color: white;
+    }
+
+    .version-badge {
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 0.125rem 0.5rem;
+      border-radius: 0.25rem;
+      background-color: var(--docs-bg-secondary);
+      border: 1px solid var(--docs-border);
+      color: var(--docs-text-secondary);
+      text-decoration: none;
+      transition: all 0.15s;
+
+      &:hover {
+        background-color: var(--docs-bg);
+        color: var(--docs-text);
+        text-decoration: none;
+      }
+
+      @media (max-width: 640px) {
+        display: none;
+      }
     }
 
     .nav-links {

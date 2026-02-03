@@ -169,7 +169,7 @@
 
 | #   | Task                                               | Status | Source Reference              |
 | --- | -------------------------------------------------- | ------ | ----------------------------- |
-| 70  | Add version badge and changelog integration        | [ ]    | -                             |
+| 70  | Add version badge and changelog integration        | [x]    | Links to releases page        |
 | 71  | Add GitHub edit links to each page                 | [ ]    | -                             |
 | 72  | Generate llms.txt for AI assistants                | [x]    | -                             |
 | 73  | Add SEO metadata to all pages                      | [ ]    | -                             |
@@ -225,9 +225,9 @@ Each component page should include:
 ## Progress Summary
 
 - **Total Tasks:** 75
-- **Completed:** 59
+- **Completed:** 60
 - **In Progress:** 0
-- **Remaining:** 16
+- **Remaining:** 15
 
 ---
 
