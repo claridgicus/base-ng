@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "npx ng build @base-ng/docs --configuration=production",
+  "buildCommand": "npm run build",
   "outputDirectory": "dist/@base-ng/docs/browser",
   "framework": null,
   "rewrites": [

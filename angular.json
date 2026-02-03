@@ -155,10 +155,7 @@
               "projects/base-ng/docs/src/styles.scss"
             ],
             "server": "projects/base-ng/docs/src/main.server.ts",
-            "outputMode": "server",
-            "ssr": {
-              "entry": "projects/base-ng/docs/src/server.ts"
-            }
+            "outputMode": "static"
           },
           "configurations": {
             "production": {

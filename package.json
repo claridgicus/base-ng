@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "ng serve @base-ng/docs",
+    "build": "ng build @base-ng/ui && ng build @base-ng/docs",
     "build:lib": "ng build @base-ng/ui",
     "watch": "ng build --watch --configuration development",
     "test": "ng test @base-ng/ui --no-watch",

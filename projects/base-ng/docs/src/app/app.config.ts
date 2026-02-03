@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, APP_INITIALIZER, inject } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection, APP_INITIALIZER, inject } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -13,6 +13,7 @@ function initSeo(): () => void {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
+    provideZonelessChangeDetection(),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
     {
