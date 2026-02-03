@@ -43,18 +43,18 @@ interface NavSection {
   styles: `
     :host {
       display: block;
-      padding: 0.75rem 0 6rem 1.5rem;
+      padding: 0.75rem 1.5rem 6rem 1.5rem;
     }
 
     .sidebar-nav {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
     }
 
     .nav-section {
       display: flex;
       flex-direction: column;
+      margin-bottom: 1rem;
     }
 
     .nav-section-title {
@@ -64,7 +64,7 @@ interface NavSection {
       letter-spacing: 0.00625em;
       color: var(--docs-text);
       margin: 0;
-      padding: 0.375rem 0.75rem;
+      padding: 0.25rem 0;
     }
 
     .nav-list {
@@ -78,26 +78,30 @@ interface NavSection {
     .nav-item {
       display: flex;
       align-items: center;
-      justify-content: space-between;
       gap: 4px;
+      flex-grow: 1;
       height: 2rem;
       padding: 0 0.75rem;
       font-size: 0.875rem;
       color: var(--docs-text-secondary);
       text-decoration: none;
-      border-radius: 0.25rem;
-      transition: background-color 0.15s, color 0.15s;
+      border-radius: 0.375rem;
+      border: 1px solid transparent;
+      background-clip: padding-box;
+      transition: background-color 0.15s;
 
       &:hover {
         background-color: var(--docs-bg-hover);
-        color: var(--docs-text);
         text-decoration: none;
       }
 
       &.active {
         background-color: var(--docs-bg-hover);
+        border: none;
         outline: 1px solid var(--docs-border);
+        outline-offset: -1px;
         font-weight: 500;
+        letter-spacing: 0.00625em;
         color: var(--docs-text);
       }
     }
@@ -108,6 +112,7 @@ interface NavSection {
       letter-spacing: 0.035em;
       color: #dc2626;
       text-transform: uppercase;
+      padding-inline: 2px;
       transform: translateY(-2px);
     }
   `,
