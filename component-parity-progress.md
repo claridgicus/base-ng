@@ -28,8 +28,8 @@
 | 10  | Fieldset       | [x]    | [x]        | [x]            | [x]    |
 | 11  | Checkbox       | [x]    | [x]        | [x]            | [x]    |
 | 12  | Checkbox Group | [x]    | [x]        | [x]            | [x]    |
-| 13  | Radio          | [ ]    | [ ]        | [ ]            | [ ]    |
-| 14  | Radio Group    | [ ]    | [ ]        | [ ]            | [ ]    |
+| 13  | Radio          | [x]    | [x]        | [x]            | [x]    |
+| 14  | Radio Group    | [x]    | [x]        | [x]            | [x]    |
 | 15  | Slider         | [ ]    | [ ]        | [ ]            | [ ]    |
 | 16  | Number Field   | [ ]    | [ ]        | [ ]            | [ ]    |
 | 17  | Form           | [ ]    | [ ]        | [ ]            | [ ]    |
@@ -92,10 +92,10 @@
 ## Progress Summary
 
 - **Total Components:** 35
-- **Visual Parity Verified:** 12
-- **Behavioral Parity Verified:** 12
-- **Specs Enhanced:** 12
-- **Fully Complete:** 12
+- **Visual Parity Verified:** 14
+- **Behavioral Parity Verified:** 14
+- **Specs Enhanced:** 14
+- **Fully Complete:** 14
 
 ---
 

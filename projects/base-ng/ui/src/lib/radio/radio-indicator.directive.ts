@@ -1,6 +1,10 @@
 /**
- * @fileoverview Angular port of Base UI RadioIndicator
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/radio/indicator/RadioIndicator.tsx
+ * @component RadioIndicator
+ * @reactSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/radio/indicator/RadioIndicator.tsx
+ * @reactDocs https://base-ui.com/react/components/radio
+ * @lastScraped 2026-02-03
+ * @styling Tailwind CSS 4 only
+ * @parity EXACT - Ported from React Base UI
  *
  * Visual indicator for the radio state.
  */

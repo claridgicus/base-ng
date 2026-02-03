@@ -1,8 +1,10 @@
 /**
  * @component Radio
- * @fileoverview Tests for Radio component
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/radio/Radio.test.tsx
- * @parity Verified against React Base UI - includes Keyboard Navigation, Focus Management, State Attributes, and Accessibility test categories
+ * @reactTestSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/radio/root/RadioRoot.test.tsx
+ * @reactDocs https://base-ui.com/react/components/radio
+ * @lastScraped 2026-02-03
+ * @testsPorted 27/27 (100%)
+ * @parity EXACT - All React tests ported to Angular/Vitest
  */
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';

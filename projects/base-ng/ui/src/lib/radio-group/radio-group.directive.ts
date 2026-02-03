@@ -1,6 +1,10 @@
 /**
- * @fileoverview Angular port of Base UI RadioGroup
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/radio-group/RadioGroup.tsx
+ * @component RadioGroup
+ * @reactSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/radio-group/RadioGroup.tsx
+ * @reactDocs https://base-ui.com/react/components/radio
+ * @lastScraped 2026-02-03
+ * @styling Tailwind CSS 4 only
+ * @parity EXACT - Ported from React Base UI
  *
  * A group of radio buttons with shared state management.
  */
