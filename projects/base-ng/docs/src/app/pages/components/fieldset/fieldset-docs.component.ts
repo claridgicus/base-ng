@@ -1,15 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import { FieldsetRootDirective, FieldsetLegendDirective } from '@base-ng/ui';
+import { InputDirective } from '@base-ng/ui';
 
 @Component({
   selector: 'docs-fieldset',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    FieldsetRootDirective,
+    FieldsetLegendDirective,
+    InputDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,14 +31,30 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <docs-demo [code]="basicDemoCode" language="html">
+          <fieldset baseUiFieldsetRoot class="demo-fieldset">
+            <div baseUiFieldsetLegend class="demo-legend">
+              Personal Information
+            </div>
+            <div class="demo-fields">
+              <label class="demo-label">
+                First Name
+                <input baseUiInput class="demo-input" placeholder="John" />
+              </label>
+              <label class="demo-label">
+                Last Name
+                <input baseUiInput class="demo-input" placeholder="Doe" />
+              </label>
+            </div>
+          </fieldset>
+        </docs-demo>
+      </section>
 
-        <p class="docs-paragraph">
-          Import the Fieldset directives from the package:
-        </p>
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -45,36 +71,42 @@ import {
       <section class="docs-section">
         <h2 class="docs-section-title">Examples</h2>
 
-        <h3 class="docs-section-subtitle">Basic usage</h3>
-        <p class="docs-paragraph">
-          Group related form fields with a descriptive legend.
-        </p>
-        <docs-code-block [code]="basicDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">With Field components</h3>
-        <p class="docs-paragraph">
-          Combine with Field for complete form field structure.
-        </p>
-        <docs-code-block [code]="fieldsDemoCode" language="html" />
-
         <h3 class="docs-section-subtitle">Multiple fieldsets</h3>
         <p class="docs-paragraph">
-          Use multiple fieldsets to organize complex forms.
+          Use multiple fieldsets to organize complex forms:
         </p>
-        <docs-code-block [code]="multipleDemoCode" language="html" />
+        <docs-demo [code]="multipleDemoCode" language="html">
+          <div class="demo-form">
+            <fieldset baseUiFieldsetRoot class="demo-fieldset">
+              <div baseUiFieldsetLegend class="demo-legend">Contact Info</div>
+              <input baseUiInput class="demo-input" placeholder="Email" />
+            </fieldset>
+            <fieldset baseUiFieldsetRoot class="demo-fieldset">
+              <div baseUiFieldsetLegend class="demo-legend">Address</div>
+              <input baseUiInput class="demo-input" placeholder="Street" />
+            </fieldset>
+          </div>
+        </docs-demo>
 
         <h3 class="docs-section-subtitle">Disabled fieldset</h3>
         <p class="docs-paragraph">
-          Disable all fields within a fieldset.
+          Disable all fields within a fieldset:
         </p>
-        <docs-code-block [code]="disabledDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">Non-semantic usage</h3>
-        <p class="docs-paragraph">
-          Use with <code>div</code> elements when semantic fieldset isn't
-          appropriate.
-        </p>
-        <docs-code-block [code]="divDemoCode" language="html" />
+        <docs-demo [code]="disabledDemoCode" language="html">
+          <div class="demo-container">
+            <fieldset baseUiFieldsetRoot [disabled]="isDisabled()" class="demo-fieldset">
+              <div baseUiFieldsetLegend class="demo-legend">Account Settings</div>
+              <div class="demo-fields">
+                <input baseUiInput class="demo-input" placeholder="Username" [disabled]="isDisabled()" />
+                <input baseUiInput class="demo-input" placeholder="Email" [disabled]="isDisabled()" />
+              </div>
+            </fieldset>
+            <label class="demo-toggle">
+              <input type="checkbox" [checked]="isDisabled()" (change)="toggleDisabled()" />
+              Disabled
+            </label>
+          </div>
+        </docs-demo>
       </section>
 
       <!-- Styling -->
@@ -158,15 +190,102 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-form,
+    .demo-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .demo-fieldset {
+      border: 1px solid var(--docs-border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 0;
+
+      &[data-disabled] {
+        opacity: 0.6;
+      }
+    }
+
+    .demo-legend {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--docs-text);
+      margin-bottom: 0.75rem;
+      padding: 0 0.25rem;
+      margin-left: -0.25rem;
+
+      &[data-disabled] {
+        color: var(--docs-text-secondary);
+      }
+    }
+
+    .demo-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .demo-label {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      font-size: 0.875rem;
+      color: var(--docs-text);
+    }
+
+    .demo-input {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.875rem;
+      background: var(--docs-bg);
+      border: 1px solid var(--docs-border);
+      border-radius: 0.375rem;
+      color: var(--docs-text);
+
+      &::placeholder {
+        color: var(--docs-text-secondary);
+      }
+
+      &[data-focused] {
+        border-color: var(--docs-accent, #0066ff);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+      }
+
+      &[data-disabled] {
+        background: var(--docs-bg-secondary);
+        cursor: not-allowed;
+      }
+    }
+
+    .demo-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--docs-text-secondary);
+      cursor: pointer;
+    }
+  `,
 })
 export class FieldsetDocsComponent {
+  protected readonly isDisabled = signal(false);
+
+  protected toggleDisabled(): void {
+    this.isDisabled.update(v => !v);
+  }
   protected readonly importCode = `import {
   FieldsetRootDirective,
   FieldsetLegendDirective,
