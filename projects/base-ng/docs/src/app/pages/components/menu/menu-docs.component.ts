@@ -1,15 +1,34 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  MenuRootDirective,
+  MenuTriggerDirective,
+  MenuPositionerDirective,
+  MenuPopupDirective,
+  MenuItemDirective,
+  MenuSeparatorDirective,
+} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-menu',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    MenuRootDirective,
+    MenuTriggerDirective,
+    MenuPositionerDirective,
+    MenuPopupDirective,
+    MenuItemDirective,
+    MenuSeparatorDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,12 +40,54 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <h2 class="docs-section-title">Live Demo</h2>
+        <docs-demo [code]="basicDemoCode">
+          <div baseUiMenuRoot [(open)]="isMenuOpen" class="demo-menu">
+            <button baseUiMenuTrigger class="menu-trigger">
+              Actions
+              <svg class="chevron" viewBox="0 0 16 16" width="12" height="12">
+                <path d="M4 6l4 4 4-4" stroke="currentColor" fill="none" stroke-width="1.5"/>
+              </svg>
+            </button>
 
-        <p class="docs-paragraph">Import the Menu directives:</p>
+            <div baseUiMenuPositioner>
+              <div baseUiMenuPopup class="menu-popup">
+                <div baseUiMenuItem class="menu-item" (itemClick)="handleAction('edit')">
+                  <svg viewBox="0 0 16 16" width="14" height="14">
+                    <path d="M11.5 1.5l3 3L5 14H2v-3l9.5-9.5z" stroke="currentColor" fill="none"/>
+                  </svg>
+                  Edit
+                </div>
+                <div baseUiMenuItem class="menu-item" (itemClick)="handleAction('duplicate')">
+                  <svg viewBox="0 0 16 16" width="14" height="14">
+                    <path d="M5 3H3v10h8v-2M5 3v10h8V3H5z" stroke="currentColor" fill="none"/>
+                  </svg>
+                  Duplicate
+                </div>
+                <div baseUiMenuItem class="menu-item" (itemClick)="handleAction('share')">
+                  <svg viewBox="0 0 16 16" width="14" height="14">
+                    <path d="M4 8v6h8V8M8 2v8M5 5l3-3 3 3" stroke="currentColor" fill="none"/>
+                  </svg>
+                  Share
+                </div>
+                <div baseUiMenuSeparator class="menu-separator"></div>
+                <div baseUiMenuItem class="menu-item menu-item-danger" (itemClick)="handleAction('delete')">
+                  <svg viewBox="0 0 16 16" width="14" height="14">
+                    <path d="M3 4h10M6 4V2h4v2M5 4v9h6V4" stroke="currentColor" fill="none"/>
+                  </svg>
+                  Delete
+                </div>
+              </div>
+            </div>
+          </div>
+        </docs-demo>
+      </section>
+
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -167,15 +228,117 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-menu {
+      display: inline-block;
+    }
+
+    .menu-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--docs-text);
+      background: var(--docs-bg);
+      border: 1px solid var(--docs-border);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .menu-trigger:hover {
+      background: var(--docs-bg-hover);
+    }
+
+    .menu-trigger[data-state="open"] {
+      background: var(--docs-bg-hover);
+    }
+
+    .menu-trigger[data-state="open"] .chevron {
+      transform: rotate(180deg);
+    }
+
+    .chevron {
+      transition: transform 0.15s ease;
+    }
+
+    .menu-popup {
+      background: var(--docs-bg);
+      border: 1px solid var(--docs-border);
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+      padding: 0.25rem;
+      min-width: 180px;
+      outline: none;
+      animation: menuIn 0.15s ease;
+    }
+
+    @keyframes menuIn {
+      from {
+        opacity: 0;
+        transform: translateY(-4px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      cursor: pointer;
+      outline: none;
+      font-size: 0.875rem;
+      color: var(--docs-text);
+      transition: background 0.1s ease;
+    }
+
+    .menu-item:hover,
+    .menu-item[data-highlighted] {
+      background: var(--docs-bg-hover);
+    }
+
+    .menu-item svg {
+      opacity: 0.6;
+    }
+
+    .menu-item-danger {
+      color: #dc2626;
+    }
+
+    .menu-item-danger:hover,
+    .menu-item-danger[data-highlighted] {
+      background: rgba(220, 38, 38, 0.1);
+    }
+
+    .menu-separator {
+      height: 1px;
+      background: var(--docs-border);
+      margin: 0.25rem 0;
+    }
+  `,
 })
 export class MenuDocsComponent {
+  protected readonly isMenuOpen = signal(false);
+
+  protected handleAction(action: string): void {
+    console.log(`Action: ${action}`);
+    this.isMenuOpen.set(false);
+  }
+
   protected readonly importCode = `import {
   MenuRootDirective,
   MenuTriggerDirective,
@@ -189,7 +352,7 @@ export class MenuDocsComponent {
   MenuRadioGroupDirective,
   MenuRadioItemDirective,
   MenuArrowDirective
-} from '@base-ng/ui/menu';
+} from '@base-ng/ui';
 
 @Component({
   imports: [
