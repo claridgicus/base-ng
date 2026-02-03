@@ -1,15 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  CollapsibleRootDirective,
+  CollapsibleTriggerDirective,
+  CollapsiblePanelDirective,
+} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-collapsible',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    CollapsibleRootDirective,
+    CollapsibleTriggerDirective,
+    CollapsiblePanelDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,12 +34,33 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <docs-demo [code]="basicDemoCode" language="html">
+          <div
+            baseUiCollapsibleRoot
+            [(open)]="isOpen"
+            class="demo-collapsible"
+          >
+            <button baseUiCollapsibleTrigger class="demo-trigger">
+              <span>Show more details</span>
+              <svg class="demo-chevron" viewBox="0 0 24 24" width="16" height="16">
+                <path d="M6 9l6 6 6-6" stroke="currentColor" fill="none" stroke-width="2"/>
+              </svg>
+            </button>
+            <div baseUiCollapsiblePanel [keepMounted]="true" class="demo-panel">
+              <div class="demo-panel-content">
+                <p>This content can be shown or hidden by clicking the button above.</p>
+                <p>Use collapsibles for FAQ sections, additional details, or any content that doesn't need to be visible by default.</p>
+              </div>
+            </div>
+          </div>
+        </docs-demo>
+      </section>
 
-        <p class="docs-paragraph">Import the Collapsible directives:</p>
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -59,7 +93,32 @@ import {
         <p class="docs-paragraph">
           Use <code>disabled</code> to prevent the collapsible from toggling:
         </p>
-        <docs-code-block [code]="disabledDemoCode" language="html" />
+        <docs-demo [code]="disabledDemoCode" language="html">
+          <div class="demo-container">
+            <div
+              baseUiCollapsibleRoot
+              [(open)]="disabledOpen"
+              [disabled]="isDisabled()"
+              class="demo-collapsible"
+            >
+              <button baseUiCollapsibleTrigger class="demo-trigger">
+                <span>Toggle content</span>
+                <svg class="demo-chevron" viewBox="0 0 24 24" width="16" height="16">
+                  <path d="M6 9l6 6 6-6" stroke="currentColor" fill="none" stroke-width="2"/>
+                </svg>
+              </button>
+              <div baseUiCollapsiblePanel [keepMounted]="true" class="demo-panel">
+                <div class="demo-panel-content">
+                  This content cannot be toggled when disabled.
+                </div>
+              </div>
+            </div>
+            <label class="demo-toggle">
+              <input type="checkbox" [checked]="isDisabled()" (change)="toggleDisabled()" />
+              Disabled
+            </label>
+          </div>
+        </docs-demo>
 
         <h3 class="docs-section-subtitle">Keep panel mounted</h3>
         <p class="docs-paragraph">
@@ -154,26 +213,131 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .demo-collapsible {
+      border: 1px solid var(--docs-border);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      width: 100%;
+      max-width: 360px;
+
+      &[data-disabled] {
+        opacity: 0.5;
+      }
+    }
+
+    .demo-trigger {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      background: var(--docs-bg);
+      border: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--docs-text);
+      cursor: pointer;
+      transition: background 0.15s;
+
+      &:hover:not([data-disabled]) {
+        background: var(--docs-bg-hover, rgba(0, 0, 0, 0.05));
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--docs-accent, #0066ff);
+        outline-offset: -2px;
+      }
+
+      &[data-disabled] {
+        cursor: not-allowed;
+      }
+    }
+
+    .demo-chevron {
+      transition: transform 0.2s;
+
+      [data-open] & {
+        transform: rotate(180deg);
+      }
+    }
+
+    .demo-panel {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.2s ease;
+      background: var(--docs-bg-muted, rgba(0, 0, 0, 0.02));
+      border-top: 1px solid var(--docs-border);
+
+      &[data-open] {
+        grid-template-rows: 1fr;
+      }
+    }
+
+    .demo-panel-content {
+      overflow: hidden;
+      padding: 0 1rem;
+      font-size: 0.875rem;
+      color: var(--docs-text-secondary);
+      line-height: 1.6;
+
+      [data-open] & {
+        padding: 1rem;
+      }
+
+      p {
+        margin: 0 0 0.5rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    .demo-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--docs-text-secondary);
+      cursor: pointer;
+    }
+  `,
 })
 export class CollapsibleDocsComponent {
+  // Demo state
+  protected readonly isOpen = signal(false);
+  protected readonly disabledOpen = signal(false);
+  protected readonly isDisabled = signal(false);
+
+  protected toggleDisabled(): void {
+    this.isDisabled.update((v) => !v);
+  }
+
   protected readonly importCode = `import {
   CollapsibleRootDirective,
   CollapsibleTriggerDirective,
-  CollapsiblePanelDirective
-} from '@base-ng/ui/collapsible';
+  CollapsiblePanelDirective,
+} from '@base-ng/ui';
 
 @Component({
   imports: [
     CollapsibleRootDirective,
     CollapsibleTriggerDirective,
-    CollapsiblePanelDirective
+    CollapsiblePanelDirective,
   ],
   // ...
 })`;
