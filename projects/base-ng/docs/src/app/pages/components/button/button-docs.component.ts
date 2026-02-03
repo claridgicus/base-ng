@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {
   CodeBlockComponent,
+  EditOnGitHubComponent,
   PackageSelectorComponent,
   PropsTableComponent,
   type PropDefinition,
@@ -8,7 +9,7 @@ import {
 
 @Component({
   selector: 'docs-button',
-  imports: [CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [CodeBlockComponent, EditOnGitHubComponent, PackageSelectorComponent, PropsTableComponent],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -118,6 +119,12 @@ import {
           </li>
         </ul>
       </section>
+
+      <footer class="docs-footer">
+        <docs-edit-on-github
+          path="projects/base-ng/docs/src/app/pages/components/button/button-docs.component.ts"
+        />
+      </footer>
     </article>
   `,
   styles: `
@@ -130,6 +137,12 @@ import {
         margin-bottom: 0.5rem;
         line-height: 1.6;
       }
+    }
+
+    .docs-footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--docs-border);
     }
   `,
 })

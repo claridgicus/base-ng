@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {
+  EditOnGitHubComponent,
   CodeBlockComponent,
   PackageSelectorComponent,
   PropsTableComponent,
@@ -8,7 +9,7 @@ import {
 
 @Component({
   selector: 'docs-use-render',
-  imports: [CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
   template: `
     <div class="docs-page">
       <header class="docs-header">
@@ -167,8 +168,15 @@ import {
           </tbody>
         </table>
       </section>
+    
+
+      <footer class="docs-footer">
+        <docs-edit-on-github
+          path="projects/base-ng/docs/src/app/pages/utils/use-render/use-render-docs.component.ts"
+        />
+      </footer>
     </div>
-  `,
+    `,
   styles: `
     .docs-page {
       max-width: 48rem;
@@ -248,7 +256,13 @@ import {
       background: #f9fafb;
       font-weight: 600;
     }
-  `,
+  
+
+    .docs-footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--docs-border);
+    }`,
 })
 export class UseRenderDocsComponent {
   directiveUsageCode = `<!-- Apply state as data attributes -->

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {
+  EditOnGitHubComponent,
   CodeBlockComponent,
   PackageSelectorComponent,
   PropsTableComponent,
@@ -8,7 +9,7 @@ import {
 
 @Component({
   selector: 'docs-csp-provider',
-  imports: [CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
   template: `
     <div class="docs-page">
       <header class="docs-header">
@@ -119,8 +120,15 @@ import {
         <h2>CSPConfig Interface</h2>
         <docs-code-block [code]="interfaceCode" language="typescript" />
       </section>
+    
+
+      <footer class="docs-footer">
+        <docs-edit-on-github
+          path="projects/base-ng/docs/src/app/pages/utils/csp-provider/csp-provider-docs.component.ts"
+        />
+      </footer>
     </div>
-  `,
+    `,
   styles: `
     .docs-page {
       max-width: 48rem;
@@ -181,7 +189,13 @@ import {
       border-radius: 0.25rem;
       font-size: 0.875rem;
     }
-  `,
+  
+
+    .docs-footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--docs-border);
+    }`,
 })
 export class CspProviderDocsComponent {
   basicUsageCode = `// app.config.ts

@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
+import { EditOnGitHubComponent } from '../../../shared';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'docs-quick-start',
-  imports: [RouterLink],
+  imports: [EditOnGitHubComponent, RouterLink],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -119,6 +120,13 @@ import { RouterLink } from '@angular/router';
           </a>
         </div>
       </section>
+    
+
+      <footer class="docs-footer">
+        <docs-edit-on-github
+          path="projects/base-ng/docs/src/app/pages/overview/quick-start/quick-start.component.ts"
+        />
+      </footer>
     </article>
   `,
   styles: `
@@ -246,7 +254,13 @@ import { RouterLink } from '@angular/router';
         color: var(--docs-text-secondary);
       }
     }
-  `,
+  
+
+    .docs-footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--docs-border);
+    }`,
 })
 export class QuickStartComponent {
   protected activeTab = 0;

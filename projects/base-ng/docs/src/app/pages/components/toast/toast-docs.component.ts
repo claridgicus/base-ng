@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {
+  EditOnGitHubComponent,
   CodeBlockComponent,
   PackageSelectorComponent,
   PropsTableComponent,
@@ -8,7 +9,7 @@ import {
 
 @Component({
   selector: 'docs-toast',
-  imports: [CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
   template: `
     <div class="docs-page">
       <header class="docs-header">
@@ -333,8 +334,15 @@ import {
           <li>F6 key provides quick access to notifications</li>
         </ul>
       </section>
+    
+
+      <footer class="docs-footer">
+        <docs-edit-on-github
+          path="projects/base-ng/docs/src/app/pages/components/toast/toast-docs.component.ts"
+        />
+      </footer>
     </div>
-  `,
+    `,
   styles: `
     .docs-page {
       max-width: 48rem;
@@ -422,7 +430,13 @@ import {
       border-radius: 0.25rem;
       font-size: 0.8125rem;
     }
-  `,
+  
+
+    .docs-footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--docs-border);
+    }`,
 })
 export class ToastDocsComponent {
   importCode = `import {

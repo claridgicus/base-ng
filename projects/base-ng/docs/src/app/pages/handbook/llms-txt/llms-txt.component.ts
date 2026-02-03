@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
-import { CodeBlockComponent } from '../../../shared';
+import {
+  EditOnGitHubComponent,
+  CodeBlockComponent
+} from '../../../shared';
 
 @Component({
   selector: 'docs-llms-txt',
-  imports: [CodeBlockComponent],
+  imports: [EditOnGitHubComponent, CodeBlockComponent],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -107,6 +110,13 @@ import { CodeBlockComponent } from '../../../shared';
           </li>
         </ul>
       </section>
+    
+
+      <footer class="docs-footer">
+        <docs-edit-on-github
+          path="projects/base-ng/docs/src/app/pages/handbook/llms-txt/llms-txt.component.ts"
+        />
+      </footer>
     </article>
   `,
   styles: `
@@ -120,7 +130,13 @@ import { CodeBlockComponent } from '../../../shared';
         line-height: 1.6;
       }
     }
-  `,
+  
+
+    .docs-footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--docs-border);
+    }`,
 })
 export class LlmsTxtComponent {
   protected readonly urlCode = `https://base-ng.dev/llms.txt`;

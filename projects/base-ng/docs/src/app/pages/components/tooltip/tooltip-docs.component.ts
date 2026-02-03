@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {
+  EditOnGitHubComponent,
   CodeBlockComponent,
   PackageSelectorComponent,
   PropsTableComponent,
@@ -8,7 +9,7 @@ import {
 
 @Component({
   selector: 'docs-tooltip',
-  imports: [CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -143,6 +144,13 @@ import {
           <li>Respects reduced motion preferences in animations</li>
         </ul>
       </section>
+    
+
+      <footer class="docs-footer">
+        <docs-edit-on-github
+          path="projects/base-ng/docs/src/app/pages/components/tooltip/tooltip-docs.component.ts"
+        />
+      </footer>
     </article>
   `,
   styles: `
@@ -156,7 +164,13 @@ import {
         line-height: 1.6;
       }
     }
-  `,
+  
+
+    .docs-footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--docs-border);
+    }`,
 })
 export class TooltipDocsComponent {
   protected readonly importCode = `import {

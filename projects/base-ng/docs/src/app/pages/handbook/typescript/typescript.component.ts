@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
-import { CodeBlockComponent } from '../../../shared';
+import {
+  EditOnGitHubComponent,
+  CodeBlockComponent
+} from '../../../shared';
 
 @Component({
   selector: 'docs-typescript',
-  imports: [CodeBlockComponent],
+  imports: [EditOnGitHubComponent, CodeBlockComponent],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -119,6 +122,13 @@ import { CodeBlockComponent } from '../../../shared';
           </li>
         </ul>
       </section>
+    
+
+      <footer class="docs-footer">
+        <docs-edit-on-github
+          path="projects/base-ng/docs/src/app/pages/handbook/typescript/typescript.component.ts"
+        />
+      </footer>
     </article>
   `,
   styles: `
@@ -132,7 +142,13 @@ import { CodeBlockComponent } from '../../../shared';
         line-height: 1.6;
       }
     }
-  `,
+  
+
+    .docs-footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--docs-border);
+    }`,
 })
 export class TypeScriptComponent {
   protected readonly importTypesCode = `// Import component and its types

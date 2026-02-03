@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
+import { EditOnGitHubComponent } from '../../../shared';
 
 @Component({
   selector: 'docs-about',
+  imports: [EditOnGitHubComponent],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -84,6 +86,13 @@ import { Component } from '@angular/core';
           the Angular ecosystem.
         </p>
       </section>
+    
+
+      <footer class="docs-footer">
+        <docs-edit-on-github
+          path="projects/base-ng/docs/src/app/pages/overview/about/about.component.ts"
+        />
+      </footer>
     </article>
   `,
   styles: `
@@ -101,6 +110,12 @@ import { Component } from '@angular/core';
         color: var(--docs-text);
       }
     }
-  `,
+  
+
+    .docs-footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--docs-border);
+    }`,
 })
 export class AboutComponent {}

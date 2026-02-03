@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
+import { EditOnGitHubComponent } from '../../../shared';
 
 @Component({
   selector: 'docs-accessibility',
+  imports: [EditOnGitHubComponent],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -102,6 +104,13 @@ import { Component } from '@angular/core';
           <li>Browser accessibility tools (Lighthouse, axe)</li>
         </ul>
       </section>
+    
+
+      <footer class="docs-footer">
+        <docs-edit-on-github
+          path="projects/base-ng/docs/src/app/pages/overview/accessibility/accessibility.component.ts"
+        />
+      </footer>
     </article>
   `,
   styles: `
@@ -157,6 +166,12 @@ import { Component } from '@angular/core';
         border-radius: 0.25rem;
       }
     }
-  `,
+  
+
+    .docs-footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--docs-border);
+    }`,
 })
 export class AccessibilityComponent {}

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {
   CodeBlockComponent,
+  EditOnGitHubComponent,
   PackageSelectorComponent,
   PropsTableComponent,
   type PropDefinition,
@@ -8,7 +9,7 @@ import {
 
 @Component({
   selector: 'docs-select',
-  imports: [CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [CodeBlockComponent, EditOnGitHubComponent, PackageSelectorComponent, PropsTableComponent],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -380,7 +381,64 @@ import {
           <li>For large lists with filtering needs, consider using Combobox instead</li>
         </ul>
       </section>
+
+      <footer class="docs-footer">
+        <docs-edit-on-github
+          path="projects/base-ng/docs/src/app/pages/components/select/select-docs.component.ts"
+        />
+      </footer>
     </article>
+  `,
+  styles: `
+    .docs-list {
+      margin: 1rem 0;
+      padding-left: 1.5rem;
+      color: var(--docs-text-secondary);
+
+      li {
+        margin-bottom: 0.5rem;
+        line-height: 1.6;
+      }
+    }
+
+    .docs-attribute-table {
+      margin: 1rem 0;
+      overflow-x: auto;
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.875rem;
+      }
+
+      th, td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid var(--docs-border);
+      }
+
+      th {
+        font-weight: 600;
+        color: var(--docs-text);
+      }
+
+      td {
+        color: var(--docs-text-secondary);
+      }
+
+      code {
+        background: var(--docs-code-bg);
+        padding: 0.125rem 0.375rem;
+        border-radius: 0.25rem;
+        font-size: 0.8125rem;
+      }
+    }
+
+    .docs-footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--docs-border);
+    }
   `,
 })
 export class SelectDocsComponent {
