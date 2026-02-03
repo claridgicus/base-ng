@@ -2,7 +2,7 @@
 active: false
 iteration: 1
 max_iterations: 100
-completion_promise: "BASE-UI-DOCS-COMPLETE"
+completion_promise: 'BASE-UI-DOCS-COMPLETE'
 started_at: null
 ---
 
@@ -73,7 +73,7 @@ Each component documentation page should follow this structure:
       <!-- 2. Live Demo -->
       <docs-demo>
         <ng-template #demo>
-          <!-- Interactive example using @base-ng/ui -->
+          <!-- Interactive example using @base-ng/ui from the angular project in this repository -->
         </ng-template>
         <ng-template #code>
           <!-- Code shown in toggle -->
@@ -157,14 +157,14 @@ export const routes: Routes = [
           { path: 'accessibility', loadComponent: () => import('./pages/overview/accessibility') },
           { path: 'releases', loadComponent: () => import('./pages/overview/releases') },
           { path: 'about', loadComponent: () => import('./pages/overview/about') },
-        ]
+        ],
       },
       {
         path: 'handbook',
         children: [
           { path: 'styling', loadComponent: () => import('./pages/handbook/styling') },
           // ... more handbook routes
-        ]
+        ],
       },
       {
         path: 'components',
@@ -172,17 +172,17 @@ export const routes: Routes = [
           { path: 'accordion', loadComponent: () => import('./pages/components/accordion') },
           { path: 'alert-dialog', loadComponent: () => import('./pages/components/alert-dialog') },
           // ... all component routes
-        ]
+        ],
       },
       {
         path: 'utils',
         children: [
           { path: 'csp-provider', loadComponent: () => import('./pages/utils/csp-provider') },
           // ... utils routes
-        ]
-      }
-    ]
-  }
+        ],
+      },
+    ],
+  },
 ];
 ```
 
@@ -203,9 +203,15 @@ Use Tailwind CSS with custom design tokens matching Base UI's aesthetic:
 }
 
 // Typography
-.docs-heading-1 { @apply text-4xl font-semibold tracking-tight; }
-.docs-heading-2 { @apply text-2xl font-semibold tracking-tight mt-12 mb-4; }
-.docs-body { @apply text-base leading-7 text-neutral-600; }
+.docs-heading-1 {
+  @apply text-4xl font-semibold tracking-tight;
+}
+.docs-heading-2 {
+  @apply text-2xl font-semibold tracking-tight mt-12 mb-4;
+}
+.docs-body {
+  @apply text-base leading-7 text-neutral-600;
+}
 ```
 
 ## Quality Requirements
@@ -225,6 +231,8 @@ WebFetch: https://base-ui.com/react/components/[component-name]
 ```
 
 Then adapt the content for Angular, replacing:
+
+- React preview component → Angular Library Component preview
 - React hooks → Angular signals
 - JSX → Angular templates
 - npm install @base-ui/react → npm install @base-ng/ui

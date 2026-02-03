@@ -1,14 +1,5 @@
-import {
-  Component,
-  Input,
-  signal,
-  computed,
-  OnInit,
-  afterNextRender,
-  inject,
-  PLATFORM_ID,
-} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { Component, computed, inject, Input, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
@@ -126,7 +117,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
         margin: 0;
         padding: 1rem;
         font-size: 0.875rem;
-        line-height: 1.6;
+        line-height: 0.875rem;
         background: transparent;
         border: none;
 
@@ -164,8 +155,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
     }
 
     :host ::ng-deep .shiki {
-      background: transparent !important;
-      padding: 0;
+      padding: 1rem;
       margin: 0;
 
       code {
@@ -176,7 +166,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
       .line {
         display: block;
-        min-height: 1.5em;
+        min-height: 0.875rem;
       }
     }
   `,
@@ -192,9 +182,7 @@ export class CodeBlockComponent implements OnInit {
   protected readonly copied = signal(false);
   protected readonly highlightedCode = signal<SafeHtml | null>(null);
 
-  protected readonly copyLabel = computed(() =>
-    this.copied() ? 'Copied!' : 'Copy code'
-  );
+  protected readonly copyLabel = computed(() => (this.copied() ? 'Copied!' : 'Copy code'));
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {

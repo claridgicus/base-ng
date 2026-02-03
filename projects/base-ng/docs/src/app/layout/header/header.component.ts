@@ -1,16 +1,21 @@
 import { Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { MobileNavComponent } from '../mobile-nav/mobile-nav.component';
+import { SearchComponent } from '../search/search.component';
 
 @Component({
   selector: 'docs-header',
-  imports: [RouterLink],
+  imports: [RouterLink, MobileNavComponent, SearchComponent],
   template: `
     <header class="header">
       <div class="header-content">
-        <a routerLink="/" class="logo">
-          <span class="logo-text">Base UI</span>
-          <span class="logo-badge">Angular</span>
-        </a>
+        <div class="header-left">
+          <docs-mobile-nav />
+          <a routerLink="/" class="logo">
+            <span class="logo-text">Base UI</span>
+            <span class="logo-badge">Angular</span>
+          </a>
+        </div>
 
         <nav class="nav-links">
           <a routerLink="/angular/overview/quick-start" class="nav-link">Docs</a>
@@ -18,6 +23,8 @@ import { RouterLink } from '@angular/router';
             >Components</a
           >
         </nav>
+
+        <docs-search />
 
         <div class="header-actions">
           <button
@@ -106,6 +113,12 @@ import { RouterLink } from '@angular/router';
       max-width: 1440px;
       margin: 0 auto;
       padding: 0 1.5rem;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .logo {
