@@ -117,7 +117,7 @@
 | --- | -------------------------------------------------- | ------ | ----------------------------- |
 | 51  | Document Tooltip component                         | [x]    | `components/tooltip`          |
 | 52  | Document Popover component                         | [x]    | `components/popover`          |
-| 53  | Document Preview Card component                    | [ ]    | `components/preview-card`     |
+| 53  | Document Preview Card component                    | [x]    | `components/preview-card`     |
 | 54  | Document Dialog component                          | [x]    | `components/dialog`           |
 | 55  | Document Alert Dialog component                    | [x]    | `components/alert-dialog`     |
 
@@ -225,9 +225,9 @@ Each component page should include:
 ## Progress Summary
 
 - **Total Tasks:** 75
-- **Completed:** 43
+- **Completed:** 44
 - **In Progress:** 0
-- **Remaining:** 32
+- **Remaining:** 31
 
 ---
 
