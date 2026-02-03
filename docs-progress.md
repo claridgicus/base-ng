@@ -158,10 +158,10 @@
 
 | #   | Task                                               | Status | Source Reference              |
 | --- | -------------------------------------------------- | ------ | ----------------------------- |
-| 66  | Document CSP Provider                              | [ ]    | `utils/csp-provider`          |
-| 67  | Document Direction Provider                        | [ ]    | `utils/direction-provider`    |
-| 68  | Document mergeProps utility                        | [ ]    | `utils/merge-props`           |
-| 69  | Document useRender directive                       | [ ]    | `utils/use-render`            |
+| 66  | Document CSP Provider                              | [x]    | `utils/csp-provider`          |
+| 67  | Document Direction Provider                        | [x]    | `utils/direction-provider`    |
+| 68  | Document mergeProps utility                        | [x]    | `utils/merge-props`           |
+| 69  | Document useRender directive                       | [x]    | `utils/use-render`            |
 
 ---
 
@@ -225,9 +225,9 @@ Each component page should include:
 ## Progress Summary
 
 - **Total Tasks:** 75
-- **Completed:** 53
+- **Completed:** 57
 - **In Progress:** 0
-- **Remaining:** 22
+- **Remaining:** 18
 
 ---
 
