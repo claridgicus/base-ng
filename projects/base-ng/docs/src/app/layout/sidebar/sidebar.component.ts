@@ -43,13 +43,13 @@ interface NavSection {
   styles: `
     :host {
       display: block;
-      padding: 1.5rem 0;
+      padding: 0.75rem 0 6rem 1.5rem;
     }
 
     .sidebar-nav {
       display: flex;
       flex-direction: column;
-      gap: 1.75rem;
+      gap: 1rem;
     }
 
     .nav-section {
@@ -58,62 +58,57 @@ interface NavSection {
     }
 
     .nav-section-title {
-      font-size: 0.8125rem;
+      display: inline-flex;
+      font-size: 0.875rem;
       font-weight: 500;
+      letter-spacing: 0.00625em;
       color: var(--docs-text);
-      margin: 0 0 0.5rem 0;
-      padding: 0 1rem 0 1.5rem;
+      margin: 0;
+      padding: 0.375rem 0.75rem;
     }
 
     .nav-list {
       list-style: none;
       margin: 0;
       padding: 0;
-      padding-left: 1rem;
       display: flex;
       flex-direction: column;
-      border-left: 1px solid var(--docs-border);
-      margin-left: 1.5rem;
     }
 
     .nav-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.375rem 1rem 0.375rem 0.75rem;
-      margin-left: -1px;
+      gap: 4px;
+      height: 2rem;
+      padding: 0 0.75rem;
       font-size: 0.875rem;
       color: var(--docs-text-secondary);
       text-decoration: none;
-      transition: color 0.15s;
-      border-left: 2px solid transparent;
+      border-radius: 0.25rem;
+      transition: background-color 0.15s, color 0.15s;
 
       &:hover {
+        background-color: var(--docs-bg-hover);
         color: var(--docs-text);
         text-decoration: none;
       }
 
       &.active {
-        color: var(--docs-accent);
-        border-left-color: var(--docs-accent);
-        margin-left: -2px;
-
-        .nav-badge {
-          background-color: var(--docs-accent);
-          color: white;
-        }
+        background-color: var(--docs-bg-hover);
+        outline: 1px solid var(--docs-border);
+        font-weight: 500;
+        color: var(--docs-text);
       }
     }
 
     .nav-badge {
-      font-size: 0.625rem;
+      font-size: 0.6875rem;
       font-weight: 500;
-      padding: 0.125rem 0.375rem;
-      border-radius: 9999px;
-      background-color: var(--docs-bg-secondary);
-      color: var(--docs-text-secondary);
+      letter-spacing: 0.035em;
+      color: #dc2626;
       text-transform: uppercase;
-      letter-spacing: 0.025em;
+      transform: translateY(-2px);
     }
   `,
 })
