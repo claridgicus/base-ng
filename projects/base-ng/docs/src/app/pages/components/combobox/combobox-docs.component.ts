@@ -1,15 +1,38 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   CodeBlockComponent,
   EditOnGitHubComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  ComboboxRootDirective,
+  ComboboxInputDirective,
+  ComboboxTriggerDirective,
+  ComboboxPositionerDirective,
+  ComboboxPopupDirective,
+  ComboboxListDirective,
+  ComboboxItemDirective,
+  ComboboxItemIndicatorDirective,
+} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-combobox',
-  imports: [CodeBlockComponent, EditOnGitHubComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    CodeBlockComponent,
+    EditOnGitHubComponent,
+    DemoComponent,
+    PropsTableComponent,
+    ComboboxRootDirective,
+    ComboboxInputDirective,
+    ComboboxTriggerDirective,
+    ComboboxPositionerDirective,
+    ComboboxPopupDirective,
+    ComboboxListDirective,
+    ComboboxItemDirective,
+    ComboboxItemIndicatorDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,12 +44,46 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <h2 class="docs-section-title">Live Demo</h2>
+        <docs-demo [code]="basicCode">
+          <div baseUiComboboxRoot [(value)]="selectedCountry" class="demo-combobox">
+            <div class="demo-combobox-input-wrap">
+              <input
+                baseUiComboboxInput
+                class="demo-combobox-input"
+                placeholder="Search countries..."
+              />
+              <button baseUiComboboxTrigger class="demo-combobox-trigger">
+                <svg viewBox="0 0 12 12" width="12" height="12">
+                  <path d="M2 4l4 4 4-4" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                </svg>
+              </button>
+            </div>
+            <div baseUiComboboxPositioner class="demo-combobox-positioner">
+              <div baseUiComboboxPopup class="demo-combobox-popup">
+                <div baseUiComboboxList class="demo-combobox-list">
+                  @for (country of countries; track country.value) {
+                    <div baseUiComboboxItem [value]="country.value" class="demo-combobox-item">
+                      <span baseUiComboboxItemIndicator class="demo-combobox-indicator">
+                        <svg viewBox="0 0 12 12" width="12" height="12">
+                          <path d="M2 6l3 3 5-6" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                        </svg>
+                      </span>
+                      {{ country.label }}
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </docs-demo>
+      </section>
 
-        <p class="docs-paragraph">Import the Combobox directives:</p>
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -383,9 +440,116 @@ import {
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
     }
+
+    /* Demo styles */
+    .demo-combobox {
+      position: relative;
+      display: inline-block;
+    }
+
+    .demo-combobox-input-wrap {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--docs-border);
+      border-radius: 6px;
+      background: var(--docs-bg);
+      overflow: hidden;
+    }
+
+    .demo-combobox-input-wrap:focus-within {
+      border-color: var(--docs-accent);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    }
+
+    .demo-combobox-input {
+      flex: 1;
+      min-width: 200px;
+      padding: 0.5rem 0.75rem;
+      border: none;
+      background: transparent;
+      font-size: 0.875rem;
+      color: var(--docs-text);
+      outline: none;
+    }
+
+    .demo-combobox-trigger {
+      padding: 0.5rem;
+      border: none;
+      background: transparent;
+      color: var(--docs-text-secondary);
+      cursor: pointer;
+    }
+
+    .demo-combobox-trigger:hover {
+      color: var(--docs-text);
+    }
+
+    .demo-combobox-positioner {
+      position: absolute;
+      z-index: 50;
+      width: 100%;
+    }
+
+    .demo-combobox-popup {
+      margin-top: 0.25rem;
+      background: var(--docs-bg);
+      border: 1px solid var(--docs-border);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      animation: comboboxIn 0.15s ease;
+    }
+
+    @keyframes comboboxIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .demo-combobox-list {
+      padding: 0.25rem;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .demo-combobox-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      color: var(--docs-text);
+    }
+
+    .demo-combobox-item:hover,
+    .demo-combobox-item[data-highlighted] {
+      background: var(--docs-bg-hover);
+    }
+
+    .demo-combobox-indicator {
+      width: 16px;
+      visibility: hidden;
+      color: var(--docs-accent);
+    }
+
+    .demo-combobox-item[data-selected] .demo-combobox-indicator {
+      visibility: visible;
+    }
   `,
 })
 export class ComboboxDocsComponent {
+  protected readonly selectedCountry = signal<string | null>(null);
+  protected readonly countries = [
+    { value: 'us', label: 'United States' },
+    { value: 'uk', label: 'United Kingdom' },
+    { value: 'ca', label: 'Canada' },
+    { value: 'au', label: 'Australia' },
+    { value: 'de', label: 'Germany' },
+    { value: 'fr', label: 'France' },
+    { value: 'jp', label: 'Japan' },
+    { value: 'br', label: 'Brazil' },
+  ];
+
   importCode = `import {
   ComboboxRootDirective,
   ComboboxInputDirective,
