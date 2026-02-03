@@ -24,8 +24,14 @@ import { ButtonComponent } from '@copied/base-ng';
       <!-- Live Demo -->
       <section class="docs-section">
         <docs-demo [code]="basicDemoCode" language="html">
-          <base-ui-button (buttonClick)="handleClick()">
-            Click me
+          <base-ui-button
+            class="flex items-center justify-center h-10 px-3.5 m-0 outline-0 border
+                   border-gray-200 rounded-md bg-gray-50 text-base font-medium
+                   leading-6 text-gray-900 select-none hover:bg-gray-100 active:bg-gray-200
+                   active:shadow-[inset_0_1px_3px_rgba(0,0,0,0.1)] focus-visible:outline-2
+                   focus-visible:outline-blue-800 data-[disabled]:text-gray-500"
+            (buttonClick)="handleClick()">
+            Submit
           </base-ui-button>
         </docs-demo>
         <p class="docs-hint">Click the button to see the interaction. Check the console for the event.</p>
@@ -57,7 +63,13 @@ import { ButtonComponent } from '@copied/base-ng';
           buttons are not focusable by default.
         </p>
         <docs-demo [code]="disabledDemoCode" language="html">
-          <base-ui-button [disabled]="true">
+          <base-ui-button
+            class="flex items-center justify-center h-10 px-3.5 m-0 outline-0 border
+                   border-gray-200 rounded-md bg-gray-50 text-base font-medium
+                   leading-6 text-gray-900 select-none hover:bg-gray-100 active:bg-gray-200
+                   active:shadow-[inset_0_1px_3px_rgba(0,0,0,0.1)] focus-visible:outline-2
+                   focus-visible:outline-blue-800 data-[disabled]:text-gray-500"
+            [disabled]="true">
             Disabled
           </base-ui-button>
         </docs-demo>
@@ -69,7 +81,14 @@ import { ButtonComponent } from '@copied/base-ng';
           focus loss during async operations.
         </p>
         <docs-demo [code]="focusableDemoCode" language="html">
-          <base-ui-button [disabled]="true" [focusableWhenDisabled]="true">
+          <base-ui-button
+            class="flex items-center justify-center h-10 px-3.5 m-0 outline-0 border
+                   border-gray-200 rounded-md bg-gray-50 text-base font-medium
+                   leading-6 text-gray-900 select-none hover:bg-gray-100 active:bg-gray-200
+                   active:shadow-[inset_0_1px_3px_rgba(0,0,0,0.1)] focus-visible:outline-2
+                   focus-visible:outline-blue-800 data-[disabled]:text-gray-500"
+            [disabled]="true"
+            [focusableWhenDisabled]="true">
             Focusable when disabled
           </base-ui-button>
         </docs-demo>
@@ -80,8 +99,15 @@ import { ButtonComponent } from '@copied/base-ng';
         </p>
         <docs-demo [code]="interactiveDemoCode" language="html">
           <div class="demo-interactive">
-            <base-ui-button [disabled]="isDisabled()" (buttonClick)="handleClick()">
-              {{ isDisabled() ? 'Disabled' : 'Click me' }}
+            <base-ui-button
+              class="flex items-center justify-center h-10 px-3.5 m-0 outline-0 border
+                     border-gray-200 rounded-md bg-gray-50 text-base font-medium
+                     leading-6 text-gray-900 select-none hover:bg-gray-100 active:bg-gray-200
+                     active:shadow-[inset_0_1px_3px_rgba(0,0,0,0.1)] focus-visible:outline-2
+                     focus-visible:outline-blue-800 data-[disabled]:text-gray-500"
+              [disabled]="isDisabled()"
+              (buttonClick)="handleClick()">
+              {{ isDisabled() ? 'Disabled' : 'Submit' }}
             </base-ui-button>
             <label class="demo-toggle">
               <input type="checkbox" [checked]="isDisabled()" (change)="toggleDisabled()" />
@@ -184,30 +210,10 @@ import { ButtonComponent } from '@copied/base-ng';
     }
 
     base-ui-button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.5rem 1rem;
-      font-size: 0.875rem;
-      font-weight: 500;
-      background: var(--docs-accent, #0066ff);
-      color: white;
-      border: none;
-      border-radius: 0.375rem;
       cursor: pointer;
       transition: background 0.15s;
 
-      &:hover:not([data-disabled]) {
-        background: #0052cc;
-      }
-
-      &:focus-visible {
-        outline: 2px solid var(--docs-accent, #0066ff);
-        outline-offset: 2px;
-      }
-
       &[data-disabled] {
-        opacity: 0.5;
         cursor: not-allowed;
       }
     }
@@ -236,8 +242,14 @@ export class ButtonDocsComponent {
 <!-- As an attribute directive -->
 <button baseUiButton>Click me</button>`;
 
-  protected readonly basicDemoCode = `<base-ui-button (buttonClick)="handleClick()">
-  Click me
+  protected readonly basicDemoCode = `<base-ui-button
+  class="flex items-center justify-center h-10 px-3.5 m-0 outline-0 border
+         border-gray-200 rounded-md bg-gray-50 text-base font-medium
+         leading-6 text-gray-900 select-none hover:bg-gray-100 active:bg-gray-200
+         active:shadow-[inset_0_1px_3px_rgba(0,0,0,0.1)] focus-visible:outline-2
+         focus-visible:outline-blue-800 data-[disabled]:text-gray-500"
+  (buttonClick)="handleClick()">
+  Submit
 </base-ui-button>`;
 
   protected readonly disabledDemoCode = `<base-ui-button [disabled]="true">
@@ -274,34 +286,15 @@ export class ExampleComponent {
   }
 }`;
 
-  protected readonly stylingCode = `/* Base button styles */
-base-ui-button {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  background: #0066ff;
-  color: white;
-  border: none;
-  border-radius: 0.375rem;
-  cursor: pointer;
-}
-
-/* Hover state */
-base-ui-button:hover:not([data-disabled]) {
-  background: #0052cc;
-}
-
-/* Focus state */
-base-ui-button:focus-visible {
-  outline: 2px solid #0066ff;
-  outline-offset: 2px;
-}
-
-/* Disabled state */
-base-ui-button[data-disabled] {
-  opacity: 0.5;
-  cursor: not-allowed;
-}`;
+  protected readonly stylingCode = `<!-- Tailwind CSS 4 styling (recommended) -->
+<base-ui-button
+  class="flex items-center justify-center h-10 px-3.5 m-0 outline-0 border
+         border-gray-200 rounded-md bg-gray-50 text-base font-medium
+         leading-6 text-gray-900 select-none hover:bg-gray-100 active:bg-gray-200
+         active:shadow-[inset_0_1px_3px_rgba(0,0,0,0.1)] focus-visible:outline-2
+         focus-visible:outline-blue-800 data-[disabled]:text-gray-500">
+  Submit
+</base-ui-button>`;
 
   protected readonly inputProps: PropDefinition[] = [
     {
