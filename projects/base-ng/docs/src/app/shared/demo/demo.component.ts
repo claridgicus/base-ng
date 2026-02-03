@@ -68,7 +68,6 @@ import { VariantSelectorComponent, type StyleVariant } from '../variant-selector
     .demo-container {
       border: 1px solid var(--docs-border);
       border-radius: 0.5rem;
-      overflow: hidden;
       margin: 1.5rem 0;
     }
 
@@ -79,6 +78,7 @@ import { VariantSelectorComponent, type StyleVariant } from '../variant-selector
       align-items: center;
       justify-content: center;
       min-height: 120px;
+      border-radius: 0.5rem 0.5rem 0 0;
     }
 
     .demo-toolbar {
@@ -87,6 +87,12 @@ import { VariantSelectorComponent, type StyleVariant } from '../variant-selector
       padding: 0.75rem 1rem;
       background: var(--docs-bg-secondary);
       border-top: 1px solid var(--docs-border);
+      border-radius: 0 0 0.5rem 0.5rem;
+    }
+
+    /* When code is shown, remove toolbar bottom radius */
+    .demo-container:has(.demo-code) .demo-toolbar {
+      border-radius: 0;
     }
 
     .toolbar-btn {
@@ -123,7 +129,7 @@ import { VariantSelectorComponent, type StyleVariant } from '../variant-selector
       docs-code-block ::ng-deep .code-block {
         margin: 0;
         border: none;
-        border-radius: 0;
+        border-radius: 0 0 0.5rem 0.5rem;
       }
     }
   `,
