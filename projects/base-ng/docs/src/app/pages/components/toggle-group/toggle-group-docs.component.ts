@@ -1,15 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import { ToggleGroupDirective, ToggleDirective } from '@base-ng/ui';
 
 @Component({
   selector: 'docs-toggle-group',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    ToggleGroupDirective,
+    ToggleDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,14 +29,23 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <docs-demo [code]="singleDemoCode" language="html">
+          <div class="demo-container">
+            <div baseUiToggleGroup [(value)]="viewMode" class="demo-toggle-group">
+              <button baseUiToggle value="list" class="demo-toggle">📋 List</button>
+              <button baseUiToggle value="grid" class="demo-toggle">⊞ Grid</button>
+              <button baseUiToggle value="table" class="demo-toggle">▦ Table</button>
+            </div>
+            <span class="demo-status">Selected: {{ viewMode()[0] || 'none' }}</span>
+          </div>
+        </docs-demo>
+      </section>
 
-        <p class="docs-paragraph">
-          Import the Toggle Group and Toggle directives from the package:
-        </p>
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -45,51 +62,36 @@ import {
       <section class="docs-section">
         <h2 class="docs-section-title">Examples</h2>
 
-        <h3 class="docs-section-subtitle">Single selection</h3>
-        <p class="docs-paragraph">
-          By default, only one toggle can be pressed at a time. Selecting another
-          toggle deselects the previous one.
-        </p>
-        <docs-code-block [code]="singleDemoCode" language="html" />
-
         <h3 class="docs-section-subtitle">Multiple selection</h3>
         <p class="docs-paragraph">
           Set <code>multiple="true"</code> to allow multiple toggles to be
-          pressed simultaneously.
+          pressed simultaneously:
         </p>
-        <docs-code-block [code]="multipleDemoCode" language="html" />
+        <docs-demo [code]="multipleDemoCode" language="html">
+          <div class="demo-container">
+            <div baseUiToggleGroup [(value)]="formats" [multiple]="true" class="demo-toggle-group">
+              <button baseUiToggle value="bold" class="demo-toggle"><strong>B</strong></button>
+              <button baseUiToggle value="italic" class="demo-toggle"><em>I</em></button>
+              <button baseUiToggle value="underline" class="demo-toggle"><u>U</u></button>
+            </div>
+            <span class="demo-status">Selected: {{ formats().join(', ') || 'none' }}</span>
+          </div>
+        </docs-demo>
 
-        <h3 class="docs-section-subtitle">Text alignment toolbar</h3>
+        <h3 class="docs-section-subtitle">Text alignment</h3>
         <p class="docs-paragraph">
-          A common use case for single selection - only one alignment can be
-          active at a time.
+          Single selection for mutually exclusive options like text alignment:
         </p>
-        <docs-code-block [code]="alignmentDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">Text formatting toolbar</h3>
-        <p class="docs-paragraph">
-          A common use case for multiple selection - multiple formatting options
-          can be active simultaneously.
-        </p>
-        <docs-code-block [code]="formattingDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">Vertical orientation</h3>
-        <p class="docs-paragraph">
-          Set <code>orientation="vertical"</code> for vertically stacked toggle groups.
-        </p>
-        <docs-code-block [code]="verticalDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">Disabled group</h3>
-        <p class="docs-paragraph">
-          Disable the entire group using the <code>disabled</code> input.
-        </p>
-        <docs-code-block [code]="disabledDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">Programmatic control</h3>
-        <p class="docs-paragraph">
-          Control the group state programmatically using the exported directive methods.
-        </p>
-        <docs-code-block [code]="programmaticDemoCode" language="typescript" />
+        <docs-demo [code]="alignmentDemoCode" language="html">
+          <div class="demo-container">
+            <div baseUiToggleGroup [(value)]="alignment" class="demo-toggle-group">
+              <button baseUiToggle value="left" class="demo-toggle" aria-label="Align left">⇤</button>
+              <button baseUiToggle value="center" class="demo-toggle" aria-label="Align center">⇔</button>
+              <button baseUiToggle value="right" class="demo-toggle" aria-label="Align right">⇥</button>
+            </div>
+            <span class="demo-status">Alignment: {{ alignment()[0] || 'none' }}</span>
+          </div>
+        </docs-demo>
       </section>
 
       <!-- Styling -->
@@ -184,15 +186,70 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .demo-toggle-group {
+      display: inline-flex;
+      gap: 0.25rem;
+      padding: 0.25rem;
+      background: var(--docs-bg-secondary);
+      border-radius: 0.5rem;
+    }
+
+    .demo-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 36px;
+      height: 36px;
+      padding: 0 0.75rem;
+      background: transparent;
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--docs-text);
+      transition: all 0.15s;
+
+      &:hover:not([data-disabled]) {
+        background: rgba(0, 0, 0, 0.05);
+      }
+
+      &[data-pressed] {
+        background: white;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--docs-accent, #0066ff);
+        outline-offset: 2px;
+      }
+    }
+
+    .demo-status {
+      font-size: 0.875rem;
+      color: var(--docs-text-secondary);
+    }
+  `,
 })
 export class ToggleGroupDocsComponent {
+  protected readonly viewMode = signal<string[]>(['list']);
+  protected readonly formats = signal<string[]>([]);
+  protected readonly alignment = signal<string[]>(['left']);
   protected readonly importCode = `import { ToggleGroupDirective } from '@base-ng/ui/toggle-group';
 import { ToggleDirective } from '@base-ng/ui/toggle';
 
