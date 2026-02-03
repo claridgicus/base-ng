@@ -142,7 +142,7 @@
 | 61  | Document Select component                          | [x]    | `components/select`           |
 | 62  | Document Combobox component                        | [x]    | `components/combobox`         |
 | 63  | Document Autocomplete component                    | [x]    | `components/autocomplete`     |
-| 64  | Document Scroll Area component                     | [ ]    | `components/scroll-area`      |
+| 64  | Document Scroll Area component                     | [x]    | `components/scroll-area`      |
 
 ---
 
@@ -225,9 +225,9 @@ Each component page should include:
 ## Progress Summary
 
 - **Total Tasks:** 75
-- **Completed:** 51
+- **Completed:** 52
 - **In Progress:** 0
-- **Remaining:** 24
+- **Remaining:** 23
 
 ---
 
