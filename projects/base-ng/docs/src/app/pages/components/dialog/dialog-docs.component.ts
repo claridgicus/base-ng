@@ -1,15 +1,36 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  DialogRootDirective,
+  DialogTriggerDirective,
+  DialogBackdropDirective,
+  DialogPopupDirective,
+  DialogTitleDirective,
+  DialogDescriptionDirective,
+  DialogCloseDirective,
+} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-dialog',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    DialogRootDirective,
+    DialogTriggerDirective,
+    DialogBackdropDirective,
+    DialogPopupDirective,
+    DialogTitleDirective,
+    DialogDescriptionDirective,
+    DialogCloseDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,12 +42,33 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <docs-demo [code]="basicDemoCode" language="html">
+          <div class="demo-container">
+            <ng-container baseUiDialogRoot [(open)]="isDialogOpen">
+              <button baseUiDialogTrigger class="demo-trigger">Open Dialog</button>
 
-        <p class="docs-paragraph">Import the Dialog directives:</p>
+              <div baseUiDialogBackdrop class="demo-backdrop"></div>
+
+              <div baseUiDialogPopup class="demo-dialog">
+                <h2 baseUiDialogTitle class="demo-dialog-title">Welcome</h2>
+                <p baseUiDialogDescription class="demo-dialog-desc">
+                  This is a simple dialog example. You can press Escape or click
+                  outside to close it.
+                </p>
+                <div class="demo-dialog-actions">
+                  <button baseUiDialogClose class="demo-dialog-close">Got it</button>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </docs-demo>
+      </section>
+
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -165,15 +207,126 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-container {
+      display: flex;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .demo-trigger {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      background: var(--docs-accent, #0066ff);
+      color: white;
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: background 0.15s;
+
+      &:hover {
+        background: color-mix(in srgb, var(--docs-accent, #0066ff), black 10%);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--docs-accent, #0066ff);
+        outline-offset: 2px;
+      }
+    }
+
+    .demo-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 100;
+      animation: backdropFadeIn 0.2s ease;
+    }
+
+    @keyframes backdropFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .demo-dialog {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 101;
+      background: var(--docs-bg, white);
+      border: 1px solid var(--docs-border);
+      border-radius: 0.5rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      padding: 1.5rem;
+      max-width: 400px;
+      width: 90%;
+      animation: dialogSlideIn 0.2s ease;
+    }
+
+    @keyframes dialogSlideIn {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -48%);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+      }
+    }
+
+    .demo-dialog-title {
+      margin: 0 0 0.5rem;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--docs-text);
+    }
+
+    .demo-dialog-desc {
+      margin: 0 0 1.25rem;
+      font-size: 0.875rem;
+      line-height: 1.6;
+      color: var(--docs-text-secondary);
+    }
+
+    .demo-dialog-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .demo-dialog-close {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      background: var(--docs-accent, #0066ff);
+      color: white;
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: background 0.15s;
+
+      &:hover {
+        background: color-mix(in srgb, var(--docs-accent, #0066ff), black 10%);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--docs-accent, #0066ff);
+        outline-offset: 2px;
+      }
+    }
+  `,
 })
 export class DialogDocsComponent {
+  // Demo state
+  protected readonly isDialogOpen = signal(false);
+
   protected readonly importCode = `import {
   DialogRootDirective,
   DialogTriggerDirective,
@@ -181,8 +334,8 @@ export class DialogDocsComponent {
   DialogPopupDirective,
   DialogTitleDirective,
   DialogDescriptionDirective,
-  DialogCloseDirective
-} from '@base-ng/ui/dialog';
+  DialogCloseDirective,
+} from '@base-ng/ui';
 
 @Component({
   imports: [
@@ -192,7 +345,7 @@ export class DialogDocsComponent {
     DialogPopupDirective,
     DialogTitleDirective,
     DialogDescriptionDirective,
-    DialogCloseDirective
+    DialogCloseDirective,
   ],
   // ...
 })`;
