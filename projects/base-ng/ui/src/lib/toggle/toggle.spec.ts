@@ -1,7 +1,8 @@
 /**
+ * @component Toggle
  * @fileoverview Tests for Toggle component
  * @source https://github.com/mui/base-ui/blob/master/packages/react/src/toggle/Toggle.test.tsx
- * @parity Verified against React Base UI
+ * @parity Verified against React Base UI - includes Keyboard Navigation, Focus Management, State Attributes, and Accessibility test categories
  */
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -305,6 +306,53 @@ describe('Toggle component', () => {
       fixture.detectChanges();
 
       expect(component.pressed()).toBe(false);
+    });
+  });
+
+  describe('Focus Management', () => {
+    @Component({
+      template: `
+        <button baseUiToggle [disabled]="disabled()">Toggle</button>
+      `,
+      standalone: true,
+      imports: [ToggleDirective],
+    })
+    class FocusTestComponent {
+      disabled = signal(false);
+    }
+
+    let fixture: ComponentFixture<FocusTestComponent>;
+    let component: FocusTestComponent;
+    let toggle: HTMLElement;
+    let toggleDirective: ToggleDirective;
+
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
+        imports: [FocusTestComponent],
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(FocusTestComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+      toggle = fixture.nativeElement.querySelector('[baseUiToggle]');
+      toggleDirective = fixture.debugElement.children[0].injector.get(ToggleDirective);
+    });
+
+    it('should be focusable when not disabled', () => {
+      expect(toggle.hasAttribute('disabled')).toBe(false);
+    });
+
+    it('should not be focusable when disabled', () => {
+      component.disabled.set(true);
+      fixture.detectChanges();
+
+      expect(toggle.hasAttribute('disabled')).toBe(true);
+    });
+
+    it('should receive focus via focus() method', () => {
+      const focusSpy = vi.spyOn(toggle, 'focus');
+      toggleDirective.focus();
+      expect(focusSpy).toHaveBeenCalled();
     });
   });
 
