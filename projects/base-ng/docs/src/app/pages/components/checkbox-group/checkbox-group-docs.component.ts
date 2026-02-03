@@ -1,15 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  CheckboxGroupDirective,
+  CheckboxRootDirective,
+  CheckboxIndicatorDirective,
+} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-checkbox-group',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    CheckboxGroupDirective,
+    CheckboxRootDirective,
+    CheckboxIndicatorDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,14 +34,34 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <docs-demo [code]="basicDemoCode" language="html">
+          <div class="demo-group-container">
+            <div baseUiCheckboxGroup [(value)]="selectedFeatures" class="demo-checkbox-group">
+              @for (feature of features; track feature.value) {
+                <button
+                  baseUiCheckboxRoot
+                  [value]="feature.value"
+                  class="demo-checkbox"
+                >
+                  <span baseUiCheckboxIndicator class="demo-indicator">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="demo-check-icon">
+                      <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  {{ feature.label }}
+                </button>
+              }
+            </div>
+            <span class="demo-status">Selected: {{ selectedFeatures().length > 0 ? selectedFeatures().join(', ') : 'none' }}</span>
+          </div>
+        </docs-demo>
+      </section>
 
-        <p class="docs-paragraph">
-          Import the Checkbox Group directive along with Checkbox directives:
-        </p>
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -45,43 +78,87 @@ import {
       <section class="docs-section">
         <h2 class="docs-section-title">Examples</h2>
 
-        <h3 class="docs-section-subtitle">Basic usage</h3>
+        <h3 class="docs-section-subtitle">Select all pattern</h3>
         <p class="docs-paragraph">
-          Create a group of checkboxes with shared state.
+          Use a parent checkbox to select/deselect all options at once:
         </p>
-        <docs-code-block [code]="basicDemoCode" language="html" />
+        <docs-demo [code]="selectAllDemoCode" language="html">
+          <div class="demo-group-container">
+            <button
+              baseUiCheckboxRoot
+              [checked]="isAllSelected()"
+              [indeterminate]="isIndeterminate()"
+              (checkedChange)="toggleAll($event)"
+              class="demo-checkbox demo-checkbox-parent"
+            >
+              <span baseUiCheckboxIndicator class="demo-indicator">
+                @if (isIndeterminate()) {
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="demo-check-icon">
+                    <path d="M3 6H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  </svg>
+                } @else {
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="demo-check-icon">
+                    <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                }
+              </span>
+              Select All
+            </button>
+            <div
+              baseUiCheckboxGroup
+              [(value)]="selectedOptions"
+              [allValues]="allOptions"
+              class="demo-checkbox-group demo-nested"
+            >
+              @for (option of allOptions; track option) {
+                <button baseUiCheckboxRoot [value]="option" class="demo-checkbox">
+                  <span baseUiCheckboxIndicator class="demo-indicator">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="demo-check-icon">
+                      <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  {{ option }}
+                </button>
+              }
+            </div>
+          </div>
+        </docs-demo>
 
-        <h3 class="docs-section-subtitle">With labels</h3>
+        <h3 class="docs-section-subtitle">Disabled group</h3>
         <p class="docs-paragraph">
-          Add labels for better usability.
+          Disable all checkboxes in the group:
         </p>
-        <docs-code-block [code]="labeledDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">Default selected values</h3>
-        <p class="docs-paragraph">
-          Pre-select options with the <code>value</code> input.
-        </p>
-        <docs-code-block [code]="defaultValueDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">With Angular forms</h3>
-        <p class="docs-paragraph">
-          Checkbox Group implements <code>ControlValueAccessor</code> for
-          seamless forms integration.
-        </p>
-        <docs-code-block [code]="formsDemoCode" language="typescript" />
-
-        <h3 class="docs-section-subtitle">Select all checkbox</h3>
-        <p class="docs-paragraph">
-          Use the <code>allValues</code> input to implement "select all"
-          functionality with a parent checkbox.
-        </p>
-        <docs-code-block [code]="selectAllDemoCode" language="typescript" />
-
-        <h3 class="docs-section-subtitle">Disabled state</h3>
-        <p class="docs-paragraph">
-          Disable the entire group.
-        </p>
-        <docs-code-block [code]="disabledDemoCode" language="html" />
+        <docs-demo [code]="disabledDemoCode" language="html">
+          <div class="demo-group-container">
+            <div
+              baseUiCheckboxGroup
+              [value]="['notifications']"
+              [disabled]="isGroupDisabled()"
+              class="demo-checkbox-group"
+            >
+              <button baseUiCheckboxRoot value="notifications" class="demo-checkbox">
+                <span baseUiCheckboxIndicator class="demo-indicator">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="demo-check-icon">
+                    <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </span>
+                Notifications
+              </button>
+              <button baseUiCheckboxRoot value="marketing" class="demo-checkbox">
+                <span baseUiCheckboxIndicator class="demo-indicator">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="demo-check-icon">
+                    <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </span>
+                Marketing emails
+              </button>
+            </div>
+            <label class="demo-toggle">
+              <input type="checkbox" [checked]="isGroupDisabled()" (change)="toggleGroupDisabled()" />
+              Disabled
+            </label>
+          </div>
+        </docs-demo>
       </section>
 
       <!-- Styling -->
@@ -161,20 +238,145 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-group-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .demo-checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      &[data-disabled] {
+        opacity: 0.5;
+      }
+    }
+
+    .demo-nested {
+      padding-left: 1.5rem;
+    }
+
+    .demo-checkbox {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.875rem;
+      color: var(--docs-text);
+
+      &:focus-visible .demo-indicator {
+        outline: 2px solid var(--docs-accent, #0066ff);
+        outline-offset: 2px;
+      }
+
+      &[data-disabled] {
+        cursor: not-allowed;
+      }
+    }
+
+    .demo-checkbox-parent {
+      font-weight: 600;
+    }
+
+    .demo-indicator {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--docs-border);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--docs-bg);
+      transition: all 0.15s;
+
+      [data-checked] & {
+        background: var(--docs-accent, #0066ff);
+        border-color: var(--docs-accent, #0066ff);
+      }
+
+      [data-indeterminate] & {
+        background: var(--docs-accent, #0066ff);
+        border-color: var(--docs-accent, #0066ff);
+      }
+    }
+
+    .demo-check-icon {
+      color: transparent;
+      transition: color 0.15s;
+
+      [data-checked] &,
+      [data-indeterminate] & {
+        color: white;
+      }
+    }
+
+    .demo-status {
+      font-size: 0.75rem;
+      color: var(--docs-text-secondary);
+    }
+
+    .demo-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--docs-text-secondary);
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+  `,
 })
 export class CheckboxGroupDocsComponent {
-  protected readonly importCode = `import { CheckboxGroupDirective } from '@base-ng/ui/checkbox-group';
-import {
+  // Basic demo
+  protected readonly features = [
+    { value: 'notifications', label: 'Notifications' },
+    { value: 'analytics', label: 'Analytics' },
+    { value: 'marketing', label: 'Marketing emails' },
+  ];
+  protected readonly selectedFeatures = signal<string[]>(['notifications']);
+
+  // Select all demo
+  protected readonly allOptions = ['Option A', 'Option B', 'Option C'];
+  protected readonly selectedOptions = signal<string[]>(['Option A']);
+
+  protected isAllSelected(): boolean {
+    return this.selectedOptions().length === this.allOptions.length;
+  }
+
+  protected isIndeterminate(): boolean {
+    const len = this.selectedOptions().length;
+    return len > 0 && len < this.allOptions.length;
+  }
+
+  protected toggleAll(checked: boolean): void {
+    this.selectedOptions.set(checked ? [...this.allOptions] : []);
+  }
+
+  // Disabled demo
+  protected readonly isGroupDisabled = signal(false);
+
+  protected toggleGroupDisabled(): void {
+    this.isGroupDisabled.update(v => !v);
+  }
+
+  protected readonly importCode = `import {
+  CheckboxGroupDirective,
   CheckboxRootDirective,
   CheckboxIndicatorDirective,
-} from '@base-ng/ui/checkbox';
+} from '@base-ng/ui';
 
 @Component({
   imports: [
