@@ -76,7 +76,7 @@
 | 30  | Document Button component                          | [x]    | `components/button`           |
 | 31  | Document Separator component                       | [x]    | `components/separator`        |
 | 32  | Document Progress component                        | [x]    | `components/progress`         |
-| 33  | Document Meter component                           | [ ]    | `components/meter`            |
+| 33  | Document Meter component                           | [x]    | `components/meter`            |
 | 34  | Document Switch component                          | [x]    | `components/switch`           |
 | 35  | Document Toggle component                          | [ ]    | `components/toggle`           |
 | 36  | Document Toggle Group component                    | [ ]    | `components/toggle-group`     |
@@ -225,9 +225,9 @@ Each component page should include:
 ## Progress Summary
 
 - **Total Tasks:** 75
-- **Completed:** 29
+- **Completed:** 30
 - **In Progress:** 0
-- **Remaining:** 46
+- **Remaining:** 45
 
 ---
 
