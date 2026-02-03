@@ -1,15 +1,32 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   CodeBlockComponent,
   EditOnGitHubComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  ScrollAreaRootDirective,
+  ScrollAreaViewportDirective,
+  ScrollAreaContentDirective,
+  ScrollAreaScrollbarDirective,
+  ScrollAreaThumbDirective,
+} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-scroll-area',
-  imports: [CodeBlockComponent, EditOnGitHubComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    CodeBlockComponent,
+    EditOnGitHubComponent,
+    DemoComponent,
+    PropsTableComponent,
+    ScrollAreaRootDirective,
+    ScrollAreaViewportDirective,
+    ScrollAreaContentDirective,
+    ScrollAreaScrollbarDirective,
+    ScrollAreaThumbDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -20,12 +37,34 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <h2 class="docs-section-title">Live Demo</h2>
+        <docs-demo [code]="verticalCode">
+          <div baseUiScrollAreaRoot class="demo-scroll-area">
+            <div baseUiScrollAreaViewport class="demo-scroll-viewport">
+              <div baseUiScrollAreaContent class="demo-scroll-content">
+                @for (item of items; track $index) {
+                  <div class="demo-scroll-item">
+                    <div class="demo-item-number">{{ $index + 1 }}</div>
+                    <div class="demo-item-text">
+                      <strong>{{ item.title }}</strong>
+                      <span>{{ item.description }}</span>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+            <div baseUiScrollAreaScrollbar orientation="vertical" class="demo-scrollbar">
+              <div baseUiScrollAreaThumb class="demo-scrollbar-thumb"></div>
+            </div>
+          </div>
+        </docs-demo>
+      </section>
 
-        <p class="docs-paragraph">Import the Scroll Area directives:</p>
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -327,9 +366,93 @@ import {
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
     }
+
+    /* Demo styles */
+    .demo-scroll-area {
+      position: relative;
+      height: 250px;
+      border: 1px solid var(--docs-border);
+      border-radius: 8px;
+      background: var(--docs-bg);
+    }
+
+    .demo-scroll-viewport {
+      height: 100%;
+      width: 100%;
+      overflow: auto;
+    }
+
+    .demo-scroll-content {
+      padding: 0.5rem;
+    }
+
+    .demo-scroll-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      margin-bottom: 0.25rem;
+      background: var(--docs-bg-hover);
+      border-radius: 6px;
+    }
+
+    .demo-item-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--docs-accent);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .demo-item-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.125rem;
+    }
+
+    .demo-item-text strong {
+      font-size: 0.875rem;
+      color: var(--docs-text);
+    }
+
+    .demo-item-text span {
+      font-size: 0.75rem;
+      color: var(--docs-text-secondary);
+    }
+
+    .demo-scrollbar {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      bottom: 0.5rem;
+      width: 8px;
+      background: var(--docs-bg-hover);
+      border-radius: 4px;
+    }
+
+    .demo-scrollbar-thumb {
+      width: 100%;
+      background: var(--docs-text-tertiary);
+      border-radius: 4px;
+      transition: background 0.15s ease;
+    }
+
+    .demo-scrollbar-thumb:hover {
+      background: var(--docs-text-secondary);
+    }
   `,
 })
 export class ScrollAreaDocsComponent {
+  protected readonly items = Array.from({ length: 15 }, (_, i) => ({
+    title: `Item ${i + 1}`,
+    description: `This is a description for item ${i + 1}`,
+  }));
+
   importCode = `import {
   ScrollAreaRootDirective,
   ScrollAreaViewportDirective,
