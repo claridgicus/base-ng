@@ -65,6 +65,10 @@ import { SearchComponent } from '../search/search.component';
     </header>
   `,
   styles: `
+    :host {
+      display: block;
+    }
+
     .Header {
       position: absolute;
       left: 0;
@@ -82,8 +86,7 @@ import { SearchComponent } from '../search/search.component';
       padding-inline: 1.5rem;
       position: fixed;
       top: 0;
-      left: 0;
-      right: 0;
+      inset-inline: 0;
       box-shadow: inset 0 -1px var(--color-gridline);
       background-color: var(--color-gray-50);
       z-index: 2;
@@ -103,8 +106,6 @@ import { SearchComponent } from '../search/search.component';
 
     .HeaderLogoLink {
       display: flex;
-      align-items: center;
-      gap: 0.375rem;
       padding: 0.25rem 0.5rem;
       margin: -0.25rem -0.5rem;
       font-weight: 600;
@@ -112,7 +113,7 @@ import { SearchComponent } from '../search/search.component';
       text-decoration: none;
 
       &:active {
-        color: var(--color-gray);
+        color: var(--color-gray-500);
       }
 
       &:focus-visible {
@@ -129,13 +130,14 @@ import { SearchComponent } from '../search/search.component';
       border-radius: 9999px;
       background-color: var(--color-blue);
       color: white;
+      margin-left: 0.375rem;
     }
 
     .nav-links {
       display: none;
-      gap: 0.25rem;
+      gap: 1.5rem;
 
-      @media (min-width: 40rem) {
+      @media (min-width: 64rem) {
         display: flex;
       }
     }
@@ -155,10 +157,6 @@ import { SearchComponent } from '../search/search.component';
       cursor: pointer;
       font-size: inherit;
 
-      &:active {
-        color: var(--color-gray);
-      }
-
       &:focus-visible {
         z-index: 1;
         outline: 2px solid var(--color-blue);
@@ -168,6 +166,12 @@ import { SearchComponent } from '../search/search.component';
       & > * {
         flex-shrink: 0;
       }
+
+      @media not (hover: hover) {
+        &:active {
+          color: var(--color-gray-500);
+        }
+      }
     }
 
     .HeaderLink {
@@ -176,7 +180,7 @@ import { SearchComponent } from '../search/search.component';
       @media (hover: hover) {
         &:hover {
           text-decoration: underline;
-          text-decoration-color: var(--color-gray);
+          text-decoration-color: var(--color-gray-500);
           text-decoration-thickness: 1px;
           text-underline-offset: 2px;
         }
@@ -186,7 +190,13 @@ import { SearchComponent } from '../search/search.component';
     .HeaderButton {
       @media (hover: hover) {
         &:hover {
-          background-color: var(--color-gray-100, rgba(0,0,0,0.06));
+          background-color: var(--color-gray-100);
+        }
+      }
+
+      @media not (hover: hover) {
+        &:active {
+          background-color: var(--color-gray-100);
         }
       }
     }
