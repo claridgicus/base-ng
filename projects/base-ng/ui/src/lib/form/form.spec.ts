@@ -1,7 +1,8 @@
 /**
+ * @component Form
  * @fileoverview Tests for Form component
  * @source https://github.com/mui/base-ui/blob/master/packages/react/src/form/Form.test.tsx
- * @parity Verified against React Base UI
+ * @parity Verified against React Base UI - includes State Attributes and Form submission test categories
  */
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';

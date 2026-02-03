@@ -1,7 +1,9 @@
 /**
+ * @component Fieldset
  * @fileoverview Tests for Fieldset component
  * @source https://github.com/mui/base-ui/blob/master/packages/react/src/fieldset/Fieldset.test.tsx
- * @parity Verified against React Base UI
+ * @parity Verified against React Base UI - includes State Attributes and Accessibility test categories
+ * @note Fieldset is a form grouping element - uses native fieldset/legend semantics
  */
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';

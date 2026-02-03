@@ -1,7 +1,8 @@
 /**
+ * @component CheckboxGroup
  * @fileoverview Tests for CheckboxGroup component
  * @source https://github.com/mui/base-ui/blob/master/packages/react/src/checkbox-group/CheckboxGroup.test.tsx
- * @parity Verified against React Base UI
+ * @parity Verified against React Base UI - includes State Attributes and Accessibility test categories
  */
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';

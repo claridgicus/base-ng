@@ -1,7 +1,9 @@
 /**
+ * @component Field
  * @fileoverview Tests for Field component
  * @source https://github.com/mui/base-ui/blob/master/packages/react/src/field/Field.test.tsx
- * @parity Verified against React Base UI
+ * @parity Verified against React Base UI - includes State Attributes and Accessibility test categories
+ * @note Field is a form structure element - provides accessible labeling/description
  */
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';

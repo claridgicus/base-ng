@@ -1,7 +1,8 @@
 /**
+ * @component Radio
  * @fileoverview Tests for Radio component
  * @source https://github.com/mui/base-ui/blob/master/packages/react/src/radio/Radio.test.tsx
- * @parity Verified against React Base UI
+ * @parity Verified against React Base UI - includes Keyboard Navigation, Focus Management, State Attributes, and Accessibility test categories
  */
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
