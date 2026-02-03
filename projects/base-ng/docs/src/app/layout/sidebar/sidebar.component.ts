@@ -62,28 +62,31 @@ interface NavSection {
       font-weight: 500;
       color: var(--docs-text);
       margin: 0 0 0.5rem 0;
-      padding: 0 1rem;
+      padding: 0 1rem 0 1.5rem;
     }
 
     .nav-list {
       list-style: none;
       margin: 0;
       padding: 0;
+      padding-left: 1rem;
       display: flex;
       flex-direction: column;
+      border-left: 1px solid var(--docs-border);
+      margin-left: 1.5rem;
     }
 
     .nav-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.375rem 1rem;
+      padding: 0.375rem 1rem 0.375rem 0.75rem;
+      margin-left: -1px;
       font-size: 0.875rem;
       color: var(--docs-text-secondary);
       text-decoration: none;
       transition: color 0.15s;
       border-left: 2px solid transparent;
-      margin-left: -1px;
 
       &:hover {
         color: var(--docs-text);
@@ -93,7 +96,7 @@ interface NavSection {
       &.active {
         color: var(--docs-accent);
         border-left-color: var(--docs-accent);
-        font-weight: 500;
+        margin-left: -2px;
 
         .nav-badge {
           background-color: var(--docs-accent);
