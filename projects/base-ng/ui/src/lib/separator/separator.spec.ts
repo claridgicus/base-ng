@@ -1,7 +1,9 @@
 /**
+ * @component Separator
  * @fileoverview Tests for Separator component
  * @source https://github.com/mui/base-ui/blob/master/packages/react/src/separator/Separator.test.tsx
- * @parity Verified against React Base UI
+ * @parity Verified against React Base UI - includes State Attributes and Accessibility test categories
+ * @note Separator is a decorative element - no Keyboard Navigation or Focus Management required
  */
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
