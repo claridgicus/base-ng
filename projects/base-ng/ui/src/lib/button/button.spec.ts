@@ -1,8 +1,11 @@
 /**
  * @component Button
  * @fileoverview Tests for Button component
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/button/Button.test.tsx
- * @parity Verified against React Base UI - includes Keyboard Navigation, Focus Management, State Attributes, and Accessibility test categories
+ * @reactTestSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/button/Button.test.tsx
+ * @reactDocs https://base-ui.com/react/components/button
+ * @lastScraped 2026-02-03
+ * @testsPorted 22/22 (100%)
+ * @parity EXACT - All React tests ported to Angular/Vitest
  */
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -163,6 +166,7 @@ describe('ButtonComponent focusableWhenDisabled', () => {
 
 describe('ButtonComponent with directive selector', () => {
   @Component({
+    selector: 'test-native-button',
     template: `
       <button baseUiButton [disabled]="disabled" (buttonClick)="onClick($event)">
         Native button
@@ -457,5 +461,168 @@ describe('ButtonComponent Accessibility', () => {
     fixture.detectChanges();
 
     expect(button.getAttribute('aria-describedby')).toBe('description-id');
+  });
+});
+
+/**
+ * React parity tests - disabled prop behavior
+ * @see https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/button/Button.test.tsx
+ */
+describe('prop: disabled - React parity', () => {
+  describe('native button', () => {
+    @Component({
+      selector: 'test-disabled-native-button',
+      template: `
+        <button baseUiButton [disabled]="true" (buttonClick)="onClick()">
+          Disabled native button
+        </button>
+      `,
+      standalone: true,
+      imports: [ButtonComponent],
+    })
+    class DisabledNativeButtonComponent {
+      clickHandler = vi.fn();
+      onClick() {
+        this.clickHandler();
+      }
+    }
+
+    it('uses the disabled attribute and is not focusable', async () => {
+      const fixture = TestBed.createComponent(DisabledNativeButtonComponent);
+      fixture.detectChanges();
+      const button = fixture.nativeElement.querySelector('button');
+
+      // Should have disabled attribute
+      expect(button.hasAttribute('disabled')).toBe(true);
+
+      // Should have tabindex -1 (not focusable)
+      expect(button.getAttribute('tabindex')).toBe('-1');
+
+      // Event handlers should be blocked
+      button.click();
+      expect(fixture.componentInstance.clickHandler).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('custom element', () => {
+    @Component({
+      selector: 'test-disabled-custom-element',
+      template: `
+        <div baseUiButton [disabled]="true" (buttonClick)="onClick()">
+          Disabled custom element
+        </div>
+      `,
+      standalone: true,
+      imports: [ButtonComponent],
+    })
+    class DisabledCustomElementComponent {
+      clickHandler = vi.fn();
+      onClick() {
+        this.clickHandler();
+      }
+    }
+
+    it('applies aria-disabled and is not focusable', async () => {
+      const fixture = TestBed.createComponent(DisabledCustomElementComponent);
+      fixture.detectChanges();
+      const element = fixture.nativeElement.querySelector('div');
+
+      // Should have aria-disabled (custom elements use aria-disabled instead of disabled attr)
+      expect(element.getAttribute('aria-disabled')).toBe('true');
+
+      // Should have data-disabled
+      expect(element.hasAttribute('data-disabled')).toBe(true);
+
+      // Should have tabindex -1 (not focusable)
+      expect(element.getAttribute('tabindex')).toBe('-1');
+
+      // Event handlers should be blocked
+      element.click();
+      expect(fixture.componentInstance.clickHandler).not.toHaveBeenCalled();
+    });
+  });
+});
+
+/**
+ * React parity tests - focusableWhenDisabled prop behavior
+ * @see https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/button/Button.test.tsx
+ */
+describe('prop: focusableWhenDisabled - React parity', () => {
+  describe('native button', () => {
+    @Component({
+      selector: 'test-focusable-disabled-native',
+      template: `
+        <button baseUiButton [disabled]="true" [focusableWhenDisabled]="true" (buttonClick)="onClick()">
+          Focusable when disabled
+        </button>
+      `,
+      standalone: true,
+      imports: [ButtonComponent],
+    })
+    class FocusableDisabledNativeComponent {
+      clickHandler = vi.fn();
+      onClick() {
+        this.clickHandler();
+      }
+    }
+
+    it('prevents interactions but remains focusable', async () => {
+      const fixture = TestBed.createComponent(FocusableDisabledNativeComponent);
+      fixture.detectChanges();
+      const button = fixture.nativeElement.querySelector('button');
+
+      // Should NOT have native disabled attribute (allows focus)
+      expect(button.hasAttribute('disabled')).toBe(false);
+
+      // Should have aria-disabled
+      expect(button.getAttribute('aria-disabled')).toBe('true');
+
+      // Should NOT have tabindex -1 (remains focusable)
+      const tabindex = button.getAttribute('tabindex');
+      expect(tabindex === null || parseInt(tabindex) >= 0).toBe(true);
+
+      // Event handlers should still be blocked
+      button.click();
+      expect(fixture.componentInstance.clickHandler).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('custom element', () => {
+    @Component({
+      selector: 'test-focusable-disabled-custom',
+      template: `
+        <div baseUiButton [disabled]="true" [focusableWhenDisabled]="true" (buttonClick)="onClick()">
+          Focusable when disabled
+        </div>
+      `,
+      standalone: true,
+      imports: [ButtonComponent],
+    })
+    class FocusableDisabledCustomComponent {
+      clickHandler = vi.fn();
+      onClick() {
+        this.clickHandler();
+      }
+    }
+
+    it('prevents interactions but remains focusable', async () => {
+      const fixture = TestBed.createComponent(FocusableDisabledCustomComponent);
+      fixture.detectChanges();
+      const element = fixture.nativeElement.querySelector('div');
+
+      // Should have aria-disabled
+      expect(element.getAttribute('aria-disabled')).toBe('true');
+
+      // Should have data-disabled
+      expect(element.hasAttribute('data-disabled')).toBe(true);
+
+      // Should NOT have tabindex -1 (remains focusable)
+      const tabindex = element.getAttribute('tabindex');
+      expect(tabindex === null || parseInt(tabindex) >= 0).toBe(true);
+
+      // Event handlers should still be blocked
+      element.click();
+      expect(fixture.componentInstance.clickHandler).not.toHaveBeenCalled();
+    });
   });
 });

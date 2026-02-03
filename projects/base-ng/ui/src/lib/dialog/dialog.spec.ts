@@ -1,8 +1,11 @@
 /**
  * @component Dialog
- * @fileoverview Tests for Dialog components
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/dialog/Dialog.test.tsx
- * @parity Verified against React Base UI - includes Keyboard Navigation, Focus Management, State Attributes, and Accessibility test categories
+ * @reactTestSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/dialog/root/DialogRoot.test.tsx
+ * @reactTestSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/dialog/trigger/DialogTrigger.test.tsx
+ * @reactTestSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/dialog/popup/DialogPopup.test.tsx
+ * @lastScraped 2026-02-03
+ * @testsPorted 40/50 (80%)
+ * @parity HIGH - Core tests ported, missing nested dialogs and animation transition tests
  */
 
 import { Component, ViewChild } from '@angular/core';

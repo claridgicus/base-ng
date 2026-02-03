@@ -1,6 +1,11 @@
 /**
- * @fileoverview Angular port of Base UI DialogRoot
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/dialog/root/DialogRoot.tsx
+ * @directive DialogRoot
+ * @reactSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/dialog/root/DialogRoot.tsx
+ * @reactDocs https://base-ui.com/react/components/dialog
+ * @visualSource https://base-ui.com/react/components/dialog
+ * @lastScraped 2026-02-03
+ * @styling Tailwind CSS 4 only
+ * @parity HIGH - Ported from React Base UI
  *
  * Groups all parts of the dialog. Manages open state and provides context.
  */

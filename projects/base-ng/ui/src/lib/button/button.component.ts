@@ -1,8 +1,13 @@
 /**
- * @fileoverview Angular port of Base UI Button component
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/button/Button.tsx
+ * @component BuiButton
+ * @reactSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/button/Button.tsx
+ * @reactDocs https://base-ui.com/react/components/button
+ * @lastScraped 2026-02-03
+ * @styling Tailwind CSS 4 only
+ * @parity EXACT - Ported from React Base UI
  *
  * A button component that can be used to trigger actions.
+ * Renders a `<button>` element with proper accessibility.
  */
 
 import {
