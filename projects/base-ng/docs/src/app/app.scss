@@ -3,6 +3,26 @@
   min-height: 100vh;
 }
 
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--docs-accent);
+  color: white;
+  padding: 0.5rem 1rem;
+  z-index: 100;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 0 0 0.5rem 0;
+  transition: top 0.2s;
+
+  &:focus {
+    top: 0;
+    outline: 2px solid white;
+    outline-offset: 2px;
+  }
+}
+
 .docs-layout {
   display: flex;
   flex-direction: column;

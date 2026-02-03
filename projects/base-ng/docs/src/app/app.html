@@ -1,11 +1,12 @@
+<a href="#main-content" class="skip-link">Skip to main content</a>
 <div class="docs-layout">
   <docs-header />
   <div class="docs-main">
     <docs-sidebar class="docs-sidebar" />
-    <main class="docs-content">
+    <main id="main-content" class="docs-content" tabindex="-1">
       <router-outlet />
     </main>
-    <aside class="docs-toc">
+    <aside class="docs-toc" aria-label="Table of contents">
       <docs-toc />
     </aside>
   </div>

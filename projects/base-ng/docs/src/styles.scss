@@ -125,6 +125,12 @@ pre {
   margin: 0 0 1rem 0;
 }
 
+// Focus visibility
+:focus-visible {
+  outline: 2px solid var(--docs-accent);
+  outline-offset: 2px;
+}
+
 // Utility classes
 .visually-hidden {
   position: absolute;
@@ -136,4 +142,16 @@ pre {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
