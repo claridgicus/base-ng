@@ -1,15 +1,36 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  AlertDialogRootDirective,
+  AlertDialogTriggerDirective,
+  AlertDialogBackdropDirective,
+  AlertDialogPopupDirective,
+  AlertDialogTitleDirective,
+  AlertDialogDescriptionDirective,
+  AlertDialogCloseDirective,
+} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-alert-dialog',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    AlertDialogRootDirective,
+    AlertDialogTriggerDirective,
+    AlertDialogBackdropDirective,
+    AlertDialogPopupDirective,
+    AlertDialogTitleDirective,
+    AlertDialogDescriptionDirective,
+    AlertDialogCloseDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,14 +42,36 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <docs-demo [code]="confirmDemoCode" language="html">
+          <div class="demo-container">
+            <ng-container baseUiAlertDialogRoot [(open)]="isAlertOpen">
+              <button baseUiAlertDialogTrigger class="demo-trigger demo-danger">
+                Delete Account
+              </button>
 
-        <p class="docs-paragraph">
-          Import the Alert Dialog directives from the package:
-        </p>
+              <div baseUiAlertDialogBackdrop class="demo-backdrop"></div>
+
+              <div baseUiAlertDialogPopup role="alertdialog" class="demo-alert-dialog">
+                <h2 baseUiAlertDialogTitle class="demo-alert-title">Delete Account?</h2>
+                <p baseUiAlertDialogDescription class="demo-alert-desc">
+                  This will permanently delete your account and all associated data.
+                  This action cannot be undone.
+                </p>
+                <div class="demo-alert-actions">
+                  <button baseUiAlertDialogClose class="demo-btn demo-btn-secondary">Cancel</button>
+                  <button (click)="handleDelete()" class="demo-btn demo-btn-danger">Delete Account</button>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </docs-demo>
+      </section>
+
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -168,15 +211,148 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-container {
+      display: flex;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .demo-trigger {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: background 0.15s;
+
+      &:focus-visible {
+        outline: 2px solid var(--docs-accent, #0066ff);
+        outline-offset: 2px;
+      }
+    }
+
+    .demo-danger {
+      background: #ef4444;
+      color: white;
+
+      &:hover {
+        background: #dc2626;
+      }
+    }
+
+    .demo-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 100;
+      animation: backdropFadeIn 0.2s ease;
+    }
+
+    @keyframes backdropFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .demo-alert-dialog {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 101;
+      background: var(--docs-bg, white);
+      border: 1px solid var(--docs-border);
+      border-radius: 0.5rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      padding: 1.5rem;
+      max-width: 400px;
+      width: 90%;
+      animation: dialogSlideIn 0.2s ease;
+    }
+
+    @keyframes dialogSlideIn {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -48%);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+      }
+    }
+
+    .demo-alert-title {
+      margin: 0 0 0.5rem;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--docs-text);
+    }
+
+    .demo-alert-desc {
+      margin: 0 0 1.25rem;
+      font-size: 0.875rem;
+      line-height: 1.6;
+      color: var(--docs-text-secondary);
+    }
+
+    .demo-alert-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
+
+    .demo-btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: background 0.15s;
+
+      &:focus-visible {
+        outline: 2px solid var(--docs-accent, #0066ff);
+        outline-offset: 2px;
+      }
+    }
+
+    .demo-btn-secondary {
+      background: var(--docs-bg-muted, #f5f5f5);
+      color: var(--docs-text);
+      border: 1px solid var(--docs-border);
+
+      &:hover {
+        background: var(--docs-bg-hover, #e5e5e5);
+      }
+    }
+
+    .demo-btn-danger {
+      background: #ef4444;
+      color: white;
+
+      &:hover {
+        background: #dc2626;
+      }
+    }
+  `,
 })
 export class AlertDialogDocsComponent {
+  // Demo state
+  protected readonly isAlertOpen = signal(false);
+
+  protected handleDelete(): void {
+    // Simulate deletion
+    this.isAlertOpen.set(false);
+  }
+
   protected readonly importCode = `import {
   AlertDialogRootDirective,
   AlertDialogTriggerDirective,
@@ -185,7 +361,7 @@ export class AlertDialogDocsComponent {
   AlertDialogCloseDirective,
   AlertDialogTitleDirective,
   AlertDialogDescriptionDirective,
-} from '@base-ng/ui/alert-dialog';
+} from '@base-ng/ui';
 
 @Component({
   imports: [
