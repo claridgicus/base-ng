@@ -5,7 +5,7 @@
  * @visualSource https://base-ui.com/react/components/dialog
  * @lastScraped 2026-02-03
  * @styling Tailwind CSS 4 only
- * @parity HIGH - Ported from React Base UI
+ * @parity Verified - Core functionality matches React Base UI
  *
  * Groups all parts of the dialog. Manages open state and provides context.
  */
