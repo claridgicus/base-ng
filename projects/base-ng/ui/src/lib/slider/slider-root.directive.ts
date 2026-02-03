@@ -1,6 +1,10 @@
 /**
- * @fileoverview Angular port of Base UI SliderRoot
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/slider/root/SliderRoot.tsx
+ * @component SliderRoot
+ * @reactSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/slider/root/SliderRoot.tsx
+ * @reactDocs https://base-ui.com/react/components/slider
+ * @lastScraped 2026-02-03
+ * @styling Tailwind CSS 4 only
+ * @parity EXACT - Ported from React Base UI
  *
  * A slider control for selecting values within a range.
  */
