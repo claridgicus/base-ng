@@ -1,15 +1,34 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  NavigationMenuRootDirective,
+  NavigationMenuListDirective,
+  NavigationMenuItemDirective,
+  NavigationMenuTriggerDirective,
+  NavigationMenuContentDirective,
+  NavigationMenuLinkDirective,
+} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-navigation-menu',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    NavigationMenuRootDirective,
+    NavigationMenuListDirective,
+    NavigationMenuItemDirective,
+    NavigationMenuTriggerDirective,
+    NavigationMenuContentDirective,
+    NavigationMenuLinkDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,14 +40,95 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <h2 class="docs-section-title">Live Demo</h2>
+        <docs-demo [code]="basicDemoCode">
+          <nav baseUiNavigationMenuRoot aria-label="Demo navigation" class="demo-nav">
+            <ul baseUiNavigationMenuList class="demo-nav-list">
+              <!-- Products dropdown -->
+              <li baseUiNavigationMenuItem value="products">
+                <button baseUiNavigationMenuTrigger class="demo-nav-trigger">
+                  Products
+                  <svg class="demo-nav-chevron" viewBox="0 0 12 12" width="12" height="12">
+                    <path d="M2 4l4 4 4-4" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                  </svg>
+                </button>
+                <div baseUiNavigationMenuContent class="demo-nav-content">
+                  <ul class="demo-nav-links">
+                    <li>
+                      <a baseUiNavigationMenuLink href="#analytics" class="demo-nav-link">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                          <path d="M3 13h4v8H3v-8zm7-8h4v16h-4V5zm7 4h4v12h-4V9z" fill="currentColor" opacity="0.6"/>
+                        </svg>
+                        <div>
+                          <strong>Analytics</strong>
+                          <p>Track and measure everything</p>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <a baseUiNavigationMenuLink href="#automation" class="demo-nav-link">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                          <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm4 11h-8v-1l1-1v-4l-1-1v-1h5v1l-1 1v3.5l2 .5v2z" fill="currentColor" opacity="0.6"/>
+                        </svg>
+                        <div>
+                          <strong>Automation</strong>
+                          <p>Automate your workflow</p>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
 
-        <p class="docs-paragraph">
-          Import the Navigation Menu directives from the package:
-        </p>
+              <!-- Solutions dropdown -->
+              <li baseUiNavigationMenuItem value="solutions">
+                <button baseUiNavigationMenuTrigger class="demo-nav-trigger">
+                  Solutions
+                  <svg class="demo-nav-chevron" viewBox="0 0 12 12" width="12" height="12">
+                    <path d="M2 4l4 4 4-4" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                  </svg>
+                </button>
+                <div baseUiNavigationMenuContent class="demo-nav-content">
+                  <ul class="demo-nav-links">
+                    <li>
+                      <a baseUiNavigationMenuLink href="#enterprise" class="demo-nav-link">
+                        <strong>Enterprise</strong>
+                        <p>For large organizations</p>
+                      </a>
+                    </li>
+                    <li>
+                      <a baseUiNavigationMenuLink href="#startups" class="demo-nav-link">
+                        <strong>Startups</strong>
+                        <p>For growing teams</p>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+
+              <!-- Simple link -->
+              <li baseUiNavigationMenuItem>
+                <a baseUiNavigationMenuLink href="#pricing" class="demo-nav-simple-link">
+                  Pricing
+                </a>
+              </li>
+
+              <!-- Docs link -->
+              <li baseUiNavigationMenuItem>
+                <a baseUiNavigationMenuLink href="#docs" class="demo-nav-simple-link">
+                  Docs
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </docs-demo>
+      </section>
+
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -174,13 +274,128 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-nav {
+      position: relative;
+    }
+
+    .demo-nav-list {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .demo-nav-trigger {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.5rem 0.75rem;
+      border: none;
+      background: transparent;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--docs-text);
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .demo-nav-trigger:hover,
+    .demo-nav-trigger[data-open] {
+      background: var(--docs-bg-hover);
+    }
+
+    .demo-nav-chevron {
+      transition: transform 0.2s ease;
+    }
+
+    .demo-nav-trigger[data-open] .demo-nav-chevron {
+      transform: rotate(180deg);
+    }
+
+    .demo-nav-content {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      margin-top: 0.5rem;
+      background: var(--docs-bg);
+      border: 1px solid var(--docs-border);
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      padding: 0.75rem;
+      min-width: 280px;
+      animation: navContentIn 0.15s ease;
+    }
+
+    @keyframes navContentIn {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .demo-nav-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .demo-nav-link {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      border-radius: 8px;
+      color: var(--docs-text);
+      text-decoration: none;
+      transition: background 0.15s ease;
+    }
+
+    .demo-nav-link:hover {
+      background: var(--docs-bg-hover);
+    }
+
+    .demo-nav-link strong {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.125rem;
+    }
+
+    .demo-nav-link p {
+      margin: 0;
+      font-size: 0.8125rem;
+      color: var(--docs-text-secondary);
+    }
+
+    .demo-nav-simple-link {
+      display: block;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--docs-text);
+      text-decoration: none;
+      transition: background 0.15s ease;
+    }
+
+    .demo-nav-simple-link:hover {
+      background: var(--docs-bg-hover);
+    }
+  `,
 })
 export class NavigationMenuDocsComponent {
   protected readonly importCode = `import {
@@ -191,9 +406,8 @@ export class NavigationMenuDocsComponent {
   NavigationMenuContentDirective,
   NavigationMenuViewportDirective,
   NavigationMenuLinkDirective,
-  NavigationMenuIconDirective,
   NavigationMenuBackdropDirective,
-} from '@base-ng/ui/navigation-menu';
+} from '@base-ng/ui';
 
 @Component({
   imports: [
