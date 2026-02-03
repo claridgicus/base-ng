@@ -43,29 +43,26 @@ interface NavSection {
   styles: `
     :host {
       display: block;
-      padding: 1.5rem 1rem;
+      padding: 1.5rem 0;
     }
 
     .sidebar-nav {
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
+      gap: 1.75rem;
     }
 
     .nav-section {
       display: flex;
       flex-direction: column;
-      gap: 0.25rem;
     }
 
     .nav-section-title {
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--docs-muted);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--docs-text);
       margin: 0 0 0.5rem 0;
-      padding: 0 0.75rem;
+      padding: 0 1rem;
     }
 
     .nav-list {
@@ -74,32 +71,32 @@ interface NavSection {
       padding: 0;
       display: flex;
       flex-direction: column;
-      gap: 0.125rem;
     }
 
     .nav-item {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 0.75rem;
+      justify-content: space-between;
+      padding: 0.375rem 1rem;
       font-size: 0.875rem;
       color: var(--docs-text-secondary);
       text-decoration: none;
-      border-radius: 0.375rem;
-      transition: all 0.15s;
+      transition: color 0.15s;
+      border-left: 2px solid transparent;
+      margin-left: -1px;
 
       &:hover {
-        background-color: var(--docs-bg-secondary);
         color: var(--docs-text);
         text-decoration: none;
       }
 
       &.active {
-        background-color: var(--docs-accent);
-        color: white;
+        color: var(--docs-accent);
+        border-left-color: var(--docs-accent);
+        font-weight: 500;
 
         .nav-badge {
-          background-color: rgba(255, 255, 255, 0.2);
+          background-color: var(--docs-accent);
           color: white;
         }
       }
@@ -110,9 +107,10 @@ interface NavSection {
       font-weight: 500;
       padding: 0.125rem 0.375rem;
       border-radius: 9999px;
-      background-color: var(--docs-accent);
-      color: white;
+      background-color: var(--docs-bg-secondary);
+      color: var(--docs-text-secondary);
       text-transform: uppercase;
+      letter-spacing: 0.025em;
     }
   `,
 })

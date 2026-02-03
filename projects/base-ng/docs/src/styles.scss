@@ -1,28 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
-  --docs-bg: #fafafa;
+  --docs-bg: #ffffff;
   --docs-bg-secondary: #f5f5f5;
-  --docs-text: #171717;
-  --docs-text-secondary: #525252;
+  --docs-bg-hover: rgba(0, 0, 0, 0.04);
+  --docs-text: #0a0a0a;
+  --docs-text-secondary: #666666;
   --docs-accent: #0066ff;
   --docs-accent-hover: #0052cc;
   --docs-border: #e5e5e5;
   --docs-code-bg: #f5f5f5;
-  --docs-muted: #737373;
-  --docs-header-height: 64px;
+  --docs-muted: #8c8c8c;
+  --docs-header-height: 60px;
 }
 
 .dark {
   --docs-bg: #0a0a0a;
-  --docs-bg-secondary: #171717;
-  --docs-text: #ededed;
-  --docs-text-secondary: #a3a3a3;
+  --docs-bg-secondary: #141414;
+  --docs-bg-hover: rgba(255, 255, 255, 0.06);
+  --docs-text: #fafafa;
+  --docs-text-secondary: #999999;
   --docs-accent: #3b82f6;
   --docs-accent-hover: #60a5fa;
   --docs-border: #262626;
-  --docs-code-bg: #1c1c1c;
-  --docs-muted: #a3a3a3;
+  --docs-code-bg: #141414;
+  --docs-muted: #666666;
 }
 
 *,
