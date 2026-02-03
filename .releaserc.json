@@ -1,6 +1,7 @@
 {
   "branches": ["master"],
   "tagFormat": "v${version}",
+  "repositoryUrl": "https://github.com/claridgicus/base-ng.git",
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
@@ -11,7 +12,8 @@
       "prepareCmd": "node scripts/update-version.js ${nextRelease.version} && npm run build:lib"
     }],
     ["@semantic-release/npm", {
-      "pkgRoot": "dist/base-ng/ui"
+      "pkgRoot": "dist/base-ng/ui",
+      "npmPublish": true
     }],
     ["@semantic-release/git", {
       "assets": [
