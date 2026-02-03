@@ -43,7 +43,7 @@ interface NavSection {
   styles: `
     :host {
       display: block;
-      padding: 0.75rem 1.5rem 6rem 1.5rem;
+      padding: var(--header-height) 1.5rem 6rem 1.5rem;
     }
 
     .sidebar-nav {
