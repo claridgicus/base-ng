@@ -119,7 +119,7 @@
 | 52  | Document Popover component                         | [x]    | `components/popover`          |
 | 53  | Document Preview Card component                    | [ ]    | `components/preview-card`     |
 | 54  | Document Dialog component                          | [x]    | `components/dialog`           |
-| 55  | Document Alert Dialog component                    | [ ]    | `components/alert-dialog`     |
+| 55  | Document Alert Dialog component                    | [x]    | `components/alert-dialog`     |
 
 ---
 
@@ -225,9 +225,9 @@ Each component page should include:
 ## Progress Summary
 
 - **Total Tasks:** 75
-- **Completed:** 42
+- **Completed:** 43
 - **In Progress:** 0
-- **Remaining:** 33
+- **Remaining:** 32
 
 ---
 
