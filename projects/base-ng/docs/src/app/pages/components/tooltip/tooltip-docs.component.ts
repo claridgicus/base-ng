@@ -1,18 +1,18 @@
 import { Component } from '@angular/core';
 import {
-  EditOnGitHubComponent,
+  TooltipArrowDirective,
+  TooltipPopupDirective,
+  TooltipPositionerDirective,
+  TooltipRootDirective,
+  TooltipTriggerDirective,
+} from '@copied/base-ng';
+import {
   CodeBlockComponent,
   DemoComponent,
+  EditOnGitHubComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
-import {
-  TooltipRootDirective,
-  TooltipTriggerDirective,
-  TooltipPositionerDirective,
-  TooltipPopupDirective,
-  TooltipArrowDirective,
-} from '@copied/base-ng';
 
 @Component({
   selector: 'docs-tooltip',
@@ -32,9 +32,8 @@ import {
       <header class="docs-header-section">
         <h1 class="docs-title">Tooltip</h1>
         <p class="docs-description">
-          A popup that displays information related to an element when it
-          receives keyboard focus or the mouse hovers over it. Positioned using
-          Floating UI for smart placement.
+          A popup that displays information related to an element when it receives keyboard focus or
+          the mouse hovers over it. Positioned using Floating UI for smart placement.
         </p>
       </header>
 
@@ -43,9 +42,7 @@ import {
         <docs-demo [code]="basicDemoCode" language="html">
           <div class="demo-container">
             <div baseUiTooltipRoot>
-              <button baseUiTooltipTrigger class="demo-button">
-                Hover me
-              </button>
+              <button baseUiTooltipTrigger class="demo-button">Hover me</button>
               <div baseUiTooltipPositioner side="top" [sideOffset]="8">
                 <div baseUiTooltipPopup class="demo-tooltip">
                   This is a tooltip with helpful information
@@ -55,9 +52,7 @@ import {
             </div>
 
             <div baseUiTooltipRoot>
-              <button baseUiTooltipTrigger class="demo-button">
-                Bottom tooltip
-              </button>
+              <button baseUiTooltipTrigger class="demo-button">Bottom tooltip</button>
               <div baseUiTooltipPositioner side="bottom" [sideOffset]="8">
                 <div baseUiTooltipPopup class="demo-tooltip">
                   Positioned below the trigger
@@ -78,9 +73,7 @@ import {
       <!-- Anatomy -->
       <section class="docs-section">
         <h2 class="docs-section-title">Anatomy</h2>
-        <p class="docs-paragraph">
-          The Tooltip uses a directive-based composition pattern:
-        </p>
+        <p class="docs-paragraph">The Tooltip uses a directive-based composition pattern:</p>
         <docs-code-block [code]="anatomyCode" language="html" />
       </section>
 
@@ -89,82 +82,56 @@ import {
         <h2 class="docs-section-title">Examples</h2>
 
         <h3 class="docs-section-subtitle">Basic usage</h3>
-        <p class="docs-paragraph">
-          Hover or focus on the trigger to display the tooltip:
-        </p>
+        <p class="docs-paragraph">Hover or focus on the trigger to display the tooltip:</p>
         <docs-code-block [code]="basicDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">Controlled tooltip</h3>
-        <p class="docs-paragraph">
-          Use <code>[(open)]</code> to control the tooltip state:
-        </p>
+        <p class="docs-paragraph">Use <code>[(open)]</code> to control the tooltip state:</p>
         <docs-code-block [code]="controlledDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">Positioning</h3>
         <p class="docs-paragraph">
-          Use <code>side</code> and <code>align</code> inputs on the
-          positioner to control placement:
+          Use <code>side</code> and <code>align</code> inputs on the positioner to control
+          placement:
         </p>
         <docs-code-block [code]="positioningDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">With arrow</h3>
-        <p class="docs-paragraph">
-          Add an arrow that points to the trigger element:
-        </p>
+        <p class="docs-paragraph">Add an arrow that points to the trigger element:</p>
         <docs-code-block [code]="arrowDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">Custom delay</h3>
-        <p class="docs-paragraph">
-          Customize the open and close delay:
-        </p>
+        <p class="docs-paragraph">Customize the open and close delay:</p>
         <docs-code-block [code]="delayDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">Offset</h3>
-        <p class="docs-paragraph">
-          Adjust the distance between the tooltip and trigger:
-        </p>
+        <p class="docs-paragraph">Adjust the distance between the tooltip and trigger:</p>
         <docs-code-block [code]="offsetDemoCode" language="html" />
 
         <h3 class="docs-section-subtitle">Disabled tooltip</h3>
-        <p class="docs-paragraph">
-          Use <code>disabled</code> to prevent the tooltip from opening:
-        </p>
+        <p class="docs-paragraph">Use <code>disabled</code> to prevent the tooltip from opening:</p>
         <docs-code-block [code]="disabledDemoCode" language="html" />
       </section>
 
       <!-- Styling -->
       <section class="docs-section">
         <h2 class="docs-section-title">Styling</h2>
-        <p class="docs-paragraph">
-          Use data attributes and CSS to style the tooltip:
-        </p>
+        <p class="docs-paragraph">Use data attributes and CSS to style the tooltip:</p>
         <docs-code-block [code]="stylingCode" language="css" />
       </section>
 
       <!-- API Reference -->
       <section class="docs-section">
         <h2 class="docs-section-title">API Reference</h2>
-        <docs-props-table
-          title="TooltipRoot Inputs"
-          [props]="rootInputProps"
-        />
-        <docs-props-table
-          title="TooltipRoot Outputs"
-          [props]="rootOutputProps"
-        />
-        <docs-props-table
-          title="TooltipPositioner Inputs"
-          [props]="positionerInputProps"
-        />
+        <docs-props-table title="TooltipRoot Inputs" [props]="rootInputProps" />
+        <docs-props-table title="TooltipRoot Outputs" [props]="rootOutputProps" />
+        <docs-props-table title="TooltipPositioner Inputs" [props]="positionerInputProps" />
       </section>
 
       <!-- Data Attributes -->
       <section class="docs-section">
         <h2 class="docs-section-title">Data attributes</h2>
-        <docs-props-table
-          title="TooltipTrigger / TooltipPopup"
-          [props]="triggerDataAttributes"
-        />
+        <docs-props-table title="TooltipTrigger / TooltipPopup" [props]="triggerDataAttributes" />
         <docs-props-table
           title="TooltipPositioner / TooltipPopup / TooltipArrow"
           [props]="positionerDataAttributes"
@@ -174,22 +141,16 @@ import {
       <!-- Accessibility -->
       <section class="docs-section">
         <h2 class="docs-section-title">Accessibility</h2>
-        <p class="docs-paragraph">
-          The Tooltip component follows WAI-ARIA Tooltip pattern:
-        </p>
+        <p class="docs-paragraph">The Tooltip component follows WAI-ARIA Tooltip pattern:</p>
         <ul class="docs-list">
           <li>Popup has <code>role="tooltip"</code></li>
-          <li>
-            Trigger has <code>aria-describedby</code> linking to the tooltip
-            when open
-          </li>
+          <li>Trigger has <code>aria-describedby</code> linking to the tooltip when open</li>
           <li>Opens on both hover and keyboard focus</li>
           <li>Closes on blur and mouse leave</li>
           <li>Arrow is hidden from assistive technology</li>
           <li>Respects reduced motion preferences in animations</li>
         </ul>
       </section>
-    
 
       <footer class="docs-footer">
         <docs-edit-on-github
@@ -233,7 +194,9 @@ import {
       border-radius: 0.375rem;
       color: var(--docs-text);
       cursor: pointer;
-      transition: background 0.15s, border-color 0.15s;
+      transition:
+        background 0.15s,
+        border-color 0.15s;
 
       &:hover {
         background: var(--docs-bg-hover, rgba(0, 0, 0, 0.05));
@@ -655,8 +618,7 @@ isDisabled = false;`;
     {
       name: 'data-side',
       type: "'top' | 'right' | 'bottom' | 'left'",
-      description:
-        "The actual rendered side (may differ from preferred if flipped).",
+      description: 'The actual rendered side (may differ from preferred if flipped).',
     },
     {
       name: 'data-align',
@@ -666,8 +628,7 @@ isDisabled = false;`;
     {
       name: 'data-uncentered',
       type: 'string',
-      description:
-        'Present on the arrow when it cannot be perfectly centered.',
+      description: 'Present on the arrow when it cannot be perfectly centered.',
     },
   ];
 }

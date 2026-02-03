@@ -1,6 +1,10 @@
 /**
- * @fileoverview Angular port of Base UI TooltipTrigger
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/tooltip/trigger/TooltipTrigger.tsx
+ * @directive TooltipTrigger
+ * @reactSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/tooltip/trigger/TooltipTrigger.tsx
+ * @reactDocs https://base-ui.com/react/components/tooltip
+ * @lastScraped 2026-02-03
+ * @styling Tailwind CSS 4 only
+ * @parity EXACT - Ported from React Base UI
  *
  * An element that triggers the tooltip on hover/focus.
  */

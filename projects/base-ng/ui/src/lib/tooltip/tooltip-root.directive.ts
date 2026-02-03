@@ -1,6 +1,11 @@
 /**
- * @fileoverview Angular port of Base UI TooltipRoot
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/tooltip/root/TooltipRoot.tsx
+ * @directive TooltipRoot
+ * @reactSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/tooltip/root/TooltipRoot.tsx
+ * @reactDocs https://base-ui.com/react/components/tooltip
+ * @visualSource https://base-ui.com/react/components/tooltip
+ * @lastScraped 2026-02-03
+ * @styling Tailwind CSS 4 only
+ * @parity IN PROGRESS - Porting from React Base UI
  *
  * Groups all parts of the tooltip. Manages open state and provides context.
  */
@@ -135,6 +140,13 @@ export class TooltipRootDirective {
     effect(() => {
       this.internalOpen.set(this.open());
     });
+
+    // Close tooltip when disabled becomes true
+    effect(() => {
+      if (this.disabled() && this.internalOpen()) {
+        this.setOpen(false, 'imperative');
+      }
+    });
   }
 
   /**
@@ -155,7 +167,8 @@ export class TooltipRootDirective {
    * Set the open state with a reason.
    */
   setOpen(open: boolean, reason: TooltipOpenChangeReason = 'imperative'): void {
-    if (this.disabled()) {
+    // Only prevent OPENING when disabled - closing should always be allowed
+    if (this.disabled() && open) {
       return;
     }
 
