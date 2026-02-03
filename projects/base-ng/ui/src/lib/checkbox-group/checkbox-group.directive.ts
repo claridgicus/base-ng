@@ -1,6 +1,10 @@
 /**
- * @fileoverview Angular port of Base UI CheckboxGroup
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/checkbox-group/CheckboxGroup.tsx
+ * @component CheckboxGroup
+ * @reactSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/checkbox-group/CheckboxGroup.tsx
+ * @reactDocs https://base-ui.com/react/components/checkbox-group
+ * @lastScraped 2026-02-03
+ * @styling Tailwind CSS 4 only
+ * @parity EXACT - Ported from React Base UI
  *
  * A group of checkboxes with shared state management.
  */
