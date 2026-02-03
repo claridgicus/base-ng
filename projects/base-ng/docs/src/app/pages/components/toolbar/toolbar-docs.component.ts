@@ -1,15 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  ToolbarRootDirective,
+  ToolbarGroupDirective,
+  ToolbarButtonDirective,
+  ToolbarSeparatorDirective,
+} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-toolbar',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    ToolbarRootDirective,
+    ToolbarGroupDirective,
+    ToolbarButtonDirective,
+    ToolbarSeparatorDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,14 +36,103 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <h2 class="docs-section-title">Live Demo</h2>
+        <docs-demo [code]="basicDemoCode">
+          <div baseUiToolbarRoot class="demo-toolbar">
+            <!-- Text formatting group -->
+            <div baseUiToolbarGroup class="demo-toolbar-group">
+              <button
+                baseUiToolbarButton
+                class="demo-toolbar-btn"
+                [class.active]="isBold()"
+                (click)="toggleBold()"
+              >
+                <svg viewBox="0 0 16 16" width="16" height="16">
+                  <path d="M4 2h5a3 3 0 0 1 0 6H4V2zm0 6h6a3 3 0 0 1 0 6H4V8z" stroke="currentColor" fill="none" stroke-width="2"/>
+                </svg>
+              </button>
+              <button
+                baseUiToolbarButton
+                class="demo-toolbar-btn"
+                [class.active]="isItalic()"
+                (click)="toggleItalic()"
+              >
+                <svg viewBox="0 0 16 16" width="16" height="16">
+                  <path d="M6 2h6M4 14h6M10 2L6 14" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                </svg>
+              </button>
+              <button
+                baseUiToolbarButton
+                class="demo-toolbar-btn"
+                [class.active]="isUnderline()"
+                (click)="toggleUnderline()"
+              >
+                <svg viewBox="0 0 16 16" width="16" height="16">
+                  <path d="M4 2v6a4 4 0 0 0 8 0V2M3 14h10" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                </svg>
+              </button>
+            </div>
 
-        <p class="docs-paragraph">
-          Import the Toolbar directives from the package:
-        </p>
+            <div baseUiToolbarSeparator class="demo-toolbar-separator"></div>
+
+            <!-- Alignment group -->
+            <div baseUiToolbarGroup class="demo-toolbar-group">
+              <button
+                baseUiToolbarButton
+                class="demo-toolbar-btn"
+                [class.active]="alignment() === 'left'"
+                (click)="alignment.set('left')"
+              >
+                <svg viewBox="0 0 16 16" width="16" height="16">
+                  <path d="M2 3h12M2 6h8M2 9h12M2 12h6" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                </svg>
+              </button>
+              <button
+                baseUiToolbarButton
+                class="demo-toolbar-btn"
+                [class.active]="alignment() === 'center'"
+                (click)="alignment.set('center')"
+              >
+                <svg viewBox="0 0 16 16" width="16" height="16">
+                  <path d="M2 3h12M4 6h8M2 9h12M5 12h6" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                </svg>
+              </button>
+              <button
+                baseUiToolbarButton
+                class="demo-toolbar-btn"
+                [class.active]="alignment() === 'right'"
+                (click)="alignment.set('right')"
+              >
+                <svg viewBox="0 0 16 16" width="16" height="16">
+                  <path d="M2 3h12M6 6h8M2 9h12M8 12h6" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                </svg>
+              </button>
+            </div>
+
+            <div baseUiToolbarSeparator class="demo-toolbar-separator"></div>
+
+            <!-- Action buttons -->
+            <button baseUiToolbarButton class="demo-toolbar-btn" (click)="handleAction('link')">
+              <svg viewBox="0 0 16 16" width="16" height="16">
+                <path d="M6.5 9.5l3-3M9 5h2a2 2 0 0 1 0 4h-1M7 7H5a2 2 0 0 0 0 4h2" stroke="currentColor" fill="none" stroke-width="1.5"/>
+              </svg>
+            </button>
+            <button baseUiToolbarButton class="demo-toolbar-btn" (click)="handleAction('image')">
+              <svg viewBox="0 0 16 16" width="16" height="16">
+                <rect x="2" y="3" width="12" height="10" rx="1" stroke="currentColor" fill="none"/>
+                <circle cx="5.5" cy="6.5" r="1.5" fill="currentColor"/>
+                <path d="M2 11l3-3 2 2 4-4 3 3" stroke="currentColor" fill="none"/>
+              </svg>
+            </button>
+          </div>
+        </docs-demo>
+      </section>
+
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -172,15 +276,88 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.5rem;
+      background: var(--docs-bg-hover);
+      border: 1px solid var(--docs-border);
+      border-radius: 8px;
+    }
+
+    .demo-toolbar-group {
+      display: flex;
+      gap: 0.125rem;
+    }
+
+    .demo-toolbar-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      border: none;
+      background: transparent;
+      border-radius: 4px;
+      color: var(--docs-text);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .demo-toolbar-btn:hover {
+      background: var(--docs-bg);
+    }
+
+    .demo-toolbar-btn.active {
+      background: var(--docs-accent);
+      color: white;
+    }
+
+    .demo-toolbar-btn:focus-visible {
+      outline: 2px solid var(--docs-accent);
+      outline-offset: 2px;
+    }
+
+    .demo-toolbar-separator {
+      width: 1px;
+      height: 24px;
+      background: var(--docs-border);
+      margin: 0 0.25rem;
+    }
+  `,
 })
 export class ToolbarDocsComponent {
+  protected readonly isBold = signal(false);
+  protected readonly isItalic = signal(false);
+  protected readonly isUnderline = signal(false);
+  protected readonly alignment = signal<'left' | 'center' | 'right'>('left');
+
+  protected toggleBold(): void {
+    this.isBold.update((v) => !v);
+  }
+
+  protected toggleItalic(): void {
+    this.isItalic.update((v) => !v);
+  }
+
+  protected toggleUnderline(): void {
+    this.isUnderline.update((v) => !v);
+  }
+
+  protected handleAction(action: string): void {
+    console.log(`Action: ${action}`);
+  }
+
   protected readonly importCode = `import {
   ToolbarRootDirective,
   ToolbarGroupDirective,
@@ -188,7 +365,7 @@ export class ToolbarDocsComponent {
   ToolbarSeparatorDirective,
   ToolbarLinkDirective,
   ToolbarInputDirective,
-} from '@base-ng/ui/toolbar';
+} from '@base-ng/ui';
 
 @Component({
   imports: [
