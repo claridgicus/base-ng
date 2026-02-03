@@ -216,6 +216,24 @@ describe('ButtonDataAttributes', () => {
   });
 });
 
+// Test with static disabled value binding
+describe('ButtonComponent with static disabled', () => {
+  @Component({
+    template: `<base-ui-button [disabled]="true">Static disabled</base-ui-button>`,
+    standalone: true,
+    imports: [ButtonComponent],
+  })
+  class StaticDisabledTestComponent {}
+
+  it('should have disabled attribute with static true', () => {
+    const fix = TestBed.createComponent(StaticDisabledTestComponent);
+    fix.detectChanges();
+
+    const btn = fix.nativeElement.querySelector('base-ui-button');
+    expect(btn.hasAttribute('disabled')).toBe(true);
+  });
+});
+
 describe('ButtonComponent press and release events', () => {
   @Component({
     template: `

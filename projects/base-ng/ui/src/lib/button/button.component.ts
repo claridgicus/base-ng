@@ -15,14 +15,13 @@ import {
   Component,
   computed,
   ElementRef,
+  EventEmitter,
   HostListener,
   inject,
-  input,
-  output,
-  type Signal,
+  Input,
+  Output,
+  signal,
 } from '@angular/core';
-import { UseButtonDirective } from '../use-button';
-
 /**
  * Data attributes for the button component.
  */
@@ -64,52 +63,75 @@ export enum ButtonDataAttributes {
     '[attr.aria-disabled]': 'ariaDisabled()',
     '[attr.data-disabled]': 'dataDisabled()',
     '[class.base-ui-button]': 'true',
-    '[class.base-ui-button-disabled]': 'disabled()',
+    '[class.base-ui-button-disabled]': '_disabled()',
   },
 })
 export class ButtonComponent {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
 
+  // Internal signals that track input values
+  readonly _disabled = signal(false);
+  readonly _focusableWhenDisabled = signal(false);
+  readonly _type = signal<'button' | 'submit' | 'reset'>('button');
+
   /**
    * Whether the button is disabled.
    */
-  readonly disabled = input<boolean>(false);
+  @Input()
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
+  get disabled(): boolean {
+    return this._disabled();
+  }
 
   /**
    * Whether the button can be focused when disabled.
    */
-  readonly focusableWhenDisabled = input<boolean>(false);
+  @Input()
+  set focusableWhenDisabled(value: boolean) {
+    this._focusableWhenDisabled.set(value);
+  }
+  get focusableWhenDisabled(): boolean {
+    return this._focusableWhenDisabled();
+  }
 
   /**
    * Button type attribute.
    */
-  readonly type = input<'button' | 'submit' | 'reset'>('button');
+  @Input()
+  set type(value: 'button' | 'submit' | 'reset') {
+    this._type.set(value);
+  }
+  get type(): 'button' | 'submit' | 'reset' {
+    return this._type();
+  }
 
   /**
    * Emitted when the button is clicked (keyboard or mouse).
    */
-  readonly buttonClick = output<MouseEvent | KeyboardEvent>();
+  @Output() buttonClick = new EventEmitter<MouseEvent | KeyboardEvent>();
 
   /**
    * Emitted when the button is pressed down.
    */
-  readonly buttonPress = output<MouseEvent | KeyboardEvent>();
+  @Output() buttonPress = new EventEmitter<MouseEvent | KeyboardEvent>();
 
   /**
    * Emitted when the button is released.
    */
-  readonly buttonRelease = output<MouseEvent | KeyboardEvent>();
+  @Output() buttonRelease = new EventEmitter<MouseEvent | KeyboardEvent>();
 
   /**
    * Computed button type attribute.
    */
-  readonly buttonType: Signal<'button' | 'submit' | 'reset'> = computed(() => this.type());
+  readonly buttonType = computed(() => this._type());
 
   /**
    * Native disabled attribute.
    */
-  readonly nativeDisabled: Signal<boolean | null> = computed(() => {
-    if (this.disabled() && !this.focusableWhenDisabled()) {
+  readonly nativeDisabled = computed(() => {
+    if (this._disabled() && !this._focusableWhenDisabled()) {
       return true;
     }
     return null;
@@ -118,8 +140,8 @@ export class ButtonComponent {
   /**
    * Computed tabindex.
    */
-  readonly effectiveTabIndex: Signal<number | null> = computed(() => {
-    if (this.disabled() && !this.focusableWhenDisabled()) {
+  readonly effectiveTabIndex = computed(() => {
+    if (this._disabled() && !this._focusableWhenDisabled()) {
       return -1;
     }
     return null;
@@ -128,8 +150,8 @@ export class ButtonComponent {
   /**
    * ARIA disabled attribute.
    */
-  readonly ariaDisabled: Signal<'true' | null> = computed(() => {
-    if (this.disabled()) {
+  readonly ariaDisabled = computed(() => {
+    if (this._disabled()) {
       return 'true';
     }
     return null;
@@ -138,8 +160,8 @@ export class ButtonComponent {
   /**
    * Data disabled attribute.
    */
-  readonly dataDisabled: Signal<'' | null> = computed(() => {
-    if (this.disabled()) {
+  readonly dataDisabled = computed(() => {
+    if (this._disabled()) {
       return '';
     }
     return null;
@@ -150,7 +172,7 @@ export class ButtonComponent {
    */
   @HostListener('click', ['$event'])
   onClick(event: MouseEvent): void {
-    if (this.disabled()) {
+    if (this._disabled()) {
       event.preventDefault();
       event.stopPropagation();
       return;
@@ -163,7 +185,7 @@ export class ButtonComponent {
    */
   @HostListener('keydown', ['$event'])
   onKeyDown(event: KeyboardEvent): void {
-    if (this.disabled()) {
+    if (this._disabled()) {
       if (event.key === ' ' || event.key === 'Enter') {
         event.preventDefault();
       }
@@ -176,7 +198,7 @@ export class ButtonComponent {
    */
   @HostListener('keyup', ['$event'])
   onKeyUp(event: KeyboardEvent): void {
-    if (this.disabled()) {
+    if (this._disabled()) {
       return;
     }
   }
@@ -186,7 +208,7 @@ export class ButtonComponent {
    */
   @HostListener('pointerdown', ['$event'])
   onPointerDown(event: PointerEvent): void {
-    if (this.disabled()) {
+    if (this._disabled()) {
       event.preventDefault();
       return;
     }
@@ -198,7 +220,7 @@ export class ButtonComponent {
    */
   @HostListener('pointerup', ['$event'])
   onPointerUp(event: PointerEvent): void {
-    if (this.disabled()) {
+    if (this._disabled()) {
       return;
     }
     this.buttonRelease.emit(event);

@@ -2,6 +2,7 @@
 
 > Tracking visual and behavioral parity between `@base-ng/ui` and React Base UI
 > Reference: https://base-ui.com/
+> Last Updated: 2026-02-04 (Reset for accurate verification)
 
 ---
 
@@ -9,14 +10,14 @@
 
 | #   | Component | SS React | SS NG Init | SS NG Post | Visual Cmp | Rectified | Re-cmp | Behavioral | Specs | Status |
 | --- | --------- | -------- | ---------- | ---------- | ---------- | --------- | ------ | ---------- | ----- | ------ |
-| 1   | Button    | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 2   | Separator | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 3   | Progress  | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 4   | Meter     | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 5   | Switch    | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 6   | Toggle    | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 7   | Avatar    | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 8   | Input     | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
+| 1   | Button    | [x]      | [x]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 2   | Separator | [x]      | [x]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 3   | Progress  | [x]      | [x]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 4   | Meter     | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 5   | Switch    | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 6   | Toggle    | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 7   | Avatar    | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 8   | Input     | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
 
 ---
 
@@ -24,15 +25,15 @@
 
 | #   | Component      | SS React | SS NG Init | SS NG Post | Visual Cmp | Rectified | Re-cmp | Behavioral | Specs | Status |
 | --- | -------------- | -------- | ---------- | ---------- | ---------- | --------- | ------ | ---------- | ----- | ------ |
-| 9   | Field          | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 10  | Fieldset       | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 11  | Checkbox       | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 12  | Checkbox Group | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 13  | Radio          | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 14  | Radio Group    | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 15  | Slider         | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 16  | Number Field   | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 17  | Form           | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
+| 9   | Field          | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 10  | Fieldset       | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 11  | Checkbox       | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 12  | Checkbox Group | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 13  | Radio          | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 14  | Radio Group    | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 15  | Slider         | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 16  | Number Field   | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 17  | Form           | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
 
 ---
 
@@ -40,9 +41,9 @@
 
 | #   | Component   | SS React | SS NG Init | SS NG Post | Visual Cmp | Rectified | Re-cmp | Behavioral | Specs | Status |
 | --- | ----------- | -------- | ---------- | ---------- | ---------- | --------- | ------ | ---------- | ----- | ------ |
-| 18  | Collapsible | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 19  | Accordion   | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 20  | Tabs        | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
+| 18  | Collapsible | [x]      | [x]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 19  | Accordion   | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 20  | Tabs        | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
 
 ---
 
@@ -50,11 +51,11 @@
 
 | #   | Component    | SS React | SS NG Init | SS NG Post | Visual Cmp | Rectified | Re-cmp | Behavioral | Specs | Status |
 | --- | ------------ | -------- | ---------- | ---------- | ---------- | --------- | ------ | ---------- | ----- | ------ |
-| 21  | Tooltip      | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 22  | Popover      | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 23  | Preview Card | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 24  | Dialog       | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 25  | Alert Dialog | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
+| 21  | Tooltip      | [x]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 22  | Popover      | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 23  | Preview Card | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 24  | Dialog       | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 25  | Alert Dialog | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
 
 ---
 
@@ -62,11 +63,11 @@
 
 | #   | Component       | SS React | SS NG Init | SS NG Post | Visual Cmp | Rectified | Re-cmp | Behavioral | Specs | Status |
 | --- | --------------- | -------- | ---------- | ---------- | ---------- | --------- | ------ | ---------- | ----- | ------ |
-| 26  | Menu            | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 27  | Context Menu    | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 28  | Menubar         | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 29  | Navigation Menu | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 30  | Toolbar         | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
+| 26  | Menu            | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 27  | Context Menu    | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 28  | Menubar         | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 29  | Navigation Menu | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 30  | Toolbar         | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
 
 ---
 
@@ -74,10 +75,10 @@
 
 | #   | Component    | SS React | SS NG Init | SS NG Post | Visual Cmp | Rectified | Re-cmp | Behavioral | Specs | Status |
 | --- | ------------ | -------- | ---------- | ---------- | ---------- | --------- | ------ | ---------- | ----- | ------ |
-| 31  | Select       | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 32  | Combobox     | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 33  | Autocomplete | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
-| 34  | Scroll Area  | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
+| 31  | Select       | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 32  | Combobox     | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 33  | Autocomplete | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
+| 34  | Scroll Area  | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
 
 ---
 
@@ -85,7 +86,7 @@
 
 | #   | Component | SS React | SS NG Init | SS NG Post | Visual Cmp | Rectified | Re-cmp | Behavioral | Specs | Status |
 | --- | --------- | -------- | ---------- | ---------- | ---------- | --------- | ------ | ---------- | ----- | ------ |
-| 35  | Toast     | [x]      | [x]        | [x]        | [x]        | [x]       | [x]    | [x]        | [x]   | [x]    |
+| 35  | Toast     | [ ]      | [ ]        | [ ]        | [ ]        | [ ]       | [ ]    | [ ]        | [ ]   | [ ]    |
 
 ---
 
@@ -108,10 +109,14 @@
 ## Progress Summary
 
 - **Total Components:** 35
-- **Visual Parity Verified:** 35
-- **Behavioral Parity Verified:** 35
-- **Specs Enhanced:** 35
-- **Fully Complete:** 35 ✅
+- **Visual Parity Verified:** 0
+- **Behavioral Parity Verified:** 0
+- **Specs Enhanced:** 0
+- **Fully Complete:** 0 ⚠️ (Reset for accurate verification - 2026-02-04)
+
+### Test Status (Last Run)
+- Test Files: 39 failed, 9 passed (48 total)
+- Tests: 590 failed, 873 passed (1463 total)
 
 ---
 

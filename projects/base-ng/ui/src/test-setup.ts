@@ -1,19 +1,29 @@
 /**
- * Test setup file for @copied/base-ng
- * Provides polyfills for APIs not available in jsdom
+ * Test setup file for @base-ng/ui
+ * Provides polyfills and Angular TestBed setup for Vitest
  */
 
-import { TestBed } from '@angular/core/testing';
+import { TestBed, getTestBed } from '@angular/core/testing';
 import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
+import { afterEach } from 'vitest';
 
-// Initialize TestBed environment
-TestBed.initTestEnvironment(
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting()
-);
+// Initialize TestBed environment (only once per test run)
+const testBed = getTestBed();
+if (!testBed.platform) {
+  TestBed.initTestEnvironment(
+    BrowserDynamicTestingModule,
+    platformBrowserDynamicTesting(),
+    { teardown: { destroyAfterEach: true } }
+  );
+}
+
+// Reset TestBed after each test to prevent state leakage
+afterEach(() => {
+  TestBed.resetTestingModule();
+});
 
 // ResizeObserver polyfill
 class ResizeObserverMock {
