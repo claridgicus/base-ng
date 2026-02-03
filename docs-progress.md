@@ -79,7 +79,7 @@
 | 33  | Document Meter component                           | [x]    | `components/meter`            |
 | 34  | Document Switch component                          | [x]    | `components/switch`           |
 | 35  | Document Toggle component                          | [x]    | `components/toggle`           |
-| 36  | Document Toggle Group component                    | [ ]    | `components/toggle-group`     |
+| 36  | Document Toggle Group component                    | [x]    | `components/toggle-group`     |
 | 37  | Document Avatar component                          | [ ]    | `components/avatar`           |
 | 38  | Document Input component                           | [ ]    | `components/input`            |
 
@@ -225,9 +225,9 @@ Each component page should include:
 ## Progress Summary
 
 - **Total Tasks:** 75
-- **Completed:** 31
+- **Completed:** 32
 - **In Progress:** 0
-- **Remaining:** 44
+- **Remaining:** 43
 
 ---
 
