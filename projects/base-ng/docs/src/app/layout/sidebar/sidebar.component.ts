@@ -16,21 +16,24 @@ interface NavSection {
   selector: 'docs-sidebar',
   imports: [RouterLink, RouterLinkActive],
   template: `
-    <nav class="sidebar-nav" aria-label="Documentation navigation">
+    <nav class="SideNavViewport" aria-label="Main navigation">
       @for (section of navigation; track section.title) {
-        <div class="nav-section">
-          <h3 class="nav-section-title">{{ section.title }}</h3>
-          <ul class="nav-list">
+        <div class="SideNavSection">
+          <div class="SideNavHeading">{{ section.title }}</div>
+          <ul class="SideNavList">
             @for (item of section.items; track item.path) {
-              <li>
+              <li class="SideNavItem">
                 <a
                   [routerLink]="item.path"
                   routerLinkActive="active"
-                  class="nav-item"
+                  class="SideNavLink"
+                  [attr.data-active]="null"
+                  #rla="routerLinkActive"
+                  [attr.aria-current]="rla.isActive ? 'true' : null"
                 >
                   {{ item.label }}
                   @if (item.badge) {
-                    <span class="nav-badge">{{ item.badge }}</span>
+                    <span class="SideNavBadge">{{ item.badge }}</span>
                   }
                 </a>
               </li>
@@ -43,21 +46,21 @@ interface NavSection {
   styles: `
     :host {
       display: block;
-      padding: var(--header-height) 1.5rem 6rem 1.5rem;
+      padding: 0.75rem 1.5rem 6rem 1.5rem;
     }
 
-    .sidebar-nav {
+    .SideNavViewport {
       display: flex;
       flex-direction: column;
     }
 
-    .nav-section {
+    .SideNavSection {
       display: flex;
       flex-direction: column;
       margin-bottom: 1rem;
     }
 
-    .nav-section-title {
+    .SideNavHeading {
       display: inline-flex;
       font-size: 0.875rem;
       font-weight: 500;
@@ -67,7 +70,7 @@ interface NavSection {
       padding: 0.25rem 0;
     }
 
-    .nav-list {
+    .SideNavList {
       list-style: none;
       margin: 0;
       padding: 0;
@@ -75,7 +78,11 @@ interface NavSection {
       flex-direction: column;
     }
 
-    .nav-item {
+    .SideNavItem {
+      display: flex;
+    }
+
+    .SideNavLink {
       display: flex;
       align-items: center;
       gap: 4px;
@@ -95,7 +102,8 @@ interface NavSection {
         text-decoration: none;
       }
 
-      &.active {
+      &.active,
+      &[aria-current='true'] {
         background-color: var(--docs-bg-hover);
         border: none;
         outline: 1px solid var(--docs-border);
@@ -106,7 +114,7 @@ interface NavSection {
       }
     }
 
-    .nav-badge {
+    .SideNavBadge {
       font-size: 0.6875rem;
       font-weight: 500;
       letter-spacing: 0.035em;

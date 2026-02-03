@@ -40,7 +40,7 @@ import { SearchComponent } from '../search/search.component';
   `,
   styles: `
     :host {
-      display: block;
+      display: contents;
     }
 
     .Header {

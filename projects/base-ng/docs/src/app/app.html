@@ -1,15 +1,18 @@
 <a href="#main-content" class="skip-link">Skip to main content</a>
-<div class="docs-layout">
-  <div class="docs-main">
-    <docs-header />
-    <div class="docs-content-grid">
-      <docs-sidebar class="docs-sidebar" />
-      <main id="main-content" class="docs-content" tabindex="-1">
-        <router-outlet />
-      </main>
-      <aside class="docs-toc" aria-label="Table of contents">
-        <docs-toc />
-      </aside>
+<div class="RootLayout">
+  <div class="RootLayoutContainer">
+    <div class="RootLayoutContent">
+      <div class="ContentLayoutRoot">
+        <docs-header />
+        <docs-sidebar class="SideNavRoot" />
+        <main id="main-content" class="ContentLayoutMain" tabindex="-1">
+          <router-outlet />
+        </main>
+        <aside class="QuickNavRoot" aria-label="Table of contents">
+          <docs-toc />
+        </aside>
+      </div>
     </div>
+    <span class="RootLayoutFooter"></span>
   </div>
 </div>

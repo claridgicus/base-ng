@@ -139,7 +139,7 @@ export class TocComponent {
   }
 
   private scanHeadings(): void {
-    const content = document.querySelector('.docs-content');
+    const content = document.querySelector('.ContentLayoutMain');
     if (!content) {
       this.items.set([]);
       return;

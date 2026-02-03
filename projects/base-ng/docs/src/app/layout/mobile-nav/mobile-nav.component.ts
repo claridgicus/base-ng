@@ -25,7 +25,7 @@ interface NavSection {
   imports: [RouterLink, RouterLinkActive],
   template: `
     <button
-      class="hamburger-btn"
+      class="HeaderButton"
       (click)="toggle()"
       [attr.aria-expanded]="isOpen()"
       aria-controls="mobile-nav-drawer"
@@ -120,7 +120,7 @@ interface NavSection {
       }
     }
 
-    .hamburger-btn {
+    .HeaderButton {
       display: flex;
       align-items: center;
       justify-content: center;
