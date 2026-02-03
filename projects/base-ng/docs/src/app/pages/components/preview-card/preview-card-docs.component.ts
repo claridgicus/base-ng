@@ -2,14 +2,31 @@ import { Component } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  PreviewCardRootDirective,
+  PreviewCardTriggerDirective,
+  PreviewCardPositionerDirective,
+  PreviewCardPopupDirective,
+  PreviewCardArrowDirective,
+} from '@base-ng/ui';
 
 @Component({
   selector: 'docs-preview-card',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    PreviewCardRootDirective,
+    PreviewCardTriggerDirective,
+    PreviewCardPositionerDirective,
+    PreviewCardPopupDirective,
+    PreviewCardArrowDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,14 +38,38 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <docs-demo [code]="basicDemoCode" language="html">
+          <p class="demo-text">
+            Read more about the
+            <span baseUiPreviewCardRoot>
+              <a baseUiPreviewCardTrigger href="#" class="demo-link" (click)="$event.preventDefault()">
+                Angular framework
+              </a>
+              <div baseUiPreviewCardPositioner side="top" [sideOffset]="8">
+                <div baseUiPreviewCardPopup class="demo-preview-card">
+                  <div class="demo-preview-content">
+                    <h3 class="demo-preview-title">Angular</h3>
+                    <p class="demo-preview-desc">
+                      Angular is a TypeScript-based web application framework led
+                      by the Angular Team at Google. It's used to build dynamic,
+                      modern web applications.
+                    </p>
+                    <span class="demo-preview-url">angular.dev</span>
+                  </div>
+                  <div baseUiPreviewCardArrow class="demo-preview-arrow"></div>
+                </div>
+              </div>
+            </span>
+            to learn about building modern web applications.
+          </p>
+        </docs-demo>
+      </section>
 
-        <p class="docs-paragraph">
-          Import the Preview Card directives from the package:
-        </p>
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -152,13 +193,104 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-text {
+      margin: 0;
+      padding: 2rem;
+      font-size: 0.9375rem;
+      line-height: 1.6;
+      color: var(--docs-text);
+      text-align: center;
+    }
+
+    .demo-link {
+      color: var(--docs-accent, #0066ff);
+      text-decoration: underline;
+      text-decoration-style: dotted;
+      text-underline-offset: 2px;
+
+      &:hover {
+        text-decoration-style: solid;
+      }
+    }
+
+    .demo-preview-card {
+      position: relative;
+      background: var(--docs-bg, white);
+      border: 1px solid var(--docs-border);
+      border-radius: 0.5rem;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+      width: 280px;
+      overflow: hidden;
+      animation: previewIn 0.15s ease-out;
+    }
+
+    @keyframes previewIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .demo-preview-content {
+      padding: 1rem;
+    }
+
+    .demo-preview-title {
+      margin: 0 0 0.5rem;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--docs-text);
+    }
+
+    .demo-preview-desc {
+      margin: 0 0 0.5rem;
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      color: var(--docs-text-secondary);
+    }
+
+    .demo-preview-url {
+      font-size: 0.75rem;
+      color: var(--docs-text-muted, #999);
+    }
+
+    .demo-preview-arrow {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: inherit;
+      border: inherit;
+      transform: rotate(45deg);
+
+      [data-side='top'] & {
+        bottom: -6px;
+        left: 50%;
+        margin-left: -5px;
+        border-top: none;
+        border-left: none;
+      }
+
+      [data-side='bottom'] & {
+        top: -6px;
+        left: 50%;
+        margin-left: -5px;
+        border-bottom: none;
+        border-right: none;
+      }
+    }
+  `,
 })
 export class PreviewCardDocsComponent {
   protected readonly importCode = `import {
@@ -167,8 +299,7 @@ export class PreviewCardDocsComponent {
   PreviewCardPositionerDirective,
   PreviewCardPopupDirective,
   PreviewCardArrowDirective,
-  PreviewCardBackdropDirective,
-} from '@base-ng/ui/preview-card';
+} from '@base-ng/ui';
 
 @Component({
   imports: [
@@ -177,7 +308,6 @@ export class PreviewCardDocsComponent {
     PreviewCardPositionerDirective,
     PreviewCardPopupDirective,
     PreviewCardArrowDirective,
-    PreviewCardBackdropDirective,
   ],
   // ...
 })`;
