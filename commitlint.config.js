@@ -25,7 +25,8 @@ module.exports = {
         'ui',
         'docs',
         'release',
-        'deps'
+        'deps',
+        'ci'
       ]
     ]
   }
