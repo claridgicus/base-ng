@@ -1,6 +1,10 @@
 /**
- * @fileoverview Angular port of Base UI FieldError
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/field/error/FieldError.tsx
+ * @component FieldError
+ * @reactSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/field/error/FieldError.tsx
+ * @reactDocs https://base-ui.com/react/components/field
+ * @lastScraped 2026-02-03
+ * @styling Tailwind CSS 4 only
+ * @parity EXACT - Ported from React Base UI
  *
  * Error message display for the field.
  */

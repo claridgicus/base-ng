@@ -1,6 +1,10 @@
 /**
- * @fileoverview Angular port of Base UI FieldControl
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/field/control/FieldControl.tsx
+ * @component FieldControl
+ * @reactSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/field/control/FieldControl.tsx
+ * @reactDocs https://base-ui.com/react/components/field
+ * @lastScraped 2026-02-03
+ * @styling Tailwind CSS 4 only
+ * @parity EXACT - Ported from React Base UI
  *
  * The input control element for the field.
  */
@@ -42,10 +46,14 @@ let controlIdCounter = 0;
     '[attr.data-disabled]': 'context.disabled() ? "" : null',
     '[attr.data-touched]': 'context.touched() ? "" : null',
     '[attr.data-dirty]': 'context.dirty() ? "" : null',
+    '[attr.data-filled]': 'context.filled() ? "" : null',
+    '[attr.data-focused]': 'context.focused() ? "" : null',
     '[attr.data-valid]': 'context.valid() ? "" : null',
     '[attr.data-invalid]': '!context.valid() ? "" : null',
     '[class.base-ui-field-control]': 'true',
     '[class.base-ui-field-control-disabled]': 'context.disabled()',
+    '[class.base-ui-field-control-focused]': 'context.focused()',
+    '[class.base-ui-field-control-filled]': 'context.filled()',
     '[class.base-ui-field-control-invalid]': '!context.valid()',
   },
 })

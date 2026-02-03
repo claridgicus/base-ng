@@ -1,6 +1,10 @@
 /**
- * @fileoverview Angular port of Base UI FieldDescription
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/field/description/FieldDescription.tsx
+ * @component FieldDescription
+ * @reactSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/field/description/FieldDescription.tsx
+ * @reactDocs https://base-ui.com/react/components/field
+ * @lastScraped 2026-02-03
+ * @styling Tailwind CSS 4 only
+ * @parity EXACT - Ported from React Base UI
  *
  * Helper text description for the field.
  */

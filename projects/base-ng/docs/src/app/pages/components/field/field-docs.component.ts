@@ -492,8 +492,9 @@ export class FieldDocsComponent {
     baseUiFieldControl
     type="email"
     class="px-3 py-2 border border-gray-200 rounded-md
-           focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20
-           data-[invalid]:border-red-500"
+           data-[focused]:border-blue-500 data-[focused]:ring-2 data-[focused]:ring-blue-500/20
+           data-[invalid]:border-red-500
+           data-[disabled]:bg-gray-100 data-[disabled]:text-gray-400"
   />
   <p
     baseUiFieldDescription
@@ -569,6 +570,16 @@ export class FieldDocsComponent {
       name: 'data-dirty',
       type: 'string',
       description: 'Present after the value has been changed.',
+    },
+    {
+      name: 'data-filled',
+      type: 'string',
+      description: 'Present when the control has a value.',
+    },
+    {
+      name: 'data-focused',
+      type: 'string',
+      description: 'Present when the control is focused.',
     },
     {
       name: 'data-valid',

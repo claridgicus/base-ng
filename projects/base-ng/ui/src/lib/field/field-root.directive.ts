@@ -1,6 +1,10 @@
 /**
- * @fileoverview Angular port of Base UI FieldRoot
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/field/root/FieldRoot.tsx
+ * @component FieldRoot
+ * @reactSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/field/root/FieldRoot.tsx
+ * @reactDocs https://base-ui.com/react/components/field
+ * @lastScraped 2026-02-03
+ * @styling Tailwind CSS 4 only
+ * @parity EXACT - Ported from React Base UI
  *
  * A form field wrapper that manages validation state and accessibility.
  */
@@ -54,12 +58,16 @@ let fieldIdCounter = 0;
     '[attr.data-disabled]': 'disabled() ? "" : null',
     '[attr.data-touched]': '_touched() ? "" : null',
     '[attr.data-dirty]': '_dirty() ? "" : null',
+    '[attr.data-filled]': '_filled() ? "" : null',
+    '[attr.data-focused]': '_focused() ? "" : null',
     '[attr.data-valid]': 'isValid() ? "" : null',
     '[attr.data-invalid]': '!isValid() ? "" : null',
     '[class.base-ui-field]': 'true',
     '[class.base-ui-field-disabled]': 'disabled()',
     '[class.base-ui-field-touched]': '_touched()',
     '[class.base-ui-field-dirty]': '_dirty()',
+    '[class.base-ui-field-filled]': '_filled()',
+    '[class.base-ui-field-focused]': '_focused()',
     '[class.base-ui-field-valid]': 'isValid()',
     '[class.base-ui-field-invalid]': '!isValid()',
   },

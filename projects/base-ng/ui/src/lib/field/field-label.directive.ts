@@ -1,6 +1,10 @@
 /**
- * @fileoverview Angular port of Base UI FieldLabel
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/field/label/FieldLabel.tsx
+ * @component FieldLabel
+ * @reactSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/field/label/FieldLabel.tsx
+ * @reactDocs https://base-ui.com/react/components/field
+ * @lastScraped 2026-02-03
+ * @styling Tailwind CSS 4 only
+ * @parity EXACT - Ported from React Base UI
  *
  * An accessible label for the field control.
  */
