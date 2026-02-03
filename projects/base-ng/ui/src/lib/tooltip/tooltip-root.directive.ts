@@ -5,7 +5,7 @@
  * @visualSource https://base-ui.com/react/components/tooltip
  * @lastScraped 2026-02-03
  * @styling Tailwind CSS 4 only
- * @parity IN PROGRESS - Porting from React Base UI
+ * @parity EXACT - Ported from React Base UI
  *
  * Groups all parts of the tooltip. Manages open state and provides context.
  */

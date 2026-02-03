@@ -1,6 +1,10 @@
 /**
- * @fileoverview Angular port of Base UI TooltipPopup
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/tooltip/popup/TooltipPopup.tsx
+ * @directive TooltipPopup
+ * @reactSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/tooltip/popup/TooltipPopup.tsx
+ * @reactDocs https://base-ui.com/react/components/tooltip
+ * @lastScraped 2026-02-03
+ * @styling Tailwind CSS 4 only
+ * @parity EXACT - Ported from React Base UI
  *
  * A container for the tooltip contents.
  */
