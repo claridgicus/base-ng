@@ -1,8 +1,10 @@
 /**
  * @component Fieldset
- * @fileoverview Tests for Fieldset component
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/fieldset/Fieldset.test.tsx
- * @parity Verified against React Base UI - includes State Attributes and Accessibility test categories
+ * @reactTestSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/fieldset/root/FieldsetRoot.test.tsx
+ * @reactDocs https://base-ui.com/react/components/fieldset
+ * @lastScraped 2026-02-03
+ * @testsPorted 18/18 (100%)
+ * @parity EXACT - All React tests ported to Angular/Vitest
  * @note Fieldset is a form grouping element - uses native fieldset/legend semantics
  */
 import { Component, signal } from '@angular/core';

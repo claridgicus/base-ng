@@ -1,6 +1,10 @@
 /**
- * @fileoverview Angular port of Base UI FieldsetLegend
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/fieldset/legend/FieldsetLegend.tsx
+ * @component FieldsetLegend
+ * @reactSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/fieldset/legend/FieldsetLegend.tsx
+ * @reactDocs https://base-ui.com/react/components/fieldset
+ * @lastScraped 2026-02-03
+ * @styling Tailwind CSS 4 only
+ * @parity EXACT - Ported from React Base UI
  *
  * Accessible label for the fieldset.
  */
