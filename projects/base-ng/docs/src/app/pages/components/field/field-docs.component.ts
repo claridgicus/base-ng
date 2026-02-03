@@ -1,15 +1,34 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   EditOnGitHubComponent,
   CodeBlockComponent,
-  PackageSelectorComponent,
+  DemoComponent,
   PropsTableComponent,
   type PropDefinition,
 } from '../../../shared';
+import {
+  FieldRootDirective,
+  FieldLabelDirective,
+  FieldControlDirective,
+  FieldDescriptionDirective,
+  FieldErrorDirective,
+} from '@base-ng/ui';
+import { InputDirective } from '@base-ng/ui';
 
 @Component({
   selector: 'docs-field',
-  imports: [EditOnGitHubComponent, CodeBlockComponent, PackageSelectorComponent, PropsTableComponent],
+  imports: [
+    EditOnGitHubComponent,
+    CodeBlockComponent,
+    DemoComponent,
+    PropsTableComponent,
+    FieldRootDirective,
+    FieldLabelDirective,
+    FieldControlDirective,
+    FieldDescriptionDirective,
+    FieldErrorDirective,
+    InputDirective,
+  ],
   template: `
     <article class="docs-page">
       <header class="docs-header-section">
@@ -21,14 +40,27 @@ import {
         </p>
       </header>
 
-      <!-- Installation -->
+      <!-- Live Demo -->
       <section class="docs-section">
-        <h2 class="docs-section-title">Installation</h2>
-        <docs-package-selector package="@base-ng/ui" />
+        <docs-demo [code]="basicDemoCode" language="html">
+          <div baseUiFieldRoot name="username" class="demo-field">
+            <label baseUiFieldLabel class="demo-label">Username</label>
+            <input
+              baseUiInput
+              baseUiFieldControl
+              placeholder="Enter username"
+              class="demo-input"
+            />
+            <p baseUiFieldDescription class="demo-description">
+              Choose a unique username for your account.
+            </p>
+          </div>
+        </docs-demo>
+      </section>
 
-        <p class="docs-paragraph">
-          Import the Field directives from the package:
-        </p>
+      <!-- Import -->
+      <section class="docs-section">
+        <h2 class="docs-section-title">Import</h2>
         <docs-code-block [code]="importCode" language="typescript" />
       </section>
 
@@ -45,42 +77,68 @@ import {
       <section class="docs-section">
         <h2 class="docs-section-title">Examples</h2>
 
-        <h3 class="docs-section-subtitle">Basic usage</h3>
+        <h3 class="docs-section-subtitle">With validation error</h3>
         <p class="docs-paragraph">
-          Create a complete form field with label, control, and description.
+          Show validation errors when the field is invalid:
         </p>
-        <docs-code-block [code]="basicDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">With validation</h3>
-        <p class="docs-paragraph">
-          Show validation errors when the field is invalid.
-        </p>
-        <docs-code-block [code]="validationDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">Match specific errors</h3>
-        <p class="docs-paragraph">
-          Use the <code>match</code> input on FieldError to show different
-          messages for different validation states.
-        </p>
-        <docs-code-block [code]="matchErrorDemoCode" language="html" />
+        <docs-demo [code]="validationDemoCode" language="html">
+          <div baseUiFieldRoot name="email" class="demo-field">
+            <label baseUiFieldLabel class="demo-label">Email</label>
+            <input
+              baseUiInput
+              baseUiFieldControl
+              type="email"
+              [(value)]="emailValue"
+              [invalid]="isInvalidEmail()"
+              placeholder="Enter email"
+              class="demo-input"
+            />
+            @if (isInvalidEmail()) {
+              <span baseUiFieldError class="demo-error">
+                Please enter a valid email address.
+              </span>
+            }
+          </div>
+        </docs-demo>
 
         <h3 class="docs-section-subtitle">Required field</h3>
         <p class="docs-paragraph">
-          Create a required field with visual indicator.
+          Create a required field with visual indicator:
         </p>
-        <docs-code-block [code]="requiredDemoCode" language="html" />
-
-        <h3 class="docs-section-subtitle">With textarea</h3>
-        <p class="docs-paragraph">
-          Field works with any form control including textareas.
-        </p>
-        <docs-code-block [code]="textareaDemoCode" language="html" />
+        <docs-demo [code]="requiredDemoCode" language="html">
+          <div baseUiFieldRoot name="fullName" class="demo-field">
+            <label baseUiFieldLabel class="demo-label">
+              Full Name
+              <span class="demo-required" aria-hidden="true">*</span>
+            </label>
+            <input
+              baseUiInput
+              baseUiFieldControl
+              placeholder="Enter your name"
+              class="demo-input"
+            />
+          </div>
+        </docs-demo>
 
         <h3 class="docs-section-subtitle">Disabled field</h3>
         <p class="docs-paragraph">
-          Disable the entire field including label styling.
+          Disable the entire field including label styling:
         </p>
-        <docs-code-block [code]="disabledDemoCode" language="html" />
+        <docs-demo [code]="disabledDemoCode" language="html">
+          <div baseUiFieldRoot name="locked" [disabled]="true" class="demo-field">
+            <label baseUiFieldLabel class="demo-label">Subscription Plan</label>
+            <input
+              baseUiInput
+              baseUiFieldControl
+              value="Premium"
+              [disabled]="true"
+              class="demo-input"
+            />
+            <p baseUiFieldDescription class="demo-description">
+              Contact support to change your plan.
+            </p>
+          </div>
+        </docs-demo>
       </section>
 
       <!-- Styling -->
@@ -178,15 +236,90 @@ import {
         line-height: 1.6;
       }
     }
-  
 
     .docs-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--docs-border);
-    }`,
+    }
+
+    /* Demo styles */
+    .demo-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .demo-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--docs-text);
+
+      &[data-disabled] {
+        color: var(--docs-text-secondary);
+      }
+
+      &[data-invalid] {
+        color: #ef4444;
+      }
+    }
+
+    .demo-input {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.875rem;
+      background: var(--docs-bg);
+      border: 1px solid var(--docs-border);
+      border-radius: 0.375rem;
+      color: var(--docs-text);
+
+      &::placeholder {
+        color: var(--docs-text-secondary);
+      }
+
+      &[data-focused] {
+        border-color: var(--docs-accent, #0066ff);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+      }
+
+      &[data-invalid] {
+        border-color: #ef4444;
+      }
+
+      &[data-disabled] {
+        background: var(--docs-bg-secondary);
+        color: var(--docs-text-secondary);
+        cursor: not-allowed;
+      }
+    }
+
+    .demo-description {
+      font-size: 0.75rem;
+      color: var(--docs-text-secondary);
+      margin: 0;
+    }
+
+    .demo-error {
+      font-size: 0.75rem;
+      color: #ef4444;
+    }
+
+    .demo-required {
+      color: #ef4444;
+      margin-left: 0.25rem;
+    }
+  `,
 })
 export class FieldDocsComponent {
+  protected readonly emailValue = signal('invalid-email');
+
+  protected isInvalidEmail(): boolean {
+    const email = this.emailValue();
+    return email.length > 0 && !email.includes('@');
+  }
   protected readonly importCode = `import {
   FieldRootDirective,
   FieldLabelDirective,
