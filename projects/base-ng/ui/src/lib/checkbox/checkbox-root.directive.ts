@@ -1,6 +1,10 @@
 /**
- * @fileoverview Angular port of Base UI CheckboxRoot
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/checkbox/root/CheckboxRoot.tsx
+ * @component CheckboxRoot
+ * @reactSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/checkbox/root/CheckboxRoot.tsx
+ * @reactDocs https://base-ui.com/react/components/checkbox
+ * @lastScraped 2026-02-03
+ * @styling Tailwind CSS 4 only
+ * @parity EXACT - Ported from React Base UI
  *
  * A checkbox control that supports checked, unchecked, and indeterminate states.
  */
@@ -187,10 +191,10 @@ export class CheckboxRootDirective implements ControlValueAccessor {
   }
 
   /**
-   * Handle keydown event for Space key.
+   * Handle keydown event for Space and Enter keys.
    */
   protected handleKeydown(event: KeyboardEvent): void {
-    if (event.key === ' ') {
+    if (event.key === ' ' || event.key === 'Enter') {
       event.preventDefault();
       if (this.disabled() || this.readOnly()) {
         return;

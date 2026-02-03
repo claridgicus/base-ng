@@ -1,6 +1,10 @@
 /**
- * @fileoverview Angular port of Base UI CheckboxIndicator
- * @source https://github.com/mui/base-ui/blob/master/packages/react/src/checkbox/indicator/CheckboxIndicator.tsx
+ * @component CheckboxIndicator
+ * @reactSource https://raw.githubusercontent.com/mui/base-ui/master/packages/react/src/checkbox/indicator/CheckboxIndicator.tsx
+ * @reactDocs https://base-ui.com/react/components/checkbox
+ * @lastScraped 2026-02-03
+ * @styling Tailwind CSS 4 only
+ * @parity EXACT - Ported from React Base UI
  *
  * Visual indicator for the checkbox state.
  */

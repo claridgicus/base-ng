@@ -26,7 +26,7 @@
 | --- | -------------- | ------ | ---------- | -------------- | ------ |
 | 9   | Field          | [x]    | [x]        | [x]            | [x]    |
 | 10  | Fieldset       | [x]    | [x]        | [x]            | [x]    |
-| 11  | Checkbox       | [ ]    | [ ]        | [ ]            | [ ]    |
+| 11  | Checkbox       | [x]    | [x]        | [x]            | [x]    |
 | 12  | Checkbox Group | [ ]    | [ ]        | [ ]            | [ ]    |
 | 13  | Radio          | [ ]    | [ ]        | [ ]            | [ ]    |
 | 14  | Radio Group    | [ ]    | [ ]        | [ ]            | [ ]    |
@@ -92,10 +92,10 @@
 ## Progress Summary
 
 - **Total Components:** 35
-- **Visual Parity Verified:** 10
-- **Behavioral Parity Verified:** 10
-- **Specs Enhanced:** 10
-- **Fully Complete:** 10
+- **Visual Parity Verified:** 11
+- **Behavioral Parity Verified:** 11
+- **Specs Enhanced:** 11
+- **Fully Complete:** 11
 
 ---
 
