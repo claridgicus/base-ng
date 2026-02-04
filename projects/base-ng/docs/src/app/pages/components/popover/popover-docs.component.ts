@@ -979,6 +979,26 @@ saveNote() {
       type: '"open" | "closed"',
       description: 'The current state of the popover.',
     },
+    {
+      name: 'data-open',
+      type: 'Present when open',
+      description: 'Present when the popover is open (alternative to data-state).',
+    },
+    {
+      name: 'data-closed',
+      type: 'Present when closed',
+      description: 'Present when the popover is closed (alternative to data-state).',
+    },
+    {
+      name: 'data-popup-open',
+      type: 'Present when open',
+      description: 'Present on trigger when the associated popup is open.',
+    },
+    {
+      name: 'data-pressed',
+      type: 'Present when pressed',
+      description: 'Present on trigger while being pressed.',
+    },
   ];
 
   protected readonly positionerDataAttributes: PropDefinition[] = [
@@ -986,6 +1006,16 @@ saveNote() {
       name: 'data-state',
       type: '"open" | "closed"',
       description: 'The current state of the popover.',
+    },
+    {
+      name: 'data-open',
+      type: 'Present when open',
+      description: 'Present when the popover is open.',
+    },
+    {
+      name: 'data-closed',
+      type: 'Present when closed',
+      description: 'Present when the popover is closed.',
     },
     {
       name: 'data-side',
@@ -997,6 +1027,16 @@ saveNote() {
       name: 'data-align',
       type: "'start' | 'center' | 'end'",
       description: 'The actual alignment after positioning.',
+    },
+    {
+      name: 'data-anchor-hidden',
+      type: 'Present when hidden',
+      description: 'Present when the anchor (trigger) is scrolled out of view.',
+    },
+    {
+      name: 'data-uncentered',
+      type: 'Present when uncentered',
+      description: 'Present on arrow when it cannot be centered.',
     },
   ];
 

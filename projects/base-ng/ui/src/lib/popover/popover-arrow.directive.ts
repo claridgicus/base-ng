@@ -31,6 +31,8 @@ import { POPOVER_CONTEXT, POPOVER_POSITIONER_CONTEXT } from './popover.types';
   host: {
     'aria-hidden': 'true',
     '[attr.data-state]': 'context.openSignal() ? "open" : "closed"',
+    '[attr.data-open]': 'context.openSignal() ? "" : null',
+    '[attr.data-closed]': '!context.openSignal() ? "" : null',
     '[attr.data-side]': 'positionerContext.side',
     '[attr.data-align]': 'positionerContext.align',
     '[attr.data-uncentered]': 'positionerContext.arrowUncentered ? "" : null',

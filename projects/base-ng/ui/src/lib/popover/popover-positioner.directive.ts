@@ -19,7 +19,7 @@ import {
 } from '@angular/core';
 import { FloatingService } from '../floating-ui';
 import type { FloatingPlacement, Side, Alignment } from '../floating-ui';
-import { flip, offset, shift } from '@floating-ui/dom';
+import { flip, hide, offset, shift } from '@floating-ui/dom';
 import {
   POPOVER_CONTEXT,
   POPOVER_POSITIONER_CONTEXT,
@@ -43,8 +43,11 @@ import {
   exportAs: 'popoverPositioner',
   host: {
     '[attr.data-state]': 'context.openSignal() ? "open" : "closed"',
+    '[attr.data-open]': 'context.openSignal() ? "" : null',
+    '[attr.data-closed]': '!context.openSignal() ? "" : null',
     '[attr.data-side]': 'sideSignal()',
     '[attr.data-align]': 'alignSignal()',
+    '[attr.data-anchor-hidden]': 'anchorHidden() ? "" : null',
     '[class.base-ui-popover-positioner]': 'true',
     '[style.position]': 'floatingService.strategy()',
     '[style.top]': '"0"',
@@ -149,6 +152,13 @@ export class PopoverPositionerDirective implements OnDestroy {
   /** Arrow uncentered state */
   private readonly arrowUncentered = signal(false);
 
+  /** Anchor hidden state - when anchor is scrolled out of view */
+  readonly anchorHidden = computed(() => {
+    const data = this.floatingService.middlewareData();
+    const hideData = data?.['hide'] as { referenceHidden?: boolean } | undefined;
+    return hideData?.referenceHidden ?? false;
+  });
+
   /** Arrow styles */
   private readonly arrowStyles = computed(() => {
     return this.floatingService.getArrowStyles();
@@ -199,6 +209,7 @@ export class PopoverPositionerDirective implements OnDestroy {
           offset({ mainAxis: sideOffset, crossAxis: alignOffset }),
           flip(),
           shift({ padding: 8 }),
+          hide(),
         ],
       });
     });
@@ -222,6 +233,7 @@ export class PopoverPositionerDirective implements OnDestroy {
         offset({ mainAxis: this._sideOffset(), crossAxis: this._alignOffset() }),
         flip(),
         shift({ padding: 8 }),
+        hide(),
       ],
     });
   }

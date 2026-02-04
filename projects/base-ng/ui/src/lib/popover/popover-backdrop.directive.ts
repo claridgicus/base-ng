@@ -31,6 +31,8 @@ import { POPOVER_CONTEXT } from './popover.types';
   host: {
     'aria-hidden': 'true',
     '[attr.data-state]': 'context.openSignal() ? "open" : "closed"',
+    '[attr.data-open]': 'context.openSignal() ? "" : null',
+    '[attr.data-closed]': '!context.openSignal() ? "" : null',
     '[class.base-ui-popover-backdrop]': 'true',
     '[class.base-ui-popover-backdrop-open]': 'context.openSignal()',
     '[class.base-ui-popover-backdrop-closed]': '!context.openSignal()',

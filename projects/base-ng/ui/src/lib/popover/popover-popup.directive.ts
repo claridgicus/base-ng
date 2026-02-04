@@ -44,6 +44,8 @@ import { POPOVER_CONTEXT, POPOVER_POSITIONER_CONTEXT } from './popover.types';
     '[attr.aria-describedby]': 'ariaDescribedBy()',
     '[attr.aria-modal]': 'isModal()',
     '[attr.data-state]': 'context.openSignal() ? "open" : "closed"',
+    '[attr.data-open]': 'context.openSignal() ? "" : null',
+    '[attr.data-closed]': '!context.openSignal() ? "" : null',
     '[attr.data-side]': 'positionerContext.side',
     '[attr.data-align]': 'positionerContext.align',
     '[class.base-ui-popover-popup]': 'true',

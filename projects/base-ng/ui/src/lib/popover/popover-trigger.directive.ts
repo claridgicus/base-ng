@@ -42,9 +42,13 @@ import { POPOVER_CONTEXT } from './popover.types';
     '[attr.aria-expanded]': 'context.openSignal()',
     '[attr.aria-controls]': 'context.openSignal() ? context.getPopupId() : null',
     '[attr.data-state]': 'context.openSignal() ? "open" : "closed"',
+    '[attr.data-popup-open]': 'context.openSignal() ? "" : null',
+    '[attr.data-pressed]': 'pressed() ? "" : null',
     '[attr.disabled]': 'context.disabledSignal() ? "" : null',
     '[class.base-ui-popover-trigger]': 'true',
     '(click)': 'handleClick($event)',
+    '(mousedown)': 'handleMouseDown()',
+    '(mouseup)': 'handleMouseUp()',
     '(mouseenter)': 'handleMouseEnter()',
     '(mouseleave)': 'handleMouseLeave()',
     '(focus)': 'handleFocus()',
@@ -55,6 +59,11 @@ export class PopoverTriggerDirective implements OnInit, OnDestroy {
   protected readonly context = inject(POPOVER_CONTEXT);
   private readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly destroyRef = inject(DestroyRef);
+
+  /**
+   * Tracks pressed state for data-pressed attribute.
+   */
+  readonly pressed = signal(false);
 
   /**
    * Whether to open the popover on hover.
@@ -126,6 +135,22 @@ export class PopoverTriggerDirective implements OnInit, OnDestroy {
     if (!this.openOnHover || this.context.openSignal()) {
       this.context.togglePopover('trigger-press');
     }
+  }
+
+  /**
+   * Handle mouse down for pressed state.
+   */
+  protected handleMouseDown(): void {
+    if (!this.context.disabledSignal()) {
+      this.pressed.set(true);
+    }
+  }
+
+  /**
+   * Handle mouse up for pressed state.
+   */
+  protected handleMouseUp(): void {
+    this.pressed.set(false);
   }
 
   /**
