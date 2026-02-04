@@ -180,9 +180,11 @@ export class PreviewCardRootDirective<T = unknown> {
     setOpen: (open: boolean, reason?: PreviewCardOpenChangeReason) =>
       this.setOpen(open, reason),
     triggerElement: this.triggerElement(),
+    triggerElementSignal: this.triggerElement,
     setTriggerElement: (element: HTMLElement | null) =>
       this.triggerElement.set(element),
     popupElement: this.popupElement(),
+    popupElementSignal: this.popupElement,
     setPopupElement: (element: HTMLElement | null) =>
       this.popupElement.set(element),
     delay: this._delay(),

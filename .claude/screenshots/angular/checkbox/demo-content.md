@@ -1,6 +1,6 @@
 # checkbox Angular Demo Content
 
-Captured: 2026-02-03T22:41:34.638Z
+Captured: 2026-02-03T22:55:14.908Z
 Source: http://localhost:4200/docs/components/checkbox
 
 ## Trigger Element

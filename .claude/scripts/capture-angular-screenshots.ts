@@ -20,7 +20,7 @@ if (!component) {
   process.exit(1);
 }
 
-const BASE_URL = process.env.ANGULAR_DOCS_URL || 'http://localhost:4200/docs/components';
+const BASE_URL = process.env['ANGULAR_DOCS_URL'] || 'http://localhost:4200/docs/components';
 
 interface CaptureResult {
   state: string;
@@ -64,71 +64,99 @@ async function findPlayground(page: Page): Promise<Locator> {
   return page.locator('main').first();
 }
 
-async function findTrigger(playground: Locator): Promise<Locator> {
-  // Try Angular-specific selectors first, then generic ones
-  const selectors = [
-    '[buiTooltipTrigger]',
-    '[buiPopoverTrigger]',
-    '[buiDialogTrigger]',
-    '[buiMenuTrigger]',
-    'button:not([disabled])',
-    '[role="button"]',
-    'a[href="#"]',
-    '[data-trigger]'
-  ];
+// Component-specific trigger selectors for Angular
+const COMPONENT_TRIGGERS: Record<string, string[]> = {
+  checkbox: ['[baseUiCheckboxRoot]', '[role="checkbox"]', 'input[type="checkbox"]'],
+  switch: ['[baseUiSwitchRoot]', '[role="switch"]', 'button[role="switch"]'],
+  slider: ['[baseUiSliderRoot]', '[role="slider"]', 'input[type="range"]'],
+  radio: ['[baseUiRadioRoot]', '[role="radio"]', 'input[type="radio"]'],
+  'radio-group': ['[baseUiRadioGroup]', '[role="radiogroup"]', '[baseUiRadioRoot]'],
+  progress: ['[baseUiProgressRoot]', '[role="progressbar"]', 'progress'],
+  meter: ['[baseUiMeterRoot]', '[role="meter"]', 'meter'],
+  avatar: ['[baseUiAvatarRoot]', '[data-avatar]', 'img'],
+  input: ['[baseUiInput]', 'input[type="text"]', 'input:not([type])'],
+  'number-field': ['[baseUiNumberFieldRoot]', 'input[type="number"]', 'input'],
+  'scroll-area': ['[baseUiScrollAreaRoot]', '[role="scrollbar"]', 'div'],
+  field: ['[baseUiFieldRoot]', 'input', 'label'],
+  fieldset: ['[baseUiFieldsetRoot]', 'fieldset', '[role="group"]'],
+  form: ['[baseUiFormRoot]', 'form', 'button[type="submit"]'],
+  // Components that were capturing wrong element (toolbar-btn)
+  'context-menu': ['[baseUiContextMenuTrigger]', '[baseUiContextMenuRoot]', '.demo-context-trigger'],
+  'preview-card': ['[baseUiPreviewCardTrigger]', '[baseUiPreviewCardRoot]', 'a[href]'],
+  autocomplete: ['[baseUiAutocompleteInput]', '[baseUiAutocompleteRoot]', '[baseUiAutocompleteTrigger]'],
+  button: ['[baseUiButton]', 'base-ui-button', '.demo-button'],
+  separator: ['[baseUiSeparator]', 'base-ui-separator', 'hr', '[role="separator"]'],
+};
 
-  for (const selector of selectors) {
+async function findTrigger(playground: Locator, componentName: string): Promise<Locator> {
+  // Try component-specific selectors first
+  const componentSelectors = COMPONENT_TRIGGERS[componentName] || [];
+
+  for (const selector of componentSelectors) {
     const element = playground.locator(selector).first();
     if (await element.isVisible().catch(() => false)) {
       return element;
     }
   }
 
-  return playground.locator('button').first();
-}
+  // Try Angular-specific directive selectors
+  const angularSelectors = [
+    '[baseUiTooltipTrigger]',
+    '[baseUiPopoverTrigger]',
+    '[baseUiDialogTrigger]',
+    '[baseUiMenuTrigger]',
+  ];
 
-// Fixed capture dimensions for consistent comparison (must match React script)
-const CAPTURE_WIDTH = 400;
-const CAPTURE_HEIGHT = 300;
-
-async function captureComponentArea(
-  page: Page,
-  trigger: Locator,
-  outputPath: string
-): Promise<void> {
-  // Get trigger position
-  const box = await trigger.boundingBox();
-  if (!box) {
-    throw new Error('Could not get trigger bounding box');
+  for (const selector of angularSelectors) {
+    const element = playground.locator(selector).first();
+    if (await element.isVisible().catch(() => false)) {
+      return element;
+    }
   }
 
-  // Calculate centered clip area around trigger
-  const centerX = box.x + box.width / 2;
-  const centerY = box.y + box.height / 2;
+  // Fall back to generic selectors (exclude toolbar-btn which is the docs UI "Show code" button)
+  const genericSelectors = [
+    'button:not([disabled]):not(.toolbar-btn)',
+    '[role="button"]:not(.toolbar-btn)',
+    'a[href="#"]',
+    '[data-trigger]',
+    'input:not([type="hidden"])',
+    '[tabindex="0"]:not(.toolbar-btn)'
+  ];
 
-  const clipX = Math.max(0, centerX - CAPTURE_WIDTH / 2);
-  const clipY = Math.max(0, centerY - CAPTURE_HEIGHT / 2);
+  for (const selector of genericSelectors) {
+    const element = playground.locator(selector).first();
+    if (await element.isVisible().catch(() => false)) {
+      return element;
+    }
+  }
 
-  // Capture fixed-size area centered on trigger
+  // Last resort: any focusable element
+  return playground.locator('button, input, [tabindex]').first();
+}
+
+// Fixed viewport for consistent comparison (must match React script)
+const VIEWPORT = { width: 1280, height: 800 };
+
+async function captureFullWindow(
+  page: Page,
+  outputPath: string
+): Promise<void> {
+  // Capture full viewport (not full page scroll)
   await page.screenshot({
     path: outputPath,
-    clip: {
-      x: clipX,
-      y: clipY,
-      width: CAPTURE_WIDTH,
-      height: CAPTURE_HEIGHT
-    }
+    fullPage: false
   });
 }
 
 async function captureAngularScreenshots(): Promise<void> {
   console.log(`\nCapturing Angular screenshots for: ${component}`);
   console.log('='.repeat(50));
-  console.log(`Using fixed capture size: ${CAPTURE_WIDTH}x${CAPTURE_HEIGHT}`);
+  console.log(`Using full window capture: ${VIEWPORT.width}x${VIEWPORT.height}`);
 
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({
-    viewport: { width: 1280, height: 720 }
+    viewport: VIEWPORT
   });
   const page = await context.newPage();
 
@@ -160,13 +188,13 @@ async function captureAngularScreenshots(): Promise<void> {
 
     // Find the playground and trigger
     const playground = await findPlayground(page);
-    const trigger = await findTrigger(playground);
+    const trigger = await findTrigger(playground, component);
 
-    console.log('\nCapturing states...');
+    console.log('\nCapturing states (full window)...');
 
     // 1. DEFAULT STATE - Component at rest
     console.log('  - default');
-    await captureComponentArea(page, trigger, path.join(outputDir, `${component}-default.png`));
+    await captureFullWindow(page, path.join(outputDir, `${component}-default.png`));
     results.push({ state: 'default', path: `${component}-default.png`, success: true });
 
     // 2. HOVER STATE - Mouse over trigger
@@ -174,7 +202,7 @@ async function captureAngularScreenshots(): Promise<void> {
     await trigger.hover();
     // Tooltips often have a delay (400-600ms) before appearing
     await waitForAnimations(page, 800);
-    await captureComponentArea(page, trigger, path.join(outputDir, `${component}-hover.png`));
+    await captureFullWindow(page, path.join(outputDir, `${component}-hover.png`));
     results.push({ state: 'hover', path: `${component}-hover.png`, success: true });
 
     // 3. ACTIVE/OPEN STATE - Click to open
@@ -183,7 +211,7 @@ async function captureAngularScreenshots(): Promise<void> {
     await waitForAnimations(page, 200);
     await trigger.click();
     await waitForAnimations(page, 500);
-    await captureComponentArea(page, trigger, path.join(outputDir, `${component}-active.png`));
+    await captureFullWindow(page, path.join(outputDir, `${component}-active.png`));
     results.push({ state: 'active', path: `${component}-active.png`, success: true });
 
     // 4. FOCUSED STATE - Tab to focus
@@ -191,7 +219,7 @@ async function captureAngularScreenshots(): Promise<void> {
     await page.keyboard.press('Escape');
     await waitForAnimations(page, 200);
     await trigger.focus();
-    await captureComponentArea(page, trigger, path.join(outputDir, `${component}-focused.png`));
+    await captureFullWindow(page, path.join(outputDir, `${component}-focused.png`));
     results.push({ state: 'focused', path: `${component}-focused.png`, success: true });
 
     // 5. Extract demo content for reference

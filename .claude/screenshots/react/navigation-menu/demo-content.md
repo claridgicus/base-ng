@@ -1,11 +1,11 @@
 # navigation-menu Demo Content
 
-Captured: 2026-02-03T22:29:29.884Z
+Captured: 2026-02-03T23:08:47.233Z
 Source: https://base-ui.com/react/components/navigation-menu
 
 ## Trigger Element
-- Text: "Overview"
-- Classes: `css-modules_Trigger__lcMSi`
+- Text: "OverviewHandbookGitHub"
+- Classes: `css-modules_Root__OaBrJ`
 
 ## Popup/Content Element
 - Classes: ``

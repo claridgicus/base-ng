@@ -1,6 +1,6 @@
 # combobox Demo Content
 
-Captured: 2026-02-03T22:25:40.904Z
+Captured: 2026-02-03T23:03:30.387Z
 Source: https://base-ui.com/react/components/combobox
 
 ## Trigger Element

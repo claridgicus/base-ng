@@ -1,11 +1,11 @@
 # meter Angular Demo Content
 
-Captured: 2026-02-03T22:47:20.007Z
+Captured: 2026-02-03T22:56:08.691Z
 Source: http://localhost:4200/docs/components/meter
 
 ## Trigger Element
-- Text: "Hide code"
-- Classes: `toolbar-btn active`
+- Text: "Disk Usage65"
+- Classes: `demo-meter base-ui-meter`
 
 ## Screenshots Captured
 - [x] default: meter-default.png

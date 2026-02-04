@@ -1,6 +1,6 @@
 # select Demo Content
 
-Captured: 2026-02-03T22:32:58.075Z
+Captured: 2026-02-03T23:02:57.223Z
 Source: https://base-ui.com/react/components/select
 
 ## Trigger Element

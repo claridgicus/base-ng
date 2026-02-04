@@ -1,11 +1,11 @@
 # slider Angular Demo Content
 
-Captured: 2026-02-03T22:43:13.668Z
+Captured: 2026-02-03T23:10:38.336Z
 Source: http://localhost:4200/docs/components/slider
 
 ## Trigger Element
-- Text: "Hide code"
-- Classes: `toolbar-btn active`
+- Text: "(no text)"
+- Classes: `demo-slider base-ui-slider base-ui-slider-horizontal base-ui-slider-dragging`
 
 ## Screenshots Captured
 - [x] default: slider-default.png

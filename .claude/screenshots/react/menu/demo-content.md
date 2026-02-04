@@ -1,6 +1,6 @@
 # menu Demo Content
 
-Captured: 2026-02-03T22:28:35.480Z
+Captured: 2026-02-03T23:01:20.748Z
 Source: https://base-ui.com/react/components/menu
 
 ## Trigger Element

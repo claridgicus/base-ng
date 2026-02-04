@@ -1,6 +1,6 @@
 # menubar Demo Content
 
-Captured: 2026-02-03T22:28:44.162Z
+Captured: 2026-02-03T23:01:38.620Z
 Source: https://base-ui.com/react/components/menubar
 
 ## Trigger Element

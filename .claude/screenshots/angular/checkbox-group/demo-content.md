@@ -1,6 +1,6 @@
 # checkbox-group Angular Demo Content
 
-Captured: 2026-02-03T22:25:20.800Z
+Captured: 2026-02-03T23:00:04.261Z
 Source: http://localhost:4200/docs/components/checkbox-group
 
 ## Trigger Element

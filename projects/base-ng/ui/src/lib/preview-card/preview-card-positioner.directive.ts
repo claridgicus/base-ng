@@ -172,9 +172,9 @@ export class PreviewCardPositionerDirective implements OnDestroy {
       this.setupFloating();
     });
 
-    // Watch for trigger element changes
+    // Watch for trigger element changes (use signal to get reactive updates)
     effect(() => {
-      const trigger = this.context.triggerElement;
+      const trigger = this.context.triggerElementSignal();
       if (trigger) {
         this.floatingService.setReference(trigger);
         this.setupFloating();
@@ -250,7 +250,7 @@ export class PreviewCardPositionerDirective implements OnDestroy {
    * Setup floating positioning.
    */
   private setupFloating(): void {
-    const trigger = this.context.triggerElement;
+    const trigger = this.context.triggerElementSignal();
     if (!trigger) return;
 
     this.floatingService.setReference(trigger);

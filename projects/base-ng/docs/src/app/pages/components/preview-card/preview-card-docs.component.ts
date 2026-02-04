@@ -40,14 +40,14 @@ import {
 
       <!-- Live Demo -->
       <section class="docs-section">
-        <docs-demo [code]="basicDemoCode" language="html">
+        <docs-demo [code]="basicDemoCode" language="html" ngSkipHydration>
           <p class="demo-text">
             Read more about the
             <span baseUiPreviewCardRoot>
               <a baseUiPreviewCardTrigger href="#" class="demo-link" (click)="$event.preventDefault()">
                 Angular framework
               </a>
-              <div baseUiPreviewCardPositioner side="top" [sideOffset]="8">
+              <div baseUiPreviewCardPositioner [side]="'bottom'" [sideOffset]="8">
                 <div baseUiPreviewCardPopup class="demo-preview-card">
                   <div class="demo-preview-content">
                     <h3 class="demo-preview-title">Angular</h3>

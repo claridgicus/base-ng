@@ -54,10 +54,14 @@ export interface PreviewCardContext<T = unknown> extends PreviewCardState {
   setOpen: (open: boolean, reason?: PreviewCardOpenChangeReason) => void;
   /** Trigger element */
   triggerElement: HTMLElement | null;
+  /** Signal for trigger element */
+  triggerElementSignal: Signal<HTMLElement | null>;
   /** Set trigger element */
   setTriggerElement: (element: HTMLElement | null) => void;
   /** Popup element */
   popupElement: HTMLElement | null;
+  /** Signal for popup element */
+  popupElementSignal: Signal<HTMLElement | null>;
   /** Set popup element */
   setPopupElement: (element: HTMLElement | null) => void;
   /** Delay before opening in ms */

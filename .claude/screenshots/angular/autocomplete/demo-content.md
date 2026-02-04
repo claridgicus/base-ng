@@ -1,11 +1,11 @@
 # autocomplete Angular Demo Content
 
-Captured: 2026-02-03T22:23:06.147Z
+Captured: 2026-02-03T23:45:23.365Z
 Source: http://localhost:4200/docs/components/autocomplete
 
 ## Trigger Element
-- Text: "Hide code"
-- Classes: `toolbar-btn active`
+- Text: "(no text)"
+- Classes: `demo-autocomplete-input base-ui-autocomplete-input`
 
 ## Screenshots Captured
 - [x] default: autocomplete-default.png
